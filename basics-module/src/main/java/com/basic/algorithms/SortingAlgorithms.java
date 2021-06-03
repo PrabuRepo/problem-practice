@@ -9,6 +9,24 @@ import com.basic.algorithms.operations.SortOperations;
 import com.common.model.ListNode;
 import com.common.utilities.Utils;
 
+/*
+ * Sorting Algorithms:
+ *   - Bubble Sort
+ *   - Selection Sort
+ *   - Insertion Sort
+ *   - Merge Sort
+ *   - Quick Sort
+ *   - Heap Sort
+ *   - Counting Sort
+ *   - Bucket Sort
+ *   - Radix Sort
+ *   - Tim Sort - Derived from merge sort and insertion sort 
+ * 
+ * Sorting Algorithm Categories:
+ *  Decrease and Conquer: Selection, Insertion Sort
+ *  Divide and Conquer: Quick, Merge Sort
+ *  Transform and Conquer: Heap Sort
+ */
 public class SortingAlgorithms implements SortOperations {
 
 	public static void main(String[] args) {
@@ -163,9 +181,9 @@ public class SortingAlgorithms implements SortOperations {
 	 *    The idea is to do something similar to Selection Sort. We one by one place maximum element at the end and reduce the size of
 	 *  current array by one.
 	 *  Following are the detailed steps. Let given array be arr[] and size of array be n.
-	 *      1) Start from current size equal to n-1 and reduce current size by one while it’s greater than 0. Let the current size be
+	 *      1) Start from current size equal to n-1 and reduce current size by one while itï¿½s greater than 0. Let the current size be
 	 *         curr_size. Do following for every curr_size
-	 *           a) Find index of the maximum element in arr[0..curr_szie-1]. Let the index be ‘mi’
+	 *           a) Find index of the maximum element in arr[0..curr_szie-1]. Let the index be ï¿½miï¿½
 	 *           b) Call flip(arr, mi) 
 	 *           c) Call flip(arr, curr_size-1)
 	 */
@@ -548,7 +566,7 @@ public class SortingAlgorithms implements SortOperations {
 	 * The lower bound for Comparison based sorting algorithm (Merge Sort, Heap Sort, Quick-Sort .. etc) is O(nLogn), 
 	 * i.e., they cannot do better than nLogn.
 	 * Counting sort is a linear time sorting algorithm that sort in O(n+k) time when elements are in range from 1 to k.
-	 * What if the elements are in range from 1 to n2? We can’t use counting sort because counting sort will take O(n2) which
+	 * What if the elements are in range from 1 to n2? We canï¿½t use counting sort because counting sort will take O(n2) which
 	 * is worse than comparison based sorting algorithms. 
 	 * Can we sort such an array in linear time? Radix Sort is the answer. 
 	 * The idea of Radix Sort is to do digit by digit sort starting from least significant digit to most significant digit. 
@@ -641,3 +659,4 @@ public class SortingAlgorithms implements SortOperations {
 	}
 
 }
+
