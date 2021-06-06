@@ -20,11 +20,7 @@ import com.common.model.GraphNode;
 import com.common.utilities.DisjointSet;
 
 /* 
- * Graph Representation: 
- * 		- Adjacency Matrix Representation
- * 		- Adjacency List Representation - Using LL array, Using List of List, Using Map
- * 		- Edge List Representation
- * 	    - Incidence Matrix Representation
+ * Graph DS & Algorithms 
  */
 public class Graph {
 	public static void main(String[] args) {
@@ -1334,7 +1330,7 @@ public class Graph {
 
 			edgeWeight[source] = 0;
 
-			for (int i = 1; i < n; i++) { // outer loop runs |v| – 1 times.
+			for (int i = 1; i < n; i++) { // outer loop runs |v| ï¿½ 1 times.
 				for (int j = 0; j < e; j++) {
 					int u = edges[j].src;
 					int v = edges[j].dest;

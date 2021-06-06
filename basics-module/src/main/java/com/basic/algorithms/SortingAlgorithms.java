@@ -15,7 +15,7 @@ import com.common.utilities.Utils;
  *   - Selection Sort
  *   - Insertion Sort
  *   - Merge Sort
- *   - Quick Sort
+ *   - Quick Sort 
  *   - Heap Sort
  *   - Counting Sort
  *   - Bucket Sort
@@ -26,6 +26,8 @@ import com.common.utilities.Utils;
  *  Decrease and Conquer: Selection, Insertion Sort
  *  Divide and Conquer: Quick, Merge Sort
  *  Transform and Conquer: Heap Sort
+ *  
+ * Stable Vs Unstable Sorting:
  */
 public class SortingAlgorithms implements SortOperations {
 
@@ -435,6 +437,8 @@ public class SortingAlgorithms implements SortOperations {
 	 * Quick sort is based on the divide-and-conquer approach based on the idea of choosing one element as a pivot element and 
 	 * partitioning the array around it such that: Left side of pivot contains all the elements that are less than the pivot element
 	 * Right side contains all elements greater than the pivot
+	 * 
+	 * Quick Sort is fast because that algorithm is randomized.
 	 */
 	public void quickSort(int[] a) {
 		qSort(a, 0, a.length - 1);

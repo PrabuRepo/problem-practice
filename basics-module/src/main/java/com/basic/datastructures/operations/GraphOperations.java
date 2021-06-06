@@ -2,6 +2,38 @@ package com.basic.datastructures.operations;
 
 import java.util.List;
 
+/*
+ * Graph Overview:
+ * 1.Basic Graph Theory
+ * 2.Graph Representations: 
+ *      - Adjacency Matrix Representation
+ * 		- Adjacency List Representation - Using LL array, Using List of List, Using Map
+ * 		- Edge List Representation
+ * 	    - Incidence Matrix Representation
+ *  3.Graph Traversals: DFS/BFS
+ *  4.Topological Sort: DFS/BFS(Kahn's Algorithm)
+ *  5.Detecting Cycles: DFS/BFS/UF
+ *  6.Shortest Path: 
+ *      - Bipartite Graph: ?
+ *      - BFS Algorithm to find the Shortest path
+ *  	- Single Source Shortest Paths using Dijikstra's Algorithm
+ *      - Single Source Shortest Paths(including negative edge weights) using Bellman-Ford Algorithm
+ *      - All-pairs Shortest paths on Dense Graphs(Floyd-Warshall Algorithm)
+ *      - All-pairs Shortest paths on Sparse Graphs(Johnson's Algorithm)
+ *  7.Minimum Spanning Tree:
+ *  	- Prim's Alg
+ *      - Kruskal's Alg
+ *  8.Bidirectional Search
+ *      - Best First
+ *      - A* 
+ *  9.Connected Components:
+ *      - Find Connected Components for Directed and Undirected Graphs
+ *  	- Terminologies: Bridges, Articulation Points, Strongly Connected Components
+ *      - Algorithms: Tarjan, Kosaraju
+ *  10.Graph Dynamic Connectivity:
+ *      - Union-Find or DisJoint set Data Structure
+ *  11.Grid Problems: DFS/BFS
+ */
 public interface GraphOperations {
 
 	// DG - Directed Graph
@@ -52,7 +84,7 @@ public interface GraphOperations {
 	// MST - Minimum Spanning Tree
 	/* A minimum spanning tree (MST) or minimum weight spanning tree for a weighted, connected and undirected graph is a spanning tree with
 	 * weight less than or equal to the weight of every other spanning tree. The weight of a spanning tree is the sum of weights given to 
-	 * each edge of the spanning tree. A minimum spanning tree has (V – 1) edges where V is the number of vertices in the given graph.
+	 * each edge of the spanning tree. A minimum spanning tree has (V - 1) edges where V is the number of vertices in the given graph.
 	 */
 	public void mstPrimsAlg();
 
@@ -63,13 +95,13 @@ public interface GraphOperations {
 
 	/*
 	 * Dijkstra follows Greed Alg; Bellmanford alg follows DP algorithms and it finds shortest paths from src to all vertices in the given graph.
-	 * Dijkstra doesn’t work for Graphs with negative weight edges, Bellman-Ford works for such graphs. Time complexity of Bellman-Ford is 
+	 * Dijkstra doesnï¿½t work for Graphs with negative weight edges, Bellman-Ford works for such graphs. Time complexity of Bellman-Ford is 
 	 * O(VE), which is more than Dijkstra.
 	 * 
 	 * How does this work? Like other Dynamic Programming Problems, the algorithm calculate shortest paths in bottom-up manner. It first
 	 * calculates the shortest distances which have at-most one edge in the path. Then, it calculates shortest paths with at-most 2 edges, 
 	 * and so on. After the i-th iteration of outer loop, the shortest paths with at most i edges are calculated. There can be maximum 
-	 * |V| – 1 edges in any simple path, that is why the outer loop runs |v| – 1 times.
+	 * |V| ï¿½ 1 edges in any simple path, that is why the outer loop runs |v| ï¿½ 1 times.
 	 */
 	public void spBellmanFordAlg(int source);
 

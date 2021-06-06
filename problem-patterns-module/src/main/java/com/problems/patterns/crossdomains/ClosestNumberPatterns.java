@@ -56,7 +56,7 @@ public class ClosestNumberPatterns {
 	}
 
 	/*
-	 * Search for closest the element – BS & record-and-move-on approach
+	 * Search for closest the element ï¿½ BS & record-and-move-on approach
 	 * Given the element is sorted
 	 */
 	public int searchClosestElement(int[] arr, int target) {

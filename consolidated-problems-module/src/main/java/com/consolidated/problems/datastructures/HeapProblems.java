@@ -1091,7 +1091,7 @@ public class HeapProblems {
 
 		return result;
 	}
-
+	
 	/* Fraudulent Activity Notifications:
 	 * Given the number of trailing days and a client's total daily expenditures for a period of days, find and print
 	 * the number of times the client will receive a notification over all days.

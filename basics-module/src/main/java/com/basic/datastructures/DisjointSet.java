@@ -8,7 +8,7 @@ import com.basic.datastructures.adv.operations.DisjointSetOperations;
 
 /*
  * 	Disjoint-Set/Union-Find is a datastructure that keeps track of elements which are split into one or more disjointsets.
- *  Disjoint-set data structure (also called a union–find data structure or merge–find set) is a data structure that tracks a set of
+ *  Disjoint-set data structure (also called a unionï¿½find data structure or mergeï¿½find set) is a data structure that tracks a set of
  *  elements partitioned into a number of disjoint (non-overlapping) subsets. It provides near-constant-time operations to add new sets,
  *  to merge existing sets, and to determine whether elements are in the same set
  * Operations :
@@ -28,6 +28,7 @@ import com.basic.datastructures.adv.operations.DisjointSetOperations;
  *  alpha(n) - Amortized constant time
  *     
  * Applications: 
+ *   - Union Find Data structure is used to handle Dynamic Connectivity. i.e Vertices and edges are keep changing.
  *   - Disjoint-set data structures model the partitioning of a set, for example to keep track of the connected components of an undirected graph.
  *   - This model can then be used to determine whether two vertices belong to the same component, or whether adding an edge between them would result in a cycle. 
  *   - This data structure is used by the Boost Graph Library to implement its Incremental Connected Components functionality.

@@ -193,7 +193,7 @@ public class GraphPatterns {
 
 	}
 
-	/*************************** Type3: Topo Sort(DFS/BFS(Kahn’s)) *******************/
+	/*************************** Type3: Topo Sort(DFS/BFS(Kahnï¿½s)) *******************/
 	//	Course Schedule II - Find course order - Using topo sort(reverse)
 	//BFS Solution: Time: O(V+E) and Space: O(V+E)
 	public int[] findOrder(int n, int[][] prereq) {
@@ -466,7 +466,7 @@ public class GraphPatterns {
 
 	/* The Celebrity Problem:
 	 * In a party of N people, only one person is known to everyone. Such a person may be present in the party, if yes,
-	 * (s)he doesn’t know anyone in the party. We can only ask questions like “does A know B? “. Find the stranger
+	 * (s)he doesnï¿½t know anyone in the party. We can only ask questions like ï¿½does A know B? ï¿½. Find the stranger
 	 * (celebrity) in minimum number of questions.
 	 */
 
@@ -516,7 +516,7 @@ public class GraphPatterns {
 			else stack.push(a);
 		}
 
-		// Check the remained person in stack doesn’t have acquaintance with anyone else.
+		// Check the remained person in stack doesnï¿½t have acquaintance with anyone else.
 		int celeb = stack.pop();
 		for (int i = 0; i < n; i++) {
 			// check celebrity in all the rows, if cond satisfies return -1;
@@ -587,4 +587,5 @@ public class GraphPatterns {
 		wordProblems.wordLadderII(null, null, null);
 	}
 
+	//TODO: Snake and Ladder Problem
 }
