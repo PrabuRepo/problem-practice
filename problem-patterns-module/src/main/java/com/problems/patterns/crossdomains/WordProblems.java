@@ -18,6 +18,9 @@ import com.common.model.TrieNode;
 import com.common.model.WordNode;
 
 public class WordProblems {
+	
+	KElementsPattern kElementsPattern;
+	
 	/* Shortest Word Distance:
 	 * words = ["practice", "makes", "perfect", "coding", "makes"]. 
 	 * Given word1 = "coding", word2 = "practice", Result: 3. 
@@ -62,7 +65,7 @@ public class WordProblems {
 	}
 
 	//Using Map to store the index - Time: O(n), Space: O(2n) = O(n)
-	public boolean wordPattern(String pattern, String str) {
+	public boolean wordPattern2(String pattern, String str) {
 		if (str == null || str.length() == 0 || pattern.length() == 0) return false;
 
 		//Use HashMap without specifying data type
@@ -93,11 +96,17 @@ public class WordProblems {
 		if (pattern.length() == 0 && str.length() == 0) return true;
 		if (pattern.length() == 0) return false;
 
-		HashMap<Character, String> map = new HashMap<Character, String>();
-		return helper(pattern, str, 0, 0, map);
+		HashMap<Character, String> map = new HashMap<>();
+		Set<String> set = new HashSet<>();
+		return helper(pattern, str, 0, 0, map, set);
 	}
 
-	public boolean helper(String pattern, String str, int i, int j, HashMap<Character, String> map) {
+	/*
+	 * Solution:
+	 *   Iterate the chars in str and Apply the Word Break I solution, if substr doesn't matches pattern
+	 *   remove substr from map and proceed with the next one. 
+	 */
+	public boolean helper(String pattern, String str, int i, int j, Map<Character, String> map, Set<String> set) {
 		if (i == pattern.length() && j == str.length()) return true;
 
 		if (i >= pattern.length() || j >= str.length()) return false;
@@ -105,15 +114,17 @@ public class WordProblems {
 		char pat = pattern.charAt(i); // pattern char
 		for (int k = j + 1; k <= str.length(); k++) {
 			String sub = str.substring(j, k);
-			if (!map.containsKey(pat) && !map.containsValue(sub)) {
+			if (!map.containsKey(pat) && !set.contains(sub)) {
 				map.put(pat, sub);
+				set.add(sub);
 
-				if (helper(pattern, str, i + 1, k, map)) return true;
+				if (helper(pattern, str, i + 1, k, map, set)) return true;
 
 				// Backtracking, remove and check from next index
 				map.remove(pat);
+				set.remove(sub);
 			} else if (map.containsKey(pat) && map.get(pat).equals(sub)) {
-				if (helper(pattern, str, i + 1, k, map)) return true;
+				if (helper(pattern, str, i + 1, k, map,set)) return true;
 			}
 		}
 
@@ -127,8 +138,8 @@ public class WordProblems {
 		if (pattern.length() == 0 && str.length() == 0) return true;
 		if (pattern.length() == 0) return false;
 
-		HashMap<Character, String> map = new HashMap<Character, String>();
-		HashSet<String> set = new HashSet<String>();
+		HashMap<Character, String> map = new HashMap<>();
+		HashSet<String> set = new HashSet<>();
 		return helper(pattern, str, 0, 0, map, set);
 	}
 
@@ -145,6 +156,8 @@ public class WordProblems {
 				map.put(c, sub);
 				set.add(sub);
 				if (helper(pattern, str, i + 1, k, map, set)) return true;
+				
+				// Backtracking, remove and check from next index
 				map.remove(c);
 				set.remove(sub);
 			} else if (map.containsKey(c) && map.get(c).equals(sub)) {
@@ -165,12 +178,22 @@ public class WordProblems {
 	 * 	Explanation: Return true because "leetcode" can be segmented as "leet code".
 	 * 	Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"] Output: false 
 	 */
+	
+	/* Solution:
+	 * This problem cane be solved by two ways,
+	 *   1.By iterating words in the dictionary and check whether word is present in string 
+	 *       - wordBreakI11 -> Bactracking solution
+	 *       - wordBreakI21 -> DP solution
+	 *   2.By iterating chars in the string and check whether substring is present in the dictionary.
+	 *       - wordBreakI12 -> Backtracking solution
+	 *       - wordBreakI22 -> DP solution 
+	 */
 	// Using DFS Search: It throws TLE
-	public boolean wordBreakI1(String s, List<String> wordDict) {
+	public boolean wordBreakI11(String s, List<String> wordDict) {
 		return wordBreakHelper(s, wordDict, 0);
 	}
 
-	public boolean wordBreakHelper(String s, List<String> dict, int index) {
+	private boolean wordBreakHelper(String s, List<String> dict, int index) {
 		if (index == s.length()) return true;
 
 		for (String word : dict) {
@@ -186,28 +209,26 @@ public class WordProblems {
 
 		return false;
 	}
-
-	// DP: Using only string length; Time: O(string length * string length); Space:O(n+dictSize)
-	public boolean wordBreakI2(String s, List<String> wordDict) {
-		int n = s.length();
-		boolean[] lookup = new boolean[n + 1];
-		lookup[0] = true;
-		Set<String> set = new HashSet<>();
-		set.addAll(wordDict);
-
-		for (int i = 0; i < n; i++) {
-			if (!lookup[i]) continue;
-			for (int j = i + 1; j <= n; j++)
-				if (set.contains(s.substring(i, j))) {
-					lookup[j] = true;
-				}
-		}
-
-		return lookup[n];
-	}
+	
+	   public boolean wordBreakI12(String s, List<String> wordDict) {
+	        return wordBreakHelper(s, new HashSet<String>(wordDict), 0);
+	    }
+	    
+	    public boolean wordBreakHelper(String s, Set<String> dict, int index){
+	        if(index == s.length()) return true;
+	        
+	        for(int i=index+1; i<=s.length(); i++){
+	            String sub = s.substring(index, i);
+	            if(!dict.contains(sub)) continue;
+	            
+	            if(wordBreakHelper(s, dict, i)) return true;            
+	        }
+	        
+	        return false;
+	    }
 
 	// DP: Using string length & dict size; Time: O(string length * dict size).
-	public boolean wordBreakI3(String s, List<String> wordDict) {
+	public boolean wordBreakI21(String s, List<String> wordDict) {
 		int n = s.length();
 		boolean[] lookup = new boolean[n + 1];
 		lookup[0] = true;
@@ -225,6 +246,24 @@ public class WordProblems {
 		return lookup[n];
 	}
 
+	// DP: Using only string length; Time: O(string length * string length); Space:O(n+dictSize)
+		public boolean wordBreakI22(String s, List<String> wordDict) {
+			int n = s.length();
+			boolean[] lookup = new boolean[n + 1];
+			lookup[0] = true;
+			Set<String> set = new HashSet<>();
+			set.addAll(wordDict);
+
+			for (int i = 0; i < n; i++) {
+				if (!lookup[i]) continue;
+				for (int j = i + 1; j <= n; j++)
+					if (set.contains(s.substring(i, j))) {
+						lookup[j] = true;
+					}
+			}
+
+			return lookup[n];
+		}
 	/*
 	 * Word Break II:
 	 * Return all such possible sentences.
@@ -240,7 +279,7 @@ public class WordProblems {
 		return result;
 	}
 
-	public void wordBreakHelper(String s, List<String> dict, int start, String str, List<String> result) {
+	private void wordBreakHelper(String s, List<String> dict, int start, String str, List<String> result) {
 		if (start == s.length()) {
 			result.add(str.trim());
 			return;
@@ -282,7 +321,7 @@ public class WordProblems {
 		return result;
 	}
 
-	public void dfs(List<String>[] lookup, List<String> result, String str, int i) {
+	private void dfs(List<String>[] lookup, List<String> result, String str, int i) {
 		if (i == 0) {
 			result.add(str.trim());
 		} else {
@@ -410,7 +449,7 @@ public class WordProblems {
 		return false;
 	}
 
-	public boolean dfsSearch(char[][] board, String word, int i, int j, int index) {
+	private boolean dfsSearch(char[][] board, String word, int i, int j, int index) {
 		int row = board.length, col = board[0].length;
 		if (i < 0 || i >= row || j < 0 || j >= col || index >= word.length() || word.charAt(index) != board[i][j]
 				|| board[i][j] == '#')
@@ -583,7 +622,7 @@ public class WordProblems {
 	/*
 	 * Time complexity: O(N * 26 * wordLength^2) time. where N=wordList.size(), M = Word length
 	 * For each word in the word list, we iterate over its length to find all the intermediate words corresponding to it. Since the length 
-	 * of each word is M and we have N words, the total number of iterations the algorithm takes M×N. Additionally, forming each of the 
+	 * of each word is M and we have N words, the total number of iterations the algorithm takes Mï¿½N. Additionally, forming each of the 
 	 * intermediate word takes O(M) time because of the substring operation used to create the new string. This adds up to a complexity of O(M^2*N).
 	 * Space complexity: O(wordList.size()) space. Because we add all words into a HashSet, and queue and seen set can't have more than wordList.size() elements.
 	 */
@@ -883,42 +922,11 @@ public class WordProblems {
 	 * from highest to lowest. If two words have the same frequency, then the word with the lower alphabetical order comes first.
 	 * Example 1: Input: ["i", "love", "leetcode", "i", "love", "coding"], k = 2; Output: ["i", "love"]
 	 */
-	// Approach1: using Map & Sorting -> Time Complexity - O(nlogn)
-	public List<String> topKFrequent(String[] words, int k) {
-		Map<String, Integer> count = new HashMap<>();
-		for (String word : words) {
-			count.put(word, count.getOrDefault(word, 0) + 1);
-		}
-		List<String> candidates = new ArrayList<>(count.keySet());
-		Collections.sort(candidates,
-				(w1, w2) -> count.get(w1).equals(count.get(w2)) ? w1.compareTo(w2) : count.get(w2) - count.get(w1));
-
-		return candidates.subList(0, k);
+	public void topKFrequentWords(String[] words, int k) {
+		kElementsPattern.topKFrequentWords(words, k);
 	}
-
-	// Approach2: using Map & Heap -> Time Complexity - O(nlogk)
-	public List<String> topKFrequent2(String[] words, int k) {
-		if (words.length == 0 || k == 0) return null;
-
-		HashMap<String, Integer> map = new HashMap<>();
-		for (String word : words)
-			map.put(word, map.getOrDefault(word, 0) + 1);
-
-		PriorityQueue<Map.Entry<String, Integer>> queue = new PriorityQueue<>((a, b) -> {
-			if (a.getValue() == b.getValue()) return a.getKey().compareTo(b.getKey());
-			return b.getValue() - a.getValue();
-		});
-
-		for (Map.Entry<String, Integer> entry : map.entrySet())
-			queue.add(entry);
-
-		List<String> result = new ArrayList<>();
-		while (!queue.isEmpty() && result.size() < k) {
-			result.add(queue.poll().getKey());
-		}
-		return result;
-	}
-
+	
+	
 	// Crossword Puzzle: DFS & Backtracking
 	public char[][] solvePuzzle(char[][] grid, String words) {
 		return search(grid, Arrays.stream(words.split(";")).collect(Collectors.toSet()), 0, 0, 0);
