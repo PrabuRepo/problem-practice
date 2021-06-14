@@ -2,7 +2,6 @@ package com.problems.patterns.crossdomains;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -18,9 +17,9 @@ import com.common.model.TrieNode;
 import com.common.model.WordNode;
 
 public class WordProblems {
-	
+
 	KElementsPattern kElementsPattern;
-	
+
 	/* Shortest Word Distance:
 	 * words = ["practice", "makes", "perfect", "coding", "makes"]. 
 	 * Given word1 = "coding", word2 = "practice", Result: 3. 
@@ -41,7 +40,7 @@ public class WordProblems {
 	/* Word Pattern: Example 1: Input: pattern = "abba", 
 	 * str = "dog cat cat dog";  Output: true
 	 */
-	//Using Map & Set - Time: O(n), Space: O(2n) = O(n)
+	//Approach1: Using Map & Set - Time: O(n), Space: O(2n) = O(n)
 	public boolean wordPattern1(String pattern, String str) {
 		if (str == null || str.length() == 0 || pattern.length() == 0) return false;
 
@@ -53,33 +52,35 @@ public class WordProblems {
 
 		for (int i = 0; i < words.length; i++) {
 			char ch = pattern.charAt(i);
-			if (!map.containsKey(ch)) {
-				if (!set.add(words[i])) return false;
-				map.put(ch, words[i]);
-			} else {
+			if (map.containsKey(ch)) {
 				if (!map.get(ch).equals(words[i])) return false;
+			} else {
+				//Validation to check any duplicate word present in the words array
+				if (!set.add(words[i])) return false;
+
+				map.put(ch, words[i]);
 			}
 		}
 
 		return true;
 	}
 
-	//Using Map to store the index - Time: O(n), Space: O(2n) = O(n)
+	//Approach2: Using two Maps to store the index - Time: O(n), Space: O(2n) = O(n)
 	public boolean wordPattern2(String pattern, String str) {
 		if (str == null || str.length() == 0 || pattern.length() == 0) return false;
 
-		//Use HashMap without specifying data type
-		Map map = new HashMap();
+		Map<Character, Integer> charsMap = new HashMap<>();
+		Map<String, Integer> wordsMap = new HashMap<>();
 		String[] words = str.split(" ");
 
 		if (pattern.length() != words.length) return false;
 
 		for (int i = 0; i < words.length; i++) {
 			char ch = pattern.charAt(i);
-			if (!map.containsKey(ch)) map.put(ch, i);
-			if (!map.containsKey(words[i])) map.put(words[i], i);
+			if (!charsMap.containsKey(ch)) charsMap.put(ch, i);
+			if (!wordsMap.containsKey(words[i])) wordsMap.put(words[i], i);
 
-			if (!map.get(ch).equals(map.get(words[i]))) return false;
+			if (!charsMap.get(ch).equals(wordsMap.get(words[i]))) return false;
 		}
 
 		return true;
@@ -88,9 +89,11 @@ public class WordProblems {
 	/*
 	 * Word Pattern II: Given a pattern and a string str, find if str follows the same pattern.
 	 * Here non-empty substring in str.
-	 * 	Examples:	pattern = "abab", str = "redblueredblue" should return true.
-	 * 				pattern = "aaaa", str = "asdasdasdasd" should return true.
-	 * 				pattern = "aabb", str = "xyzabcxzyabc" should return false.
+	 * 	Examples:	
+	 * 		pattern = "cdcd", str = "xyabxyab" should return true.
+	 * 		pattern = "abab", str = "redblueredblue" should return true.
+	 * 		pattern = "aaaa", str = "asdasdasdasd" should return true.
+	 * 		pattern = "aabb", str = "xyzabcxzyabc" should return false.
 	 */
 	public boolean wordPatternMatch1(String pattern, String str) {
 		if (pattern.length() == 0 && str.length() == 0) return true;
@@ -124,7 +127,7 @@ public class WordProblems {
 				map.remove(pat);
 				set.remove(sub);
 			} else if (map.containsKey(pat) && map.get(pat).equals(sub)) {
-				if (helper(pattern, str, i + 1, k, map,set)) return true;
+				if (helper(pattern, str, i + 1, k, map, set)) return true;
 			}
 		}
 
@@ -156,7 +159,7 @@ public class WordProblems {
 				map.put(c, sub);
 				set.add(sub);
 				if (helper(pattern, str, i + 1, k, map, set)) return true;
-				
+
 				// Backtracking, remove and check from next index
 				map.remove(c);
 				set.remove(sub);
@@ -178,7 +181,7 @@ public class WordProblems {
 	 * 	Explanation: Return true because "leetcode" can be segmented as "leet code".
 	 * 	Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"] Output: false 
 	 */
-	
+
 	/* Solution:
 	 * This problem cane be solved by two ways,
 	 *   1.By iterating words in the dictionary and check whether word is present in string 
@@ -209,23 +212,23 @@ public class WordProblems {
 
 		return false;
 	}
-	
-	   public boolean wordBreakI12(String s, List<String> wordDict) {
-	        return wordBreakHelper(s, new HashSet<String>(wordDict), 0);
-	    }
-	    
-	    public boolean wordBreakHelper(String s, Set<String> dict, int index){
-	        if(index == s.length()) return true;
-	        
-	        for(int i=index+1; i<=s.length(); i++){
-	            String sub = s.substring(index, i);
-	            if(!dict.contains(sub)) continue;
-	            
-	            if(wordBreakHelper(s, dict, i)) return true;            
-	        }
-	        
-	        return false;
-	    }
+
+	public boolean wordBreakI12(String s, List<String> wordDict) {
+		return wordBreakHelper(s, new HashSet<String>(wordDict), 0);
+	}
+
+	public boolean wordBreakHelper(String s, Set<String> dict, int index) {
+		if (index == s.length()) return true;
+
+		for (int i = index + 1; i <= s.length(); i++) {
+			String sub = s.substring(index, i);
+			if (!dict.contains(sub)) continue;
+
+			if (wordBreakHelper(s, dict, i)) return true;
+		}
+
+		return false;
+	}
 
 	// DP: Using string length & dict size; Time: O(string length * dict size).
 	public boolean wordBreakI21(String s, List<String> wordDict) {
@@ -247,23 +250,24 @@ public class WordProblems {
 	}
 
 	// DP: Using only string length; Time: O(string length * string length); Space:O(n+dictSize)
-		public boolean wordBreakI22(String s, List<String> wordDict) {
-			int n = s.length();
-			boolean[] lookup = new boolean[n + 1];
-			lookup[0] = true;
-			Set<String> set = new HashSet<>();
-			set.addAll(wordDict);
+	public boolean wordBreakI22(String s, List<String> wordDict) {
+		int n = s.length();
+		boolean[] lookup = new boolean[n + 1];
+		lookup[0] = true;
+		Set<String> set = new HashSet<>();
+		set.addAll(wordDict);
 
-			for (int i = 0; i < n; i++) {
-				if (!lookup[i]) continue;
-				for (int j = i + 1; j <= n; j++)
-					if (set.contains(s.substring(i, j))) {
-						lookup[j] = true;
-					}
-			}
-
-			return lookup[n];
+		for (int i = 0; i < n; i++) {
+			if (!lookup[i]) continue;
+			for (int j = i + 1; j <= n; j++)
+				if (set.contains(s.substring(i, j))) {
+					lookup[j] = true;
+				}
 		}
+
+		return lookup[n];
+	}
+
 	/*
 	 * Word Break II:
 	 * Return all such possible sentences.
@@ -279,20 +283,21 @@ public class WordProblems {
 		return result;
 	}
 
-	private void wordBreakHelper(String s, List<String> dict, int start, String str, List<String> result) {
-		if (start == s.length()) {
+	private void wordBreakHelper(String s, List<String> dict, int index, String str, List<String> result) {
+		if (index == s.length()) {
 			result.add(str.trim());
 			return;
 		}
 
 		for (String word : dict) {
-			int end = start + word.length();
+			int end = index + word.length();
 
 			if (end > s.length()) continue;
 
-			String substr = s.substring(start, end);
-			if (substr.equals(word)) wordBreakHelper(s, dict, end, str + " " + substr, result);
-
+			String substr = s.substring(index, end);
+			if (substr.equals(word)) {
+				wordBreakHelper(s, dict, end, str + " " + substr, result);
+			}
 		}
 	}
 
@@ -622,7 +627,7 @@ public class WordProblems {
 	/*
 	 * Time complexity: O(N * 26 * wordLength^2) time. where N=wordList.size(), M = Word length
 	 * For each word in the word list, we iterate over its length to find all the intermediate words corresponding to it. Since the length 
-	 * of each word is M and we have N words, the total number of iterations the algorithm takes Mï¿½N. Additionally, forming each of the 
+	 * of each word is M and we have N words, the total number of iterations the algorithm takes M×N. Additionally, forming each of the 
 	 * intermediate word takes O(M) time because of the substring operation used to create the new string. This adds up to a complexity of O(M^2*N).
 	 * Space complexity: O(wordList.size()) space. Because we add all words into a HashSet, and queue and seen set can't have more than wordList.size() elements.
 	 */
@@ -925,8 +930,7 @@ public class WordProblems {
 	public void topKFrequentWords(String[] words, int k) {
 		kElementsPattern.topKFrequentWords(words, k);
 	}
-	
-	
+
 	// Crossword Puzzle: DFS & Backtracking
 	public char[][] solvePuzzle(char[][] grid, String words) {
 		return search(grid, Arrays.stream(words.split(";")).collect(Collectors.toSet()), 0, 0, 0);

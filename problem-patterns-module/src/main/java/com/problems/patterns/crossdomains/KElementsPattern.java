@@ -25,7 +25,7 @@ import com.common.model.TreeNode;
  *     - K Closest Elements from given target
  */
 public class KElementsPattern {
-	
+
 	/********************** 2.Find top K frequent elements *************************/
 	/* Top K Frequent Elements:
 	 * Find top k (or most frequent) numbers in a stream:
@@ -38,8 +38,7 @@ public class KElementsPattern {
 		topKFrequentElements13(nums, k);
 		topKFrequentElements2(nums, k);
 	}
-	
-	
+
 	/* Top K Frequent Words:
 	 * Given a non-empty list of words, return the k most frequent elements.
 	 * Your answer should be sorted by frequency from highest to lowest. If two words have the same frequency, then the word 
@@ -49,13 +48,12 @@ public class KElementsPattern {
 	 * 	Output: ["i", "love"]
 	 * 	Explanation: "i" and "love" are the two most frequent words.
 	 * 	Note that "i" comes before "love" due to a lower alphabetical order.
-	 */	
+	 */
 	public void topKFrequentWords(String[] words, int k) {
 		topKFrequentWords1(words, k);
 		topKFrequentWords2(words, k);
 	}
-	
-	
+
 	/* Rearrange String K Distance Apart:
 	 * Given a non-empty string str and an integer k, rearrange the string such that the same characters are at least
 	 * distance k from each other. All input strings are given in lowercase letters. If it is not possible to rearrange
@@ -220,7 +218,6 @@ public class KElementsPattern {
 		return cnt;
 	}
 
-	
 	/*
 	 *  Sort Characters By Frequency:
 	 *  Given a string, sort it in decreasing order based on the frequency of characters.
@@ -279,183 +276,181 @@ public class KElementsPattern {
 		}
 		return sb.toString();
 	}
-	
-	
+
 	// Approach1: Using Hashmap & Heap; Time Complexity: O(nlogk)
-		public List<Integer> topKFrequentElements11(int[] nums, int k) {
-			int n = nums.length;
-			if (n == 0 || k == 0) return null;
+	public List<Integer> topKFrequentElements11(int[] nums, int k) {
+		int n = nums.length;
+		if (n == 0 || k == 0) return null;
 
-			// 1.Count the frequency of elements
-			Map<Integer, Integer> map = new HashMap<>();
-			for (int i = 0; i < n; i++)
-				map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+		// 1.Count the frequency of elements
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++)
+			map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
 
-			if (map.size() < k) return null;
+		if (map.size() < k) return null;
 
-			// 2.Create a min Heap based on count(freq of elements)
-			PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> map.get(a) - map.get(b));
+		// 2.Create a min Heap based on count(freq of elements)
+		PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> map.get(a) - map.get(b));
 
-			// 3.Insert the elements one by one in queue and maintain k elements in PQ; Time-O(nlogk)
-			for (Integer key : map.keySet()) {
-				queue.add(key);
-				if (queue.size() > k) queue.poll();
-			}
-
-			//4.Arrange Elements in Decreasing order; Because queue(min heap) returns elements in increasing order.
-			List<Integer> result = new ArrayList<>();
-			while (!queue.isEmpty() && result.size() < k) {
-				result.add(queue.poll());
-			}
-			Collections.reverse(result);
-
-			return result;
+		// 3.Insert the elements one by one in queue and maintain k elements in PQ; Time-O(nlogk)
+		for (Integer key : map.keySet()) {
+			queue.add(key);
+			if (queue.size() > k) queue.poll();
 		}
 
-		// Approach1: Same solution but here priority queue uses Entry map
-		public List<Integer> topKFrequentElements12(int[] nums, int k) {
-			int n = nums.length;
+		//4.Arrange Elements in Decreasing order; Because queue(min heap) returns elements in increasing order.
+		List<Integer> result = new ArrayList<>();
+		while (!queue.isEmpty() && result.size() < k) {
+			result.add(queue.poll());
+		}
+		Collections.reverse(result);
 
-			if (n == 0 || k == 0) return null;
+		return result;
+	}
 
-			// Count the frequency of elements
-			Map<Integer, Integer> map = new HashMap<>(); // Key - Element; Value - Count
-			for (int i = 0; i < n; i++) {
-				map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
-			}
+	// Approach1: Same solution but here priority queue uses Entry map
+	public List<Integer> topKFrequentElements12(int[] nums, int k) {
+		int n = nums.length;
 
-			if (map.size() < k) return null;
+		if (n == 0 || k == 0) return null;
 
-			// Create a min Heap based on count(freq of elements)
-			PriorityQueue<Map.Entry<Integer, Integer>> queue = new PriorityQueue<>((a, b) -> a.getValue() - b.getValue());
-
-			// Insert the elements one by one in queue and maintain k elements in PQ
-			for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-				queue.add(entry);
-				if (queue.size() > k) queue.poll();
-			}
-			// Insert the queue values in result
-			List<Integer> result = new ArrayList<>();
-			while (!queue.isEmpty() && result.size() < k) {
-				result.add(queue.poll().getKey());
-			}
-
-			Collections.reverse(result);
-			return result;
+		// Count the frequency of elements
+		Map<Integer, Integer> map = new HashMap<>(); // Key - Element; Value - Count
+		for (int i = 0; i < n; i++) {
+			map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
 		}
 
-		// Approach1: Same problem but here return type is array:
-		public int[] topKFrequentElements13(int[] nums, int k) {
-			int n = nums.length;
+		if (map.size() < k) return null;
 
-			// Count the frequency of elements
-			Map<Integer, Integer> map = new HashMap<>(); // Key - Element; Value - Count
-			for (int i = 0; i < n; i++) {
-				int count = map.getOrDefault(nums[i], 0);
-				map.put(nums[i], count + 1);
-			}
+		// Create a min Heap based on count(freq of elements)
+		PriorityQueue<Map.Entry<Integer, Integer>> queue = new PriorityQueue<>((a, b) -> a.getValue() - b.getValue());
 
-			if (map.size() < k) return null;
-
-			// Create a min Heap based on count(freq of elements)
-			PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> map.get(a) - map.get(b));
-
-			// Insert the elements one by one in queue and maintain k elements in PQ
-			for (Integer key : map.keySet()) {
-				queue.add(key);
-				if (queue.size() > k) queue.poll();
-			}
-
-			// Insert the queue values in result 
-			int[] result = new int[k];
-			for (int i = k - 1; i >= 0; --i) {
-				result[i] = queue.poll();
-			}
-
-			return result;
+		// Insert the elements one by one in queue and maintain k elements in PQ
+		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			queue.add(entry);
+			if (queue.size() > k) queue.poll();
+		}
+		// Insert the queue values in result
+		List<Integer> result = new ArrayList<>();
+		while (!queue.isEmpty() && result.size() < k) {
+			result.add(queue.poll().getKey());
 		}
 
-		// Approach2: Using Hashmap & Bucket Sort; Time Complexity: O(n)
-		public List<Integer> topKFrequentElements2(int[] nums, int k) {
-			int n = nums.length;
-			if (n == 0 || k == 0) return null;
+		Collections.reverse(result);
+		return result;
+	}
 
-			// Count the frequency of elements
-			Map<Integer, Integer> map = new HashMap<>();
-			for (int i = 0; i < n; i++)
-				map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+	// Approach1: Same problem but here return type is array:
+	public int[] topKFrequentElements13(int[] nums, int k) {
+		int n = nums.length;
 
-			// get the max frequency
-			int max = 0;
-			for (Map.Entry<Integer, Integer> entry : map.entrySet())
-				max = Math.max(max, entry.getValue());
+		// Count the frequency of elements
+		Map<Integer, Integer> map = new HashMap<>(); // Key - Element; Value - Count
+		for (int i = 0; i < n; i++) {
+			int count = map.getOrDefault(nums[i], 0);
+			map.put(nums[i], count + 1);
+		}
 
-			// Bucket Sorting
-			ArrayList<Integer>[] buckets = new ArrayList[max + 1];
-			for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-				if (buckets[entry.getValue()] == null) buckets[entry.getValue()] = new ArrayList<>();
-				buckets[entry.getValue()].add(entry.getKey());
-			}
+		if (map.size() < k) return null;
 
-			List<Integer> result = new ArrayList<Integer>();
+		// Create a min Heap based on count(freq of elements)
+		PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> map.get(a) - map.get(b));
 
-			// add most frequent numbers to result
-			for (int i = max; i >= 1 && result.size() < k; i--) { // Start from max value
-				if (buckets[i] != null && buckets[i].size() > 0) {
-					// If there is more than one element in the same count
-					for (int a : buckets[i]) {
-						if (result.size() == k) // if size==k, stop
-							break;
-						result.add(a);
-					}
+		// Insert the elements one by one in queue and maintain k elements in PQ
+		for (Integer key : map.keySet()) {
+			queue.add(key);
+			if (queue.size() > k) queue.poll();
+		}
+
+		// Insert the queue values in result 
+		int[] result = new int[k];
+		for (int i = k - 1; i >= 0; --i) {
+			result[i] = queue.poll();
+		}
+
+		return result;
+	}
+
+	// Approach2: Using Hashmap & Bucket Sort; Time Complexity: O(n)
+	public List<Integer> topKFrequentElements2(int[] nums, int k) {
+		int n = nums.length;
+		if (n == 0 || k == 0) return null;
+
+		// Count the frequency of elements
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++)
+			map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+
+		// get the max frequency
+		int max = 0;
+		for (Map.Entry<Integer, Integer> entry : map.entrySet())
+			max = Math.max(max, entry.getValue());
+
+		// Bucket Sorting
+		ArrayList<Integer>[] buckets = new ArrayList[max + 1];
+		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+			if (buckets[entry.getValue()] == null) buckets[entry.getValue()] = new ArrayList<>();
+			buckets[entry.getValue()].add(entry.getKey());
+		}
+
+		List<Integer> result = new ArrayList<Integer>();
+
+		// add most frequent numbers to result
+		for (int i = max; i >= 1 && result.size() < k; i--) { // Start from max value
+			if (buckets[i] != null && buckets[i].size() > 0) {
+				// If there is more than one element in the same count
+				for (int a : buckets[i]) {
+					if (result.size() == k) // if size==k, stop
+						break;
+					result.add(a);
 				}
 			}
-
-			return result;
-		}
-	
-		//TODO: Rewrite this because below solution takes O(nlogn) time
-		// Approach1: using Map & Sorting -> Time Complexity - O(nlogk) 
-		public List<String> topKFrequentWords1(String[] words, int k) {
-			Map<String, Integer> count = new HashMap<>();
-			for (String word : words) {
-				count.put(word, count.getOrDefault(word, 0) + 1);
-			}
-			List<String> candidates = new ArrayList(count.keySet());
-			Collections.sort(candidates,
-					(w1, w2) -> count.get(w1).equals(count.get(w2)) ? w1.compareTo(w2) : count.get(w2) - count.get(w1));
-
-			return candidates.subList(0, k);
 		}
 
-		// Approach2: using Map & Heap -> Time Complexity - O(nlogn)
-		public List<String> topKFrequentWords2(String[] words, int k) {
-			if (words.length == 0 || k == 0) return null;
+		return result;
+	}
 
-			HashMap<String, Integer> map = new HashMap<>();
-			for (String word : words)
-				map.put(word, map.getOrDefault(word, 0) + 1);
-
-			PriorityQueue<Map.Entry<String, Integer>> queue = new PriorityQueue<>((a, b) -> {
-				if (a.getValue() == b.getValue()) return a.getKey().compareTo(b.getKey());
-				return b.getValue() - a.getValue();
-			});
-
-			//Time for this step: O(nlogn)
-			for (Map.Entry<String, Integer> entry : map.entrySet())
-				queue.add(entry);
-
-			List<String> result = new ArrayList<>();
-			while (!queue.isEmpty() && result.size() < k) {
-				result.add(queue.poll().getKey());
-			}
-
-			return result;
+	//TODO: Rewrite this because below solution takes O(nlogn) time
+	// Approach1: using Map & Sorting -> Time Complexity - O(nlogk) 
+	public List<String> topKFrequentWords1(String[] words, int k) {
+		Map<String, Integer> count = new HashMap<>();
+		for (String word : words) {
+			count.put(word, count.getOrDefault(word, 0) + 1);
 		}
-	
-	
+		List<String> candidates = new ArrayList(count.keySet());
+		Collections.sort(candidates,
+				(w1, w2) -> count.get(w1).equals(count.get(w2)) ? w1.compareTo(w2) : count.get(w2) - count.get(w1));
+
+		return candidates.subList(0, k);
+	}
+
+	// Approach2: using Map & Heap -> Time Complexity - O(nlogn)
+	public List<String> topKFrequentWords2(String[] words, int k) {
+		if (words.length == 0 || k == 0) return null;
+
+		HashMap<String, Integer> map = new HashMap<>();
+		for (String word : words)
+			map.put(word, map.getOrDefault(word, 0) + 1);
+
+		PriorityQueue<Map.Entry<String, Integer>> queue = new PriorityQueue<>((a, b) -> {
+			if (a.getValue() == b.getValue()) return a.getKey().compareTo(b.getKey());
+			return b.getValue() - a.getValue();
+		});
+
+		//Time for this step: O(nlogn)
+		for (Map.Entry<String, Integer> entry : map.entrySet())
+			queue.add(entry);
+
+		List<String> result = new ArrayList<>();
+		while (!queue.isEmpty() && result.size() < k) {
+			result.add(queue.poll().getKey());
+		}
+
+		return result;
+	}
+
 	/********************** 2.K elements/K Closest Elements Problems *************************/
-	
+
 	//K Closest Points to Origin – Solved using Kth element pattern
 	/*
 	 * 'K' Closest Points to the Origin: 
@@ -610,21 +605,20 @@ public class KElementsPattern {
 		}
 		return res;
 	}
-	
-	
+
 	ClosestNumberPatterns closestNumberPatterns;
-	
+
 	//Find K closest elements - Binary Search
 	public void kclosestElements(int[] arr, int k, int x) {
 		closestNumberPatterns.findKClosestElements1(arr, k, x);
 		closestNumberPatterns.findKClosestElements2(arr, k, x);
 		closestNumberPatterns.findKClosestElements3(arr, k, x);
 	}
-	
+
 	//Closest Binary Search Tree Value II/Find K closest values in BST
 	public void kClosestValuesInBST(TreeNode root, double target, int k) {
 		closestNumberPatterns.closestKValues1(root, target, k);
 		closestNumberPatterns.closestKValues2(root, target, k);
 	}
-	
+
 }

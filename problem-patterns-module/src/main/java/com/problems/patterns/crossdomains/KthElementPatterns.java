@@ -24,6 +24,7 @@ import com.problems.patterns.ds.MatrixPatterns;
 
 public class KthElementPatterns {
 	MatrixPatterns matrixPatterns = new MatrixPatterns();
+
 	/********************* Search Kth element *************************/
 	// Kth Smallest Element in Unsorted Array
 	/* Find the kth Smallest element in an unsorted array. Note that it is the kth largest element in the sorted order,
@@ -143,8 +144,6 @@ public class KthElementPatterns {
 		return queue.size() < k ? -1 : queue.peek();
 	}
 
-	
-
 	//	Kth Smallest/Largest Element in a BST 
 	/*
 	 * Kth Smallest Element in a BST:
@@ -229,16 +228,15 @@ public class KthElementPatterns {
 		kthSmallest(root.left, queue, k);
 		kthSmallest(root.right, queue, k);
 	}
-	
-	
-	/*********************** Kth Element using K-way merge approach*****************/
+
+	/*********************** Kth Element using K-way merge approach *****************/
 	/*
 	 *  2-Dimensional Kth elements can be solved using K-way merge approach 
 	 *  	- Kth Smallest Element in a Sorted Matrix
 	 *  	- Kth Smallest Number in Multiplication Table
 	 *  	- Kth Smallest Number in M Sorted Lists
 	 */
-	
+
 	/* Kth Smallest Element in a Sorted Matrix: 
 	 * Given a n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest element in the matrix.
 	 * Note that it is the kth smallest element in the sorted order, not the kth distinct element.

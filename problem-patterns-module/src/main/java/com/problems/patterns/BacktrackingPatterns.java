@@ -15,9 +15,8 @@ import com.problems.patterns.crossdomains.WordProblems;
  * 	All the problems here follows the auxiliary buffer technique
  */
 public class BacktrackingPatterns {
-	
+
 	WordProblems wordProblems;
-	
 
 	/* Factor Combinations
 	 * Numbers can be regarded as product of its factors. For example, 
@@ -326,56 +325,53 @@ public class BacktrackingPatterns {
 		}
 	}
 
-	
-	/********************* Other Backtracking Problems**************/
+	/********************* Other Backtracking Problems **************/
 	public void wordPattern(String pattern, String str) {
 		//Word Pattern I
 		wordProblems.wordPattern1(pattern, str);
 		wordProblems.wordPattern2(pattern, str);
-		
+
 		//Word Pattern II
 		wordProblems.wordPatternMatch1(pattern, str);
 		wordProblems.wordPatternMatch2(pattern, str);
 	}
-	
-	
+
 	public void wordBreak(String s, List<String> wordDict) {
 		//Word Break I		
 		wordProblems.wordBreakI11(s, wordDict);
 		wordProblems.wordBreakI12(s, wordDict);
 		wordProblems.wordBreakI21(s, wordDict);
 		wordProblems.wordBreakI22(s, wordDict);
-		
+
 		//Word Break II
 		wordProblems.wordBreakII1(s, wordDict);
-		wordProblems.wordBreakII2(s, wordDict);		
+		wordProblems.wordBreakII2(s, wordDict);
 	}
-	
+
 	public void wordSquares(String[] words) {
 		wordProblems.wordSquares(words);
 	}
-	
-	
+
 	//Word Search or Word Boggle
 	public void wordSearch(char[][] board, String str, String[] words) {
 		//Word Search I
 		wordProblems.wordSearchI(board, str);
-		
+
 		//Word Search II
 		wordProblems.wordSearchII1(board, words);
 		wordProblems.wordSearchII2(board, words);
 		wordProblems.wordSearchII3(board, words);
 	}
-	
+
 	public void wordLadder(String beginWord, String endWord, List<String> wordList) {
 		// Word Ladder I
 		wordProblems.wordLadderI1(beginWord, endWord, wordList);
 		wordProblems.wordLadderI2(beginWord, endWord, wordList);
-		
+
 		//Word Ladder II
 		wordProblems.wordLadderII(beginWord, endWord, wordList);
 	}
-	
+
 	public static void main(String[] args) {
 		BacktrackingPatterns ob = new BacktrackingPatterns();
 		System.out.println("Factor Combinations: ");
