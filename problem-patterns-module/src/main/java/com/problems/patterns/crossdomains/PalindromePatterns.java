@@ -7,23 +7,93 @@ import com.problems.patterns.StringProblems;
 import com.problems.patterns.dp.DPStringPatterns;
 import com.problems.patterns.ds.FastAndSlowPtrPatterns;
 
+/*
+ * Palindrome Problem Patterns have three catagories,
+ * 	1. Number: Here reverse the whole number and compare
+ * 	2. LinkedList: Here reverse the second half and compare with first half of the list
+ *  3. String: Compare char from both side and move towards mid to check the palindrome string
+ */
 public class PalindromePatterns {
 
-	StringProblems stringProblems = new StringProblems();
+	private StringProblems stringProblems;
 
-	MathProblems mathProblems = new MathProblems();
+	private MathProblems mathProblems;
 
-	FastAndSlowPtrPatterns fastAndSlowPtrPatterns = new FastAndSlowPtrPatterns();
+	private FastAndSlowPtrPatterns fastAndSlowPtrPatterns;
 
-	DPStringPatterns dpStringPatterns = new DPStringPatterns();
+	private DPStringPatterns dpStringPatterns;
 
-	BacktrackingPatterns backtrackingPatterns = new BacktrackingPatterns();
+	private BacktrackingPatterns backtrackingPatterns;
 
+	/************************** Palindrome Number Problems ***********************************/
 	//Palindrome Number  
 	public void palindromeNumber(int num) {
 		mathProblems.isPalindrome(num);
 	}
 
+	/* Find the Closest Palindrome
+	 *  Example: 
+	 *  	Input: 7599; Output: 7557
+	 *  	Input: 7501; Output: 7447
+	 *  	Input: 9999; Output: 10001
+	 *  	Input: 10000; Output: 9999
+	 */
+	public String closestPalindrome(String n) {
+		Long num = Long.valueOf(new String(n));
+
+		//Order used to eliminate second half of digits
+		int order = (int) Math.pow(10, n.length() / 2);
+
+		/* 3 cases to mid: Example for 7599,
+		 *   1. Same mid: 7557
+		 *   2. Increase one to mid to get 7667
+		 *   3. Decrease one to mid to get 7447
+		 */
+		//1.Same mid
+		Long mirrorNum = mirror(num);
+
+		//2.Increase 1 to mid and also handles input like 9,99,999...
+		Long mirrorLarger = mirror((num / order) * order + order);
+
+		//3.Decrease 1 to mid and also handles input like 10,100,1000...
+		Long mirrorSmaller = mirror((num / order) * order - 1);
+
+		//Below logic to find the closest to given number
+		if (mirrorNum > num) {
+			mirrorLarger = (long) Math.min(mirrorLarger, mirrorNum);
+		} else if (mirrorNum < num) {
+			mirrorSmaller = (long) Math.max(mirrorSmaller, mirrorNum);
+		}
+
+		Long closestValue = Math.abs(num - mirrorSmaller) <= Math.abs(mirrorLarger - num) ? mirrorSmaller
+				: mirrorLarger;
+		return String.valueOf(closestValue);
+	}
+
+	/*
+	 * Example for Mirror:
+	 * 	7599 become 7557
+	 *  7400 become 7447
+	 *  7600 become 7669
+	 */
+	private Long mirror(Long ans) {
+		char[] a = String.valueOf(ans).toCharArray();
+		int i = 0;
+		int j = a.length - 1;
+		while (i < j) {
+			a[j--] = a[i++];
+		}
+		return Long.valueOf(new String(a));
+	}
+
+	/**************************** Palindrome Linked List Problems *********************************/
+	//Palindrome Linked List
+	public void palindromeLinkedList(ListNode head) {
+		fastAndSlowPtrPatterns.isPalindrome1(head);
+		fastAndSlowPtrPatterns.isPalindrome2(head);
+	}
+
+	/***************************** Palindrome String Problems ********************************/
 	//Valid Palindrome I
 	public void validPalindromeI(String str) {
 		stringProblems.isPalindrome11(str);
@@ -35,44 +105,6 @@ public class PalindromePatterns {
 	public void validPalindromeII(String str) {
 		stringProblems.validPalindrome2(str);
 	}
-
-	//Find the Closest Palindrome
-	public String closestPalindrome(String n) {
-		int order = (int) Math.pow(10, n.length() / 2);//Order used to eliminate half of digits
-		Long num = Long.valueOf(new String(n));
-		Long mirrorNum = mirror(num); //Same mid
-		//Two Cases: 1.Increase 1 to mid;  2.handles input like 9, 99...
-		Long mirrorLarger = mirror((num / order) * order + order);
-		//Two Cases: 1.Decrease 1 to mid & 2.handles input like 10, 100...
-		Long mirrorSmaller = mirror((num / order) * order - 1);
-
-		if (mirrorNum > num) {
-			mirrorLarger = (long) Math.min(mirrorNum, mirrorLarger);
-		} else if (mirrorNum < num) {
-			mirrorSmaller = (long) Math.max(mirrorNum, mirrorSmaller);
-		}
-		return String.valueOf(num - mirrorSmaller <= mirrorLarger - num ? mirrorSmaller : mirrorLarger);
-	}
-
-	Long mirror(Long ans) {
-		char[] a = String.valueOf(ans).toCharArray();
-		int i = 0;
-		int j = a.length - 1;
-		while (i < j) {
-			a[j--] = a[i++];
-		}
-		return Long.valueOf(new String(a));
-	}
-
-	//Palindrome Linked List
-	public void palindromeLinkedList(ListNode head) {
-		fastAndSlowPtrPatterns.isPalindrome1(head);
-		fastAndSlowPtrPatterns.isPalindrome2(head);
-	}
-
-	//TODO: Check these problems
-	//Trie: Palindrome Pairs    
-	//KMP Algorithm: Shortest Palindrome 
 
 	//Longest Palindromic Subsequence   
 	public void palindromicSubsequence(String str) {
@@ -98,10 +130,14 @@ public class PalindromePatterns {
 		dpStringPatterns.minCut2(str);
 	}
 
-	//TODO: Solve below problems
+	//These problems are modification above LPS pattern
 	//Minimum Deletions in a String to make it a Palindrome
 	//Form a Palindrome(min no of chars needed to form palindrome)
 	//Count of Palindromic Subsequence
 	//Count of Palindromic Substrings/Palindromic Substrings
+
+	//TODO: Solve below problems
+	//Trie: Palindrome Pairs    
+	//KMP Algorithm: Shortest Palindrome 
 
 }

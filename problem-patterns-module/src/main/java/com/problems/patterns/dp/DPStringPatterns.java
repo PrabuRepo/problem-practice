@@ -3,6 +3,7 @@ package com.problems.patterns.dp;
 import java.util.Arrays;
 
 import com.common.utilities.Utils;
+import com.problems.patterns.BacktrackingPatterns;
 
 /*
  * Patterns covered in this class are,
@@ -10,6 +11,9 @@ import com.common.utilities.Utils;
  *  2.Substring/Subsequence Probs - LCSs
  */
 public class DPStringPatterns {
+
+	private BacktrackingPatterns backtrackingPatterns;
+
 	/********************* Pattern 5: String-Palindromic substring/subseq Probs ***********************/
 	// Longest Palindromic Subsequence:
 	// 1.Recursion Approach
@@ -27,38 +31,38 @@ public class DPStringPatterns {
 	// 3.DP-Bottom Up Approach
 	public int lps3(String str) {
 		int n = str.length();
-		int[][] result = new int[n][n];
+		int[][] dp = new int[n][n];
 		for (int i = 1; i < n; i++)
-			result[i][i] = 1;
+			dp[i][i] = 1;
 		for (int len = 2; len <= n; len++) {
 			for (int i = 0; i <= n - len; i++) {
 				int j = i + len - 1;
 				if (str.charAt(i) == str.charAt(j)) {
-					result[i][j] = len == 2 ? 2 : result[i + 1][j - 1] + 2;
+					dp[i][j] = len == 2 ? 2 : dp[i + 1][j - 1] + 2;
 				} else {
-					result[i][j] = Math.max(result[i][j - 1], result[i + 1][j]);
+					dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);
 				}
 			}
 		}
 
-		printLPS3(result, str);
+		printLPS3(dp, str);
 
-		return result[0][n - 1];
+		return dp[0][n - 1];
 	}
 
-	private String printLPS3(int[][] result, String str) {
-		int n = str.length();
-		int row = 0, col = n - 1, start = 0, end = result[0][n - 1] - 1;
-		char[] seq = new char[result[0][n - 1]];
+	private String printLPS3(int[][] dp, String str) {
+		int n = str.length(), maxLen = dp[0][n - 1];
+		int row = 0, col = n - 1, i = 0, j = maxLen - 1;
+		char[] seq = new char[maxLen];
 		while (row <= col) {
-			if (result[row][col] > result[row][col - 1] && result[row][col] > result[row + 1][col]) {
-				seq[start++] = str.charAt(col);
-				seq[end--] = str.charAt(col);
+			if (dp[row][col] > dp[row][col - 1] && dp[row][col] > dp[row + 1][col]) {
+				seq[i++] = str.charAt(col);
+				seq[j--] = str.charAt(col);
 				row++;
 				col--;
-			} else if (result[row][col] == result[row][col - 1]) {
+			} else if (dp[row][col] == dp[row][col - 1]) {
 				col--;
-			} else if (result[row][col] == result[row + 1][col]) {
+			} else if (dp[row][col] == dp[row + 1][col]) {
 				row++;
 			} else {
 				row++;
@@ -119,13 +123,22 @@ public class DPStringPatterns {
 		return true;
 	}
 
-	// Palindromic Partitioning I???
+	// Palindromic Partitioning I
+	public void palindromicPartitioningI(String s) {
+		backtrackingPatterns.partition1(s);
+		backtrackingPatterns.partition2(s);
+	}
 
 	/*
 	 * Palindrome Partitioning II:
 	 *   Given a string s, partition s such that every substring of the partition is a palindrome. Return the minimum cuts needed for 
-	 *   a palindrome partitioning of s.*/
+	 *   a palindrome partitioning of s.
+	 *   
+	 *   Example: Input: s = "aab" Output: 1; 
+	 *   Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+	 */
 	//Approach 1: Time O(n^2), Space: O(n^2)
+	//Note: This is similar to palindromic substring problem.
 	public int minCut1(String s) {
 		int n = s.length();
 		if (n <= 1) return 0;
@@ -165,7 +178,6 @@ public class DPStringPatterns {
 
 	private void checkPalindrome(String s, int[] cuts, int l, int r) {
 		int n = cuts.length;
-
 		while (l >= 0 && r < n && s.charAt(l) == s.charAt(r)) {
 			//if l == 0 means substring(0, r) is palindrome, so no cut is needed
 			if (l == 0) cuts[r] = 0;

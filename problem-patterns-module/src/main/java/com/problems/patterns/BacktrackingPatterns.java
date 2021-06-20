@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import com.problems.patterns.crossdomains.WordProblems;
+import com.problems.patterns.dp.DPStringPatterns;
 
 /*
  * Backtracking Problems:
@@ -17,6 +18,8 @@ import com.problems.patterns.crossdomains.WordProblems;
 public class BacktrackingPatterns {
 
 	WordProblems wordProblems;
+
+	DPStringPatterns dpStringPatterns;
 
 	/* Factor Combinations
 	 * Numbers can be regarded as product of its factors. For example, 
