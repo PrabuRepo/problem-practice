@@ -407,4 +407,202 @@ public class DPStringPatterns {
 		return dp[n1][n2];
 	}
 
+	/*
+	 * Wild card Matching:
+	 * Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*'.
+	'?' Matches any single character.
+	'*' Matches any sequence of characters (including the empty sequence).
+	 */
+	// Approach1: Recursion
+	public boolean wildCardMatch1(String s, String p) {
+		return isMatch(0, s, 0, p);
+	}
+
+	private boolean isMatch(int i, String s, int j, String p) {
+		int sn = s.length(), pn = p.length();
+		if (j == pn && i == sn) return true;
+		if (j == pn) return false;
+
+		char pj = p.charAt(j);
+		if (i < sn && (pj == '?' || pj == s.charAt(i))) {
+			return isMatch(i + 1, s, j + 1, p);
+		} else if (pj == '*') {
+			return isMatch(i, s, j + 1, p) || i < sn && isMatch(i + 1, s, j, p);
+		}
+
+		return false;
+	}
+
+	// Approach2: Using DP-Top Down Approach
+	public boolean wildCardMatch2(String s, String p) {
+		Boolean[][] mem = new Boolean[s.length() + 1][p.length() + 1];
+		return isMatch(0, s, 0, p, mem);
+	}
+
+	private boolean isMatch(int i, String s, int j, String p, Boolean[][] mem) {
+		int sn = s.length(), pn = p.length();
+		if (j == pn && i == sn) return true;
+		if (j == pn) return false;
+
+		if (mem[i][j] != null) return mem[i][j];
+
+		char pj = p.charAt(j);
+		if (i < sn && (pj == '?' || pj == s.charAt(i))) {
+			return mem[i][j] = isMatch(i + 1, s, j + 1, p, mem);
+		} else if (pj == '*') {
+			return mem[i][j] = isMatch(i, s, j + 1, p, mem) || i < sn && isMatch(i + 1, s, j, p, mem);
+		}
+
+		return mem[i][j] = false;
+	}
+
+	// Approach3: Using DP-Bottom Up Approach- Time: O(mn), Space: O(mn)
+	public boolean wildCardMatch3(String s, String p) {
+		int m = s.length(), n = p.length();
+		boolean[][] dp = new boolean[m + 1][n + 1];
+		dp[0][0] = true;
+		for (int j = 1; j <= n; j++)
+			if (p.charAt(j - 1) == '*') dp[0][j] = dp[0][j - 1];
+
+		for (int i = 1; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				//Here i-1, j-1 are curr index
+				char si = s.charAt(i - 1), pj = p.charAt(j - 1);
+
+				if (pj == si || pj == '?') {
+					dp[i][j] = dp[i - 1][j - 1];
+				} else if (pj == '*') {
+					dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
+				} else {
+					dp[i][j] = false;
+				}
+
+			}
+		}
+		return dp[m][n];
+	}
+
+	// Approach4: Greedy Algorithm
+	/*
+	 * Avg Time: O(m+n)
+	 * Worst case definitely not linear. Should be O(mn)
+	 * think that s ="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" to match p ="*aaaaaab"( '*' in the beginning)
+	 * It's easy to see 'match' is moving step by step to almost the end, each time we move 'match', we will go 
+	 * through the whole tail of p (after '*') until we found out 'b' is not a match. Thus it's O(NM)
+	 */
+	public int isMatch(final String s, final String p) {
+		int m = s.length(), n = p.length();
+		int i = 0, j = 0, star = -1, mark = 0;
+		while (i < m) {
+			if (j < n && (p.charAt(j) == s.charAt(i) || p.charAt(j) == '?')) {
+				i++;
+				j++;
+			} else if (j < n && p.charAt(j) == '*') {
+				star = j;
+				mark = i;
+				j++;
+			} else if (star != -1) {
+				j = star + 1;
+				i = ++mark;
+			} else {
+				return 0;
+			}
+		}
+
+		while (j < n && p.charAt(j) == '*') j++;
+
+		return j == n ? 1 : 0;
+	}
+
+	/*
+	 * Regular Expression Matching:
+	 * Given an input string (s) and a pattern (p), implement regular expression matching with support for '.' and '*'.
+	 *  '.' Matches any single character.
+	 *  '*' Matches zero or more of the preceding element.
+	 */
+	// Approach1: Recursion
+	public boolean regExMatch1(String s, String p) {
+		return regEx(0, s, 0, p);
+	}
+
+	private boolean regEx(int i, String s, int j, String p) {
+		int sn = s.length(), pn = p.length();
+		if (j == pn && i == sn) return true;
+		if (j == pn) return false;
+
+		char pj = p.charAt(j);
+		//Here first check "*", needs to look at the next char to repeat current char
+		if (j + 1 < pn && p.charAt(j + 1) == '*') {
+			if (regEx(i, s, j + 2, p)) return true;
+
+			if (i < sn && (pj == '.' || pj == s.charAt(i))) {
+				if (regEx(i + 1, s, j, p)) {
+					return true;
+				}
+			}
+		} else if (i < sn && (s.charAt(i) == pj || pj == '.')) {
+			return regEx(i + 1, s, j + 1, p);
+		}
+		return false;
+	}
+
+	// Approach2: Using DP-Top Down Approach
+	public boolean regExMatch2(String s, String p) {
+		Boolean[][] mem = new Boolean[s.length() + 1][p.length() + 1];
+		return regEx(0, s, 0, p, mem);
+	}
+
+	private boolean regEx(int i, String s, int j, String p, Boolean[][] mem) {
+		int sn = s.length(), pn = p.length();
+		if (j == pn && i == sn) return true;
+		if (j == pn) return false;
+
+		if (mem[i][j] != null) return mem[i][j];
+
+		char pj = p.charAt(j);
+		//Here first check "*", needs to look at the next char to repeat current char
+		if (j + 1 < pn && p.charAt(j + 1) == '*') {
+			if (regEx(i, s, j + 2, p, mem)) {
+				return mem[i][j] = true;
+			}
+			if (i < sn && (pj == '.' || pj == s.charAt(i))) {
+				if (regEx(i + 1, s, j, p, mem)) {
+					return mem[i][j] = true;
+				}
+			}
+		} else if (i < sn && (s.charAt(i) == pj || pj == '.')) {
+			return mem[i][j] = regEx(i + 1, s, j + 1, p, mem);
+		}
+		return mem[i][j] = false;
+	}
+
+	// Approach3: Using DP-Bottom Up Approach- Time: O(mn), Space: O(mn) 
+	public boolean regExMatch3(String s, String p) {
+		int m = s.length(), n = p.length();
+		boolean[][] dp = new boolean[m + 1][n + 1];
+		// Base case: For both s & p are empty
+		dp[0][0] = true;
+		for (int j = 2; j <= n; j++)
+			if (p.charAt(j - 1) == '*') dp[0][j] = dp[0][j - 2];
+
+		for (int i = 1; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				// Note: Here i-1, j-1 is curr index/char;
+				char si = s.charAt(i - 1), pj = p.charAt(j - 1);
+
+				if (pj == si || pj == '.') {
+					dp[i][j] = dp[i - 1][j - 1];
+				} else if (pj == '*') {
+					dp[i][j] = dp[i][j - 2]; //This is for 0 occurrence of the prev char
+					//Check curr char in 's' with previous char in pattern 'p'
+					if (p.charAt(j - 2) == si || p.charAt(j - 2) == '.') {
+						dp[i][j] = dp[i][j] || dp[i - 1][j];
+					}
+				} else {
+					dp[i][j] = false;
+				}
+			}
+		}
+		return dp[m][n];
+	}
 }
