@@ -507,4 +507,82 @@ public class DPKnapsackPatterns {
 		}
 		return dp[target];
 	}
+
+	// Rod cutting - Exactly same as unbounded knapsack solution
+	// 1.Recursive Approach - Time Complexity: O(2^n); Additional Space: O(1); recursion space: O(n)
+	public int cutRod1(int[] prices) {
+		int n = prices.length;
+		return cutRod11(prices, n, n - 1);
+		//return cutRod12(prices, n);
+	}
+
+	//Note: Unbounded Knapsack Vs Cutting Rod:  Here 'i' is index of price and 'i+1' is rod length; i+1 == wt[i] in knapsack problem
+	public int cutRod11(int[] prices, int maxLen, int i) {
+		if (i < 0 || maxLen <= 0) return 0;
+
+		if (i + 1 > maxLen) return cutRod11(prices, maxLen, i - 1);
+
+		return Math.max(prices[i] + cutRod11(prices, maxLen - i - 1, i), cutRod11(prices, maxLen, i - 1));
+	}
+
+	//2.Recursive Approach2
+	public int cutRod12(int[] price, int n) {
+		if (n <= 0) return 0;
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < n; i++) {
+			System.out.print(i + " ");
+			max = Math.max(max, price[i] + cutRod12(price, n - i - 1));
+		}
+		return max;
+	}
+
+	// Approach2: DP - Top Up Approach
+	// Time Complexity: O(n*rodLength), As redundant calculations of states are avoided. 
+	// Space: O(n*rodLength), The use of 2D array data structure for storing intermediate states
+	public int cutRod2(int[] prices) {
+		int n = prices.length;
+		int[][] memo = new int[n + 1][n + 1];
+
+		//Intialize memo array to -1.
+		for (int i = 0; i <= n; i++) {
+			Arrays.fill(memo[i], -1);
+		}
+
+		return cutRod2(prices, n, n - 1, memo);
+	}
+
+	public int cutRod2(int[] prices, int maxLen, int i, int[][] memo) {
+		if (i < 0 || maxLen <= 0) return 0;
+		if (memo[i][maxLen] != -1) return memo[i][maxLen];
+
+		if (i + 1 > maxLen) return memo[i][maxLen] = cutRod11(prices, maxLen, i - 1);
+
+		return memo[i][maxLen] = Math.max(prices[i] + cutRod11(prices, maxLen - i - 1, i),
+				cutRod11(prices, maxLen, i - 1));
+	}
+
+	//3.Using DP - Bottom Up Approach
+	public int cutRod31(int[] prices) {
+		int len = prices.length;
+		int[][] dp = new int[len + 1][len + 1];
+		for (int i = 1; i <= len; i++) {
+			for (int j = 1; j <= len; j++) {
+				dp[i][j] = (j < i) ? dp[i - 1][j] : Math.max(dp[i - 1][j], prices[i - 1] + dp[i][j - i]);
+			}
+		}
+		return dp[len][len];
+	}
+
+	//3. Using DP - Bottom Up Approach - 1D array
+	public int cutRod32(int[] price) {
+		int maxRodLen = price.length + 1;
+		int dp[] = new int[maxRodLen];
+		//Note: i is rod length from 1 to maxRodLen
+		for (int i = 1; i <= price.length; i++) {
+			for (int j = i; j <= maxRodLen; j++) {
+				dp[j] = Math.max(dp[j], price[i - 1] + dp[j - i]);
+			}
+		}
+		return dp[price.length];
+	}
 }

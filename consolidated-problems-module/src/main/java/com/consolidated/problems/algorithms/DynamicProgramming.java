@@ -217,47 +217,79 @@ public class DynamicProgramming {
 
 	/***************************** Pattern 4: Unbounded Knapsack *************************/
 
-	// Rod cutting
-	/*public int cutRod(int price[], int n) {
-		if (n <= 0) return 0;
-		int max_val = Integer.MIN_VALUE;
-		for (int i = 0; i < n; i++) {			
-			int prev = price[i] + cutRod(price, n - i - 1);
-			max_val = Math.max(max_val, prev);
-		}
-		return max_val;
-	}*/
-
-	// Rod cutting
-	public int cutRod1(int price[]) {
-		return cutRod1(price, price.length);
+	// Rod cutting - Exactly same as unbounded knapsack solution
+	// 1.Recursive Approach - Time Complexity: O(2^n); Additional Space: O(1); recursion space: O(n)
+	public int cutRod1(int[] prices) {
+		int n = prices.length;
+		return cutRod11(prices, n, n - 1);
+		//return cutRod12(prices, n);
 	}
 
-	public int cutRod1(int price[], int n) {
+	//Note: Unbounded Knapsack Vs Cutting Rod:  Here 'i' is index of price and 'i+1' is rod length; i+1 == wt[i] in knapsack problem
+	public int cutRod11(int[] prices, int maxLen, int i) {
+		if (i < 0 || maxLen <= 0) return 0;
+
+		if (i + 1 > maxLen) return cutRod11(prices, maxLen, i - 1);
+
+		return Math.max(prices[i] + cutRod11(prices, maxLen - i - 1, i), cutRod11(prices, maxLen, i - 1));
+	}
+
+	//2.Recursive Approach2
+	public int cutRod12(int[] price, int n) {
 		if (n <= 0) return 0;
 		int max = Integer.MIN_VALUE;
 		for (int i = 0; i < n; i++) {
 			System.out.print(i + " ");
-			max = Math.max(max, price[i] + cutRod1(price, n - i - 1));
+			max = Math.max(max, price[i] + cutRod12(price, n - i - 1));
 		}
 		return max;
 	}
 
+	// Approach2: DP - Top Up Approach
+	// Time Complexity: O(n*rodLength), As redundant calculations of states are avoided. 
+	// Space: O(n*rodLength), The use of 2D array data structure for storing intermediate states
 	public int cutRod2(int[] prices) {
+		int n = prices.length;
+		int[][] memo = new int[n + 1][n + 1];
+
+		//Intialize memo array to -1.
+		for (int i = 0; i <= n; i++) {
+			Arrays.fill(memo[i], -1);
+		}
+
+		return cutRod2(prices, n, n - 1, memo);
+	}
+
+	public int cutRod2(int[] prices, int maxLen, int i, int[][] memo) {
+		if (i < 0 || maxLen <= 0) return 0;
+		if (memo[i][maxLen] != -1) return memo[i][maxLen];
+
+		if (i + 1 > maxLen) return memo[i][maxLen] = cutRod11(prices, maxLen, i - 1);
+
+		return memo[i][maxLen] = Math.max(prices[i] + cutRod11(prices, maxLen - i - 1, i),
+				cutRod11(prices, maxLen, i - 1));
+	}
+
+	//3.Using DP - Bottom Up Approach
+	public int cutRod31(int[] prices) {
 		int len = prices.length;
 		int[][] dp = new int[len + 1][len + 1];
-		for (int i = 1; i <= len; i++)
-			for (int j = 1; j <= len; j++)
+		for (int i = 1; i <= len; i++) {
+			for (int j = 1; j <= len; j++) {
 				dp[i][j] = (j < i) ? dp[i - 1][j] : Math.max(dp[i - 1][j], prices[i - 1] + dp[i][j - i]);
+			}
+		}
 		return dp[len][len];
 	}
 
-	// Approach-3: Bottom Up Approach - 1D array
-	public int cutRod3(int price[]) {
-		int dp[] = new int[price.length + 1];
+	//3. Using DP - Bottom Up Approach - 1D array
+	public int cutRod32(int[] price) {
+		int maxRodLen = price.length + 1;
+		int dp[] = new int[maxRodLen];
+		//Note: i is rod length from 1 to maxRodLen
 		for (int i = 1; i <= price.length; i++) {
-			for (int j = i; j <= price.length; j++) {
-				dp[j] = Math.max(dp[j], dp[j - i] + price[i - 1]);
+			for (int j = i; j <= maxRodLen; j++) {
+				dp[j] = Math.max(dp[j], price[i - 1] + dp[j - i]);
 			}
 		}
 		return dp[price.length];
@@ -876,7 +908,61 @@ public class DynamicProgramming {
 
 	/******************************* Others: Uncategorized ********************/
 	/*
-	 * Text Justification - Leetcode:
+	* Text Justification/Word Wrap Problem - GeeksforGeeks:
+	* Given a sequence of words, and a limit on the number of characters that can be put in one line (line width). Put line breaks in the
+	* given sequence such that the lines are printed neatly. Assume that the length of each word is smaller than the line width. 
+	* The word processors like MS Word do task of placing line breaks. The idea is to have balanced lines. In other words, not have few 
+	* lines with lots of extra spaces and some lines with small amount of extra spaces.
+	* Eg: For example, consider the following string and line width M = 15
+	*        "Geeks for Geeks presents word wrap problem"
+	*     Following is the optimized arrangement of words in 3 lines
+	*     		Geeks for Geeks
+	*     		presents word
+	*     		wrap problem 
+	*/
+	/*
+	 * Approach1: The greedy solution is to place as many words as possible in the first line. Then do the same thing for the second line 
+	 * and so on until all words are placed. This solution gives optimal solution for many cases, but doesn’t give optimal solution in all cases. 
+	 * Despite being sub-optimal in some cases, the greedy approach is used by many word processors like MS Word and OpenOffice.org Writer.
+	 * 
+	 * Approach2: Recursive & DP
+	 * The problem is to minimize the following total cost.
+	 *  	Cost of a line = (Number of extra spaces in the line)^3 or (Number of extra spaces in the line)^2
+	 *  	Total Cost = Sum of costs for all lines
+	 * Please note that the total cost function is not sum of extra spaces, but sum of cubes (or square is also used) of extra spaces. 
+	 * The idea behind this cost function is to balance the spaces among lines. For example, consider the following two arrangement of same 
+	 * set of words: 
+	 * 	1. There are 3 lines. One line has 3 extra spaces and all other lines have 0 extra spaces. Total extra spaces = 3 + 0 + 0 = 3. 
+	 * 	   Total cost = 3*3*3 + 0*0*0 + 0*0*0 = 27.
+	 * 	2. There are 3 lines. Each of the 3 lines has one extra space. Total extra spaces = 1 + 1 + 1 = 3. Total cost = 1*1*1 + 1*1*1 + 1*1*1 = 3.
+	 * Ref: https://www.geeksforgeeks.org/word-wrap-problem-dp-19/
+	 */
+
+	//Using Greedy Algorithm:
+	public String justify1(String words[], int width) {
+		StringBuilder result = new StringBuilder();
+
+		int i = 0, j = 0, n = words.length;
+		while (i < n) {
+			int len = words[i].length();
+			result.append(words[i]);
+			j = i + 1;
+			//Here j-i-1 denotes no of space between words
+			while (j < n && len + words[j].length() + (j - i - 1) < width) {
+				result.append(" ").append(words[j]);
+				len += words[j].length();
+				j++;
+			}
+			if (j != n) result.append(" ");
+			result.append("\n");
+			i = j;
+		}
+
+		return result.toString();
+	}
+
+	/*
+	 * Text Justification - Leetcode: Modification of above problem
 	 * Given an array of words and a width maxWidth, format the text such that each line has exactly maxWidth characters 
 	 * and is fully (left and right) justified.
 	 * You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra 
@@ -908,11 +994,11 @@ public class DynamicProgramming {
 		if (r - l == 0) return padResult(words[l], maxWidth);
 
 		boolean isLastLine = r == words.length - 1;
-		int numSpaces = r - l;
-		int totalSpace = maxWidth - wordsLength;
+		int noOfWords = r - l;
+		int remSpace = maxWidth - wordsLength; //Remaining Space
 
-		String space = isLastLine ? " " : whitespace(totalSpace / numSpaces);
-		int extraSpace = isLastLine ? 0 : totalSpace % numSpaces;
+		String space = isLastLine ? " " : whitespace(remSpace / noOfWords);
+		int extraSpace = isLastLine ? 0 : remSpace % noOfWords;
 
 		StringBuilder result = new StringBuilder();
 		for (int i = l; i <= r; i++) {
@@ -934,77 +1020,12 @@ public class DynamicProgramming {
 		return sb.toString();
 	}
 
-	/*
-	 * Text Justification/Word Wrap Problem - GeeksforGeeks:
-	 * Given a sequence of words, and a limit on the number of characters that can be put in one line (line width). Put line breaks in the
-	 * given sequence such that the lines are printed neatly. Assume that the length of each word is smaller than the line width. 
-	 * The word processors like MS Word do task of placing line breaks. The idea is to have balanced lines. In other words, not have few 
-	 * lines with lots of extra spaces and some lines with small amount of extra spaces.
-	 * Eg: For example, consider the following string and line width M = 15
-	 *        "Geeks for Geeks presents word wrap problem"
-	 *     Following is the optimized arrangement of words in 3 lines
-	 *     		Geeks for Geeks
-	 *     		presents word
-	 *     		wrap problem 
-	 */
-	/*
-	 * Approach1: The greedy solution is to place as many words as possible in the first line. Then do the same thing for the second line 
-	 * and so on until all words are placed. This solution gives optimal solution for many cases, but doesn’t give optimal solution in all cases. 
-	 * Despite being sub-optimal in some cases, the greedy approach is used by many word processors like MS Word and OpenOffice.org Writer.
-	 * 
-	 * Approach2: Recursive & DP
-	 * The problem is to minimize the following total cost.
-	 *  	Cost of a line = (Number of extra spaces in the line)^3 or (Number of extra spaces in the line)^2
-	 *  	Total Cost = Sum of costs for all lines
-	 * Please note that the total cost function is not sum of extra spaces, but sum of cubes (or square is also used) of extra spaces. 
-	 * The idea behind this cost function is to balance the spaces among lines. For example, consider the following two arrangement of same 
-	 * set of words: 
-	 * 	1. There are 3 lines. One line has 3 extra spaces and all other lines have 0 extra spaces. Total extra spaces = 3 + 0 + 0 = 3. 
-	 * 	   Total cost = 3*3*3 + 0*0*0 + 0*0*0 = 27.
-	 * 	2. There are 3 lines. Each of the 3 lines has one extra space. Total extra spaces = 1 + 1 + 1 = 3. Total cost = 1*1*1 + 1*1*1 + 1*1*1 = 3.
-	 * Ref: https://www.geeksforgeeks.org/word-wrap-problem-dp-19/
-	 */
-
-	//Using Greedy Algorithm:
-	public String justify1(String words[], int width) {
-		StringBuilder result = new StringBuilder();
-
-		int i = 0, j = 0, n = words.length;
-		while (i < n) {
-			int len = words[i].length();
-			result.append(words[i]);
-			j = i + 1;
-			while (j < n && len + words[j].length() + (j - i - 1) < width) {
-				result.append(" ").append(words[j]);
-				len += words[j].length();
-				j++;
-			}
-			if (j != n) result.append(" ");
-			result.append("\n");
-			i = j;
-		}
-
-		return result.toString();
-	}
-
 	//Using DP:
 	public String justify2(String words[], int width) {
 		int cost[][] = new int[words.length][words.length];
 
-		//next 2 for loop is used to calculate cost of putting words from i to j in one line. If words don't fit in one line then we put
-		//Integer.MAX_VALUE there.
-		for (int i = 0; i < words.length; i++) {
-			cost[i][i] = width - words[i].length();
-			for (int j = i + 1; j < words.length; j++) {
-				cost[i][j] = cost[i][j - 1] - words[j].length() - 1;
-			}
-		}
-
-		for (int i = 0; i < words.length; i++) {
-			for (int j = i; j < words.length; j++) {
-				cost[i][j] = cost[i][j] < 0 ? Integer.MAX_VALUE : (int) Math.pow(cost[i][j], 2);
-			}
-		}
+		//Populate cost array
+		populateCost(words, cost, width);
 
 		//minCost from i to len is found by trying j between i to len and checking which one has min value
 		int minCost[] = new int[words.length];
@@ -1023,6 +1044,36 @@ public class DynamicProgramming {
 		}
 		System.out.println("Minimum cost is " + minCost[0]);
 		return getResult(words, result);
+	}
+
+	private void populateCost(String[] words, int[][] cost, int maxWidth) {
+		int n = words.length;
+		//Approach 1: using two for loops to calculate cost of putting words from i to j in one line. If words don't fit in one line then we put
+		//Integer.MAX_VALUE there.
+		for (int i = 0; i < n; i++) {
+			cost[i][i] = maxWidth - words[i].length();
+			for (int j = i + 1; j < n; j++) {
+				cost[i][j] = cost[i][j - 1] - words[j].length() - 1;
+			}
+		}
+
+		for (int i = 0; i < n; i++) {
+			for (int j = i; j < n; j++) {
+				cost[i][j] = cost[i][j] < 0 ? Integer.MAX_VALUE : (int) Math.pow(cost[i][j], 2);
+			}
+		}
+
+		// or 
+
+		//Approach2: Combining two for loops into one 
+		for (int i = 0; i < n; i++) {
+			int width = maxWidth;
+			for (int j = i; j < n; j++) {
+				int len = width - words[j].length();
+				cost[i][j] = len < 0 ? Integer.MAX_VALUE : (int) Math.pow(len, 2);
+				width--; // For single space between words
+			}
+		}
 	}
 
 	private String getResult(String[] words, int[] result) {
