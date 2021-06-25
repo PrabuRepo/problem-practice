@@ -186,42 +186,10 @@ public class LinkedListProblems {
 	}
 
 	// Remove loop in Linked List:
-	public int removeTheLoop(ListNode head) {
-		ListNode slowPtr = head, fastPtr = head;
-		boolean flag = false;
-		int result = 0;
-		while (fastPtr != null && fastPtr.next != null) {
-			slowPtr = slowPtr.next;
-			fastPtr = fastPtr.next.next;
-			if (slowPtr == fastPtr) {
-				flag = true;
-				break;
-			}
-		}
-		//TODO: Check how this is works?
-		if (flag) {
-			//1.Find loop/cycle length
-			int len = 0;
-			do {
-				slowPtr = slowPtr.next;
-				len++;
-			} while (slowPtr != fastPtr);
-
-			//2.Move from head till length of cycle
-			slowPtr = head;
-			while (len-- > 0) {
-				slowPtr = slowPtr.next;
-			}
-
-			fastPtr = head;
-			while (slowPtr.next != fastPtr.next) {
-				slowPtr = slowPtr.next;
-				fastPtr = fastPtr.next;
-			}
-			slowPtr.next = null;
-			result = 1;
-		}
-		return result;
+	public void removeLoop(ListNode head) {
+		fastAndSlowPtrPatterns.removeLoop1(head);
+		fastAndSlowPtrPatterns.removeLoop2(head);
+		fastAndSlowPtrPatterns.removeLoop3(head);
 	}
 
 	/************************* Type3: In-place Reversal **********************************/

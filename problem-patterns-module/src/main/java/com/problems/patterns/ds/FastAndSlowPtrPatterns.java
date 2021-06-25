@@ -16,8 +16,21 @@ public class FastAndSlowPtrPatterns {
 
 	InPlaceReversalLLPatterns reversalLLPatterns = new InPlaceReversalLLPatterns();
 
-	// LinkedList Cycle: Floyd's Algorithm or Tortoise & Hare Algorithm
-	public boolean hasCycle(ListNode head) {
+	// LinkedList Cycle: 
+	//Approach1: Using HashSet; Time: O(n), Space: O(n)
+	public boolean hasCycle1(ListNode head) {
+		ListNode curr = head;
+		HashSet<ListNode> set = new HashSet<>();
+		while (curr != null) {
+			if (!set.add(curr)) return true;
+			curr = curr.next;
+		}
+		return false;
+	}
+
+	//Approach2: Floyd's Algorithm or Tortoise & Hare Algorithm
+	//Time: O(n), Space: O(1)
+	public boolean hasCycle2(ListNode head) {
 		ListNode slowPtr = head, fastPtr = head;
 		while (fastPtr != null && fastPtr.next != null) {
 			slowPtr = slowPtr.next;
@@ -28,23 +41,191 @@ public class FastAndSlowPtrPatterns {
 	}
 
 	/* Start of LinkedList Cycle/Linked List Cycle II: Linked List Cycle II: Given a linked list, return the node
-	 *  where the cycle begins. If there is no cycle, return null. */
-	//Why this is logic is working? refer the document here \1.Coding Interview\1.DS & Algorithms\Algorithms Proof
-	public ListNode detectCycle(ListNode head) {
+	 * where the cycle begins. If there is no cycle, return null. */
+	//Approach1: Using HashSet; Time: O(n), Space: O(n)
+	public ListNode detectCycle1(ListNode head) {
+		ListNode curr = head;
+		HashSet<ListNode> set = new HashSet<>();
+		while (curr != null) {
+			if (!set.add(curr)) return curr;
+			curr = curr.next;
+		}
+		return null;
+	}
+
+	/* Approach2: Floyd Algorithm and Counter Approach; Time: O(n), Space: O(1)
+	 *  n = x + l; 
+	 *  where n - no of nodes in the list
+	 *        l - length of the loop/cycle
+	 *        x - no of nodes from head to starting point of the node.
+	 *        
+	 *  1. Check if there is any loop in the list 
+	 *  2. Find the length of the loop(l)
+	 *  3. Move the slowPtr from head to l(loop length) times, remaining will be x.
+	 *  4. Now if we move fastPtr from head and slowPtr with one jump, then both will meet at starting point.
+	 *  5. After that return starting point of the loop  
+	 */
+	public ListNode detectCycle2(ListNode head) {
+		ListNode slowPtr = head, fastPtr = head;
+		boolean flag = false;
+		//1. Check if there is any loop in the list 
+		while (fastPtr != null && fastPtr.next != null) {
+			slowPtr = slowPtr.next;
+			fastPtr = fastPtr.next.next;
+			if (slowPtr == fastPtr) {
+				flag = true;
+				break;
+			}
+		}
+
+		if (!flag) return null;
+
+		//2. Find the length of the loop(l)
+		int len = 0;
+		do {
+			slowPtr = slowPtr.next;
+			len++;
+		} while (slowPtr != fastPtr);
+
+		//3. Move the slowPtr from head to l(loop length) times, remaining will be x.
+		slowPtr = head;
+		while (len-- > 0) {
+			slowPtr = slowPtr.next;
+		}
+
+		//4. Now if we move fastPtr from head and slowPtr with one jump, then both will meet at starting point.
+		fastPtr = head;
+		while (slowPtr != fastPtr) {
+			slowPtr = slowPtr.next;
+			fastPtr = fastPtr.next;
+		}
+
+		return slowPtr; // or fastPtr
+	}
+
+	/* Approach3: using Floyd Algorithm ; Time: O(n), Space: O(1)
+	 * Why this is logic is working? refer the document in below,
+	 *  HardDisk: \1.Coding Interview\1.DS & Algorithms\Algorithms Proof od
+	 *  src/main/resources
+	 */
+	public ListNode detectCycle3(ListNode head) {
 		if (head == null || head.next == null) return null;
-		ListNode slow = head, fast = head, start = head;
+		ListNode slow = head, fast = head;
 		while (fast.next != null && fast.next.next != null) {
 			slow = slow.next;
 			fast = fast.next.next;
 			if (slow == fast) {
-				while (slow != start) {
+				fast = head;
+				while (slow != fast) {
 					slow = slow.next;
-					start = start.next;
+					fast = fast.next;
 				}
-				return start;
+				return fast;
 			}
 		}
 		return null;
+	}
+
+	// Remove loop in Linked List:
+	//Approach1: Using HashSet; Time: O(n), Space: O(n)
+	public boolean removeLoop1(ListNode head) {
+		ListNode curr = head;
+		HashSet<ListNode> set = new HashSet<>();
+		while (curr != null) {
+			if (set.contains(curr.next)) {
+				curr.next = null;
+				return true;
+			}
+			set.add(curr);
+			curr = curr.next;
+		}
+		return false;
+	}
+
+	/* Approach2: Floyd Algorithm and Counter Approach; 
+	 *  n = x + l; 
+	 *  where n - no of nodes in the list
+	 *        l - length of the loop/cycle
+	 *        x - no of nodes from head to starting point of the node.
+	 *        
+	 *  1. Check if there is any loop in the list 
+	 *  2. Find the length of the loop(l)
+	 *  3. Move the slowPtr from head to l(loop length)-1 times, remaining will be x.
+	 *  4. Now if we move fastPtr from head and slowPtr with one jump, then both will meet at starting point.
+	 *  5. After that we assign null to break/remove the loop
+	 *  
+	 *  Note: There is a slight modification from detect cycle logic, this modification to set null before
+	 *  the starting point of the loop
+	 */
+	public boolean removeLoop2(ListNode head) {
+		ListNode slowPtr = head, fastPtr = head;
+		//1. Check if there is any loop in the list 
+		while (slowPtr != fastPtr) {
+			if (fastPtr == null || fastPtr.next == null) return false;
+			slowPtr = slowPtr.next;
+			fastPtr = fastPtr.next.next;
+		}
+
+		//2. Find the length of the loop(l)
+		int len = 0;
+		do {
+			slowPtr = slowPtr.next;
+			len++;
+		} while (slowPtr != fastPtr);
+
+		//3. Move the slowPtr from head to l(loop length)-1 times, remaining will be x.
+		slowPtr = head;
+		while (len-- > 1) {
+			slowPtr = slowPtr.next;
+		}
+
+		//4. Now if we move fastPtr from head and slowPtr with one jump, then both will meet at starting point.
+		fastPtr = head;
+		while (slowPtr.next != fastPtr) {
+			slowPtr = slowPtr.next;
+			fastPtr = fastPtr.next;
+		}
+		slowPtr.next = null;
+
+		return true;
+	}
+
+	/* Approach3: using Floyd Algorithm ; Time: O(n), Space: O(1)
+	 * Why this is logic is working? refer the document in below,
+	 *  HardDisk: \1.Coding Interview\1.DS & Algorithms\Algorithms Proof 
+	 *  src/main/resources
+	 *  
+	 *  Note: There is a slight modification from detect cycle logic, this modification to set null before
+	 *  the starting point of the loop
+	 */
+	public boolean removeLoop3(ListNode head) {
+		ListNode slow = head, fast = head;
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+			if (slow == fast) {
+				remove(head, slow);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void remove(ListNode head, ListNode slow) {
+		//if fast and slow pointer meet at first position.
+		if (slow == head) {
+			while (slow.next != head) {
+				slow = slow.next;
+			}
+		} else { //if slow and fast pointer meet at other positions
+			ListNode fast = head;
+			while (slow.next != fast.next) {
+				slow = slow.next;
+				fast = fast.next;
+			}
+		}
+		slow.next = null;
 	}
 
 	// Happy Number (medium)
