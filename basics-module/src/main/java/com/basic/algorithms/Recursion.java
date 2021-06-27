@@ -5,33 +5,26 @@ import java.util.List;
 
 /* 
  * Recursion:
- *   Recursion is an algorithmic technique where a function, in order to accomplish a task, calls itself with some part of the task.
- *   A recursive function calls itself on a simpler version of the problem in an attempt to simplify the problem to a point where it 
- *   can be solved. With this smaller problem solved, it can work backwards to solve each slightly larger problem until the entire 
- *   problem has been solved.
- * To solve a problem using recursion, then we need to make sure that:
- *   - The problem can broken down into smaller problems of same type.
- *   - Problem has some base case(s).
- *   - Base case is reached before the stack size limit exceeds.
+ *  The process in which a function calls itself directly or indirectly is called recursion and the corresponding function is called as recursive
+ *  function. Using recursive algorithm, certain problems can be solved quite easily. 
+ *  Examples of such problems are Towers of Hanoi (TOH), Inorder/Preorder/Postorder Tree Traversals, DFS of Graph, etc.
+ *   
+ * Recursion Template
+ *   - Base Case or Termination Condition
+ *   - Any Logic: The problem can broken down into smaller problems of same type.
+ *   - Recursive Function calls: It can be one or more time
  *   
  * Types:
- *  1.Linear Recursion: A linear recursive function is a function that only makes a single call to itself each time the function runs
+ *  1.Linear or Single Recursion: A linear recursive function is a function that only makes a single call to itself each time the function runs
  *  	i. Head Recursion: First make a recursive call, then do the logic(any logic like add, div, sub, mul, print etc)
  *  	ii.Tail Recursion: First do a logic, then make recursive call.
- * 	 i.Head Recursion: If a recursive function calling itself and that recursive call is the first statement in the function then it’s known as 
- * 	 Head Recursion.There’s no statement, no operation before the call. The function doesn’t have to process or perform any operation at the 
- *   time of calling and all operations are done at returning time.
- *   ii.Tail Recursion: If a recursive function calling itself and that recursive call is the last statement in the function then it’s known as 
- *   Tail Recursion.After that call the recursive function performs nothing. The function has to process or perform any operation at the time 
- *   of calling and it does nothing at returning time.
- *  2.Binary Recursion: Some recursive functions don't just have one call to themself, they have two (or more). Functions with two recursive
- *    calls are referred to as binary recursive functions.
- *    	1.Linear Tree Recursion
- *    	2.Exponential Tree Recursion
- *  3.Exponential Recursion: An exponential recursive function is one that, if you were to draw out a representation of all the function calls,
- *    would have an exponential number of calls in relation to the size of the data set (exponential meaning if there were n elements, there
- *    would be O(a^n) function calls where a is a positive number).
- * 
+ *  	Note: Head and Tail recursion applicable for all types of recursion such as linear, tree, mutual and nested.
+ *  2.Tree or Multiple Recursion: If a recursive function calling itself for more than one time then it’s known as Tree Recursion.
+ *  	- Functions with two recursive calls are referred to as binary recursive functions. No of function calls: 2^n
+ *        Binary Recursion examples: Binary Tree traversals
+ *      - Function calls itself more than twice. No of function calls: a^n
+ *  4.Mutual or Indirect Recursion: In this recursion, there may be more than one functions and they are calling one another in a circular manner.
+ *  5.Nested Recursion: In this recursion, a recursive function will pass the parameter as a recursive call.That means “recursion inside recursion”. 
  *   
  * When you hear a problem beginning with the following statements, it's often (though not always) a good candidate for recursion:
  *  - "Design an algorithm to compute the nth .. :;  
@@ -55,8 +48,6 @@ import java.util.List;
  */
 public class Recursion {
 
-	Backtracking backtracking = new Backtracking();
-
 	MathProblems math = new MathProblems();
 
 	SortingAlgorithms sort = new SortingAlgorithms();
@@ -64,20 +55,49 @@ public class Recursion {
 	public static int count = 0;
 
 	/**************** Methods to understand the recursion concepts *******************/
-	/*************** 1.Single Recursion or Linear Recursion ********************/
-	// single recursion: head recursive type
-	public void headRecursiveCall(int n) {
-		// No of calls in recursive program: n+1
-		// System.out.println("No of calls:"+count++);
-		count++;
-		if (n >= 1) {
-			// System.out.println("Before recursive fun call");
-			headRecursiveCall(n - 1);
-			System.out.print(n + " ");
-		}
+	public void recursionMethodConsolidations(int n, int[] a) {
+		//1.Linear Recursion
+		//Head Vs Tail recursion types
+		increasingNumber(n);
+		decreasingNumber(n);
+		//More examples in Linear Recursion
+		factorial(n);
+		sqrt(9, 2);
+		gcd(10, 5);
+		decimalToBin(n);
+
+		//2.Tree or Multiple Recursion
+		fibRecursive(n);
+		quickSort(a);
+		printZigZag(n);
 	}
 
-	//Example for linear recursion: Factorial , sqrt
+	/*************** 1.Single or Linear Recursion ********************/
+	//Head recursive type
+	public void increasingNumber(int n) {
+		//Base case
+		if (n == 0) return;
+
+		//Recursive Function call
+		increasingNumber(n - 1);
+
+		//Any logic: here just printing the number 
+		System.out.print(n + " "); //Result: 1 2 3 4 5
+	}
+
+	// Tail recursive type
+	public void decreasingNumber(int n) {
+		//Base case
+		if (n == 0) return;
+
+		//Any logic: here just printing the number 
+		System.out.print(n + " "); //Result: 5 4 3 2 1
+
+		//Recursive Function call
+		decreasingNumber(n - 1);
+	}
+
+	//Example for linear recursion: Factorial , sqrt, gcd, decimalToBinary etc
 	public void factorial(int n) {
 		math.factorial1(n);
 	}
@@ -85,17 +105,6 @@ public class Recursion {
 	//Compute the square root of a number using Newton's method (assume EPSILON to be a very small number close to 0):
 	public double sqrt(double x, double a) {
 		return math.mySqrt4(x, a);
-	}
-
-	// single recursion: tail recursive type
-	public void tailRecursiveCall(int n) {
-		// No of calls in recursive program: n+1
-		// System.out.println("No of calls:" + count++);
-		count++;
-		if (n >= 1) {
-			System.out.print(n + " ");
-			tailRecursiveCall(n - 1);
-		}
 	}
 
 	//Example for a tail recursive function is GCD
@@ -108,27 +117,7 @@ public class Recursion {
 		return math.decimalToBin2(n);
 	}
 
-	/*************** 2.Multiple recursion & Binary Recursion ********************/
-	/*Binary Recursion: This form of recursion has the potential for calling itself twice instead of once as with before. 
-	 Many operations, such as traversals, on binary trees are naturally binary recursive, like the trees.*/
-
-	// Binary Recursion: Both Head & Tail recursion; 
-	public void binaryRecursiveCall(int n) {
-		// No of calls in recursive program: n+1s
-		// System.out.println("No of calls:" + count++);
-		count++;
-		if (n >= 1) {
-			System.out.println("t(" + (n - 1) + "): ");
-			headRecursiveCall(n - 1); // Head Recursion
-			// tailRecursiveCall(n - 1); // Tail Recursion
-
-			// System.out.println("Value:"+n);
-			System.out.println("t(" + (n - 1) + "): ");
-			headRecursiveCall(n - 1); // Head Recursion
-			// tailRecursiveCall(n - 1); // Tail Recursion
-		}
-	}
-
+	/*************** 2.Multiple or Tree Recursion ********************/
 	// Example1: Fibonacci Series; Time-O(2^n)
 	public long fibRecursive(int n) {
 		if (n <= 1) return n;
@@ -159,10 +148,22 @@ public class Recursion {
 		sort.quickSort(a);
 	}
 
-	/*************** 3.Exponential Recursion ********************/
-	public void permutation(int[] nums) {
-		backtracking.permute2(nums);
+	// Print Zig Zag
+	public void printZigZag(int n) {
+		if (n == 0) return;
+
+		System.out.println("Pre: " + n);
+
+		printZigZag(n - 1);
+
+		System.out.println("In: " + n);
+
+		printZigZag(n - 1);
+
+		System.out.println("Post: " + n);
 	}
+
+	//TODO:  Revisit and delete below
 
 	/*************** 4.Iterative Vs Recursive ********************/
 	// Single Iteration
@@ -288,63 +289,4 @@ public class Recursion {
 		tripleRecursion(i + 1, n);
 		tripleRecursion(i + 1, n);
 	}
-
-	/*************** Recursion ********************/
-	public void combination1(int n) {
-		combination1(n, 0);
-	}
-
-	public void combination1(int n, int i) {
-		if (i >= n) {
-			System.out.println();
-			return;
-		}
-		System.out.print(i + " ");
-		combination1(n, i + 1);
-		combination1(n, i + 1);
-	}
-
-	public int combinationSum41(int[] nums, int target) {
-		if (target == 0) return 1;
-
-		int count = 0;
-		for (int i = 0; i < nums.length; i++) {
-			//System.out.print(i + " ");
-			if (target >= nums[i]) count += combinationSum41(nums, target - nums[i]);
-		}
-		return count;
-	}
-
-	public int combinationSum42(int[] nums, int target) {
-		return combinationSum4(nums, target, nums.length - 1);
-	}
-
-	public int combinationSum4(int[] nums, int target, int i) {
-		if (target == 0) return 1;
-		if (target < 0 || i < 0) return 0;
-
-		return combinationSum4(nums, target - nums[i], i) + combinationSum4(nums, target, i - 1);
-	}
-
-	//Recursive another approach:
-	public int coinChange(int[] coins, int amount) {
-		int result = change(amount, coins, coins.length - 1);
-		System.out.println(count);
-		return result == Integer.MAX_VALUE ? -1 : result;
-	}
-
-	public int change(int amount, int[] coins, int i) {
-		if (amount == 0) {
-			count++;
-			return 0;
-		}
-		if (i < 0) return Integer.MAX_VALUE;
-
-		if (amount < coins[i]) return change(amount, coins, i - 1);
-
-		int minVal = Math.min(change(amount - coins[i], coins, i), change(amount, coins, i - 1));
-		if (minVal != Integer.MAX_VALUE && i == 0) System.out.println(minVal);
-		return minVal == Integer.MAX_VALUE ? minVal : minVal + 1;
-	}
-
 }
