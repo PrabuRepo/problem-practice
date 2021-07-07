@@ -1241,7 +1241,6 @@ public class HashingProblems {
 	/*
 	Min Max Riddle - Deque
 	Max Sum of Rectangle No Larger Than K
-	Shortest Unsorted Continuous Subarray
 	Sliding Window Median - Heap
 	 */
 

@@ -85,10 +85,21 @@ public class MathProblems {
 		return result;
 	}
 
-	// Pow(x, n)
+	/* Pow(x, n)
+	 * Power Function: Implement a function to calculate X^N. Both X and N can be positive or negative. 
+	 * You can assume that overflow doesn't happen.
+	 * For example:
+	 * 			2 ^ 2 = 4
+	 * 			2 ^ -2 = 0.25
+	 * 			-2 ^ 3 = -8
+	 */
 	//Time Complexity: O(n)
 	public double pow1(double x, int n) {
-		//if n is negative find 1/x^n; here -n used below for changing -n to +n; 
+		if (x == 0 && n <= 0) throw new ArithmeticException("Undefined");
+		if (x == 0) return 0;
+
+		//if n is negative find 1/x^n; here -n used below for changing -n to +n;
+		//x negative is handled automatically; if n is odd, result is -ve, otherwise its +ve;
 		return (n < 0) ? (1 / findPow1(x, -n)) : findPow1(x, n);
 	}
 
@@ -99,7 +110,7 @@ public class MathProblems {
 		return x * findPow1(x, n - 1);
 	}
 
-	//Better Approach: Time Complexity: O(n); Assume n%2 always odd
+	//Better Approach: Time Complexity: O(logn);
 	public double pow2(double x, int n) {
 		return (n < 0) ? (1 / findPow2(x, -n)) : findPow2(x, n);
 	}
@@ -427,8 +438,11 @@ public class MathProblems {
 	public static void main(String[] args) {
 		MathProblems ob = new MathProblems();
 		int n = 43253;
-		System.out.println("Sqrt: " + ob.mySqrt1(n));
-		System.out.println("Sqrt: " + ob.mySqrt2(n));
-		System.out.println("Sqrt: " + ob.mySqrt3(n));
+		//System.out.println("Sqrt: " + ob.mySqrt1(n));
+		//System.out.println("Sqrt: " + ob.mySqrt2(n));
+		//System.out.println("Sqrt: " + ob.mySqrt3(n));
+
+		System.out.println("Pow: " + ob.pow3(-2, -3));
+
 	}
 }

@@ -198,6 +198,27 @@ public class SlidingWindowStringPatterns {
 		return max;
 	}
 
+	//Approach2: Using Map and index
+	public int lengthOfLongestSubstring3(String s) {
+		if (s == null || s.length() == 0) return 0;
+
+		int l = 0, r = 0, n = s.length(), maxLen = 0;
+		Map<Character, Integer> map = new HashMap<>();
+
+		while (r < n) {
+			char ch = s.charAt(r);
+			//Note: Test input "abba" to understand this condition
+			if (map.containsKey(ch) && map.get(ch) >= l) {
+				l = map.get(ch) + 1;
+			}
+			map.put(ch, r);
+			maxLen = Math.max(maxLen, r - l + 1);
+			r++;
+		}
+
+		return maxLen;
+	}
+
 	/*
 	 * Longest Substring with At Most Two Distinct Characters:
 	 * Given a string, find the longest substring that contains only two unique characters. For example, given "abcbbbbcccbdddadacb",

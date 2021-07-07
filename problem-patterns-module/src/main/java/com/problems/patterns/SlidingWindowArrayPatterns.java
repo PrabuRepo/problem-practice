@@ -415,22 +415,19 @@ public class SlidingWindowArrayPatterns {
 	 * equals to k. Example 1: Input:nums = [1,1,1], k = 2 Output: 2
 	 */
 	/*
-	 * Why this solution works?
-	 The idea behind this approach is as follows: If the cumulative sum(represented by sum[i] for sum up to ith index) up to two 
-	 indices is the same, the sum of the elements lying in between those indices is zero. 
-	 Extending the same thought further, if the cumulative sum up to two indices, say i and j is at a difference of k
-	 i.e. if sum[i] - sum[j] = k the sum of elements lying between indices i and j is k.
-	 Explanation:
-	1. Hashmap<sum[0,i - 1], frequency>
-	2. sum[i, j] = sum[0, j] - sum[0, i - 1]    --> sum[0, i - 1] = sum[0, j] - sum[i, j]
-	     k           sum      hashmap-key     -->  hashmap-key  =  sum - k
-	3. now, we have k and sum.  
-	    As long as we can find a sum[0, i - 1], we then get a valid subarray
-	   which is as long as we have the hashmap-key,  we then get a valid subarray
-	4. Why don't map.put(sum[0, i - 1], 1) every time ?
-	    if all numbers are positive, this is fine
-	    if there exists negative number, there could be preSum frequency > 1
-	*/
+	 * Solution:
+	 * 	This is a small modification of the subarrayzerosum problem. In fact, we just modify a few parameters to make this work.
+	 *  In the previous solution, we were looking for the sum 0. Here, instead of 0, we're looking for K. While we maintain the
+	 *  prefix sum, if the prefix sum is equal to K, we know that a[0..i] is the resulting subarray.
+	 *  Now here's the important part - if we have previously encountered current_prefix_sum - K, i.e, it is in our hash map at 
+	 *  some index p, that means a[p+1..i] is our result.
+	 *  Why does this work? 
+	 *  Because from index p+1 to i, our sum increased by K. So that subarray has a sum of K .
+	 *  Another simple intuition  is, 
+	 *  	- if same prefix sum present in the map means, sub array sum is zero
+	 *  	- if same prefix sum - k present in the map means, sub array sum is k. i,e difference b/w prev index and curr index 
+	 *  	  is the result.
+	 */
 	public int subarraySumKCount(int[] nums, int k) {
 		int n = nums.length, count = 0, sum = 0;
 		//Hashmap: Key: sum[0,i - 1]; Val: frequency

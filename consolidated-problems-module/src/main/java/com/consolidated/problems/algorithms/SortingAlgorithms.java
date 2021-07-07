@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.TreeMap;
 
 import com.common.model.Interval;
@@ -335,6 +336,89 @@ public class SortingAlgorithms {
 	// Relative Sorting - Sorting based on another array
 
 	/****************** Type3: Min no of swap required to sort array ***********************/
+	//Approach1: Brute Force Approach: Time: O(n), Space: O(n)
+	public int findUnsortedSubarray1(int[] nums) {
+		int begin = nums.length - 1;
+		int end = nums.length - 1;
+
+		int[] sorted = nums.clone();
+		Arrays.sort(sorted);
+
+		for (int i = 0; i < nums.length; i++) {
+			if (sorted[i] != nums[i]) {
+				begin = i;
+				break;
+			}
+		}
+		for (int i = nums.length - 1; i > begin; i--) {
+			if (sorted[i] != nums[i]) {
+				end = i;
+				break;
+			}
+		}
+
+		return (end == begin) ? 0 : (end - begin + 1);
+	}
+
+	//Approach2: Time: O(n), Space: O(1)
+	public int findUnsortedSubarray2(int[] nums) {
+		int n = nums.length, start = 0, end = n - 1;
+
+		//Find first dip from start
+		while (start < n - 1) {
+			if (nums[start] > nums[start + 1]) break;
+			start++;
+		}
+
+		// There is no unsorted subarray
+		if (start == n - 1) return 0;
+
+		//Find last bump from end 
+		while (end > 0) {
+			if (nums[end] < nums[end - 1]) break;
+			end--;
+		}
+
+		//Find the min and max value between start and end index
+		int max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
+		for (int i = start; i <= end; i++) {
+			max = Math.max(max, nums[i]);
+			min = Math.min(min, nums[i]);
+		}
+
+		//Expand start and end outward:
+		//Find any other element greater than min in the left side
+		while (start > 0 && nums[start - 1] > min) {
+			start--;
+		}
+
+		//Find any other element less than max in the right side
+		while (end < n - 1 && nums[end + 1] < max) {
+			end++;
+		}
+
+		return end - start + 1;
+	}
+
+	//Approach3: Using Montonic Stack: Time: O(n), Space: O(1)
+	//Best example to understand the monotonic stack
+	public int findUnsortedSubarray3(int[] nums) {
+		Stack<Integer> stack = new Stack<>();
+		int l = nums.length, r = 0;
+		//monotonous increasing stack - Find start index
+		for (int i = 0; i < nums.length; i++) {
+			while (!stack.isEmpty() && nums[stack.peek()] > nums[i]) l = Math.min(l, stack.pop());
+			stack.push(i);
+		}
+		stack.clear();
+
+		//monotonous decreasing stack - Find end index
+		for (int i = nums.length - 1; i >= 0; i--) {
+			while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) r = Math.max(r, stack.pop());
+			stack.push(i);
+		}
+		return r - l > 0 ? r - l + 1 : 0;
+	}
 
 	/********************************* Type4: Cyclic Sort/Marker Alg ************************/
 	// 6.Find the Corrupt Pair
@@ -362,6 +446,50 @@ public class SortingAlgorithms {
 	// 8.Find the First K Missing Positive Numbers (hard)
 
 	// 9.Insert into a Cyclic Sorted List - Additional Prob - Check this
+
+	/************************* Type: Revisit and Add Category ************************************/
+
+	/*
+	 * Given a sorted array in non-decreasing order, return an array of squares of each number, also 
+	 * in non-decreasing order.
+	 * For example: [-4,-2,-1,0,3,5] -> [0,1,4,9,16,25]
+	 */
+	/*
+	 * Solution:
+	 * Approach1: Sorting Approach: Time: O(nlogn), Space: O(1)
+	 * 	Doing this problem in O(nlog(n)) time is pretty trivial - just square all the numbers and then
+	 * 	sort them.
+	 *
+	 * Approach2: Linear Solution -> Time: O(n), Space: O(n)
+	 *	There is a pattern in the input array. The largest squares will be at either end of the array.
+	 *	The lowest -ve number and the highest +ve number will be the largest squares. So, if we look at
+	 *	either ends of the array, we can go inwards and find smaller squares. This will give us squares 
+	 *  in descending order - from largest to smallest.
+	 *  Keep in mind that we will need to store the output somewhere. We will need to allocate a separate
+	 *  array for that. Unfortunately, we cannot do this in-place (i.e, by rearranging the input array).
+	 *  We allocate a new array and fill it from the back (since our squares are presented from largest to
+	 *  smallest).
+	 *	
+	 */
+	public int[] sortedSquares(int[] arr) {
+		if (arr == null || arr.length <= 1) return arr;
+
+		int n = arr.length, l = 0, h = n - 1, i = n - 1;
+		int[] result = new int[n];
+
+		while (l <= h) {
+			if (Math.abs(arr[l]) >= Math.abs(arr[h])) {
+				result[i--] = arr[l] * arr[l];
+				l++;
+			} else {
+				result[i--] = arr[h] * arr[h];
+				h--;
+			}
+		}
+
+		return result;
+	}
+
 	/********************* Type1: Interval Patterns - Selection Problems **************************/
 	/*
 	 * Max length chain/Maximum Length of Pair Chain: 

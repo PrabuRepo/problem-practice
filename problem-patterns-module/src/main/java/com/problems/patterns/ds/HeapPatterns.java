@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 import java.util.function.Supplier;
@@ -200,38 +197,37 @@ public class HeapPatterns {
 
 		return diff;
 	}
-	
+
 	/********************* 2.Kth Element Pattern *************************/
 	KthElementPatterns kthElementPatterns;
-	
+
 	public void kthSmallestElement(int[] a, int k) {
 		kthElementPatterns.kthSmallestElementInArray1(a, k);
 		kthElementPatterns.kthSmallestElementInArray21(a, k);
 		kthElementPatterns.kthSmallestElementInArray22(a, k);
-		kthElementPatterns.kthSmallestElementInArray3(a, k);	
+		kthElementPatterns.kthSmallestElementInArray3(a, k);
 	}
-	
+
 	/********************* 3.Top K Elements Pattern *************************/
 	KElementsPattern kElementsPatterns;
-	
+
 	public void topKFrequentElements(int[] nums, int k) {
 		kElementsPatterns.topKFrequentElements11(nums, k);
 		kElementsPatterns.topKFrequentElements12(nums, k);
 		kElementsPatterns.topKFrequentElements13(nums, k);
 		kElementsPatterns.topKFrequentElements2(nums, k);
 	}
-	
+
 	public void rearrangeString(String str, int k) {
 		kElementsPatterns.rearrangeString(str, k);
 	}
-	
+
 	public void taskScheduler(char[] tasks, int n) {
 		kElementsPatterns.leastInterval11(tasks, n);
 		kElementsPatterns.leastInterval12(tasks, n);
 		kElementsPatterns.leastInterval2(tasks, n);
 	}
-	
-	
+
 	/********************* 4.Two Heaps *************************/
 
 	/*Find Median from Data Stream:
@@ -287,8 +283,12 @@ public class HeapPatterns {
 
 	// Returns the median of current data stream
 	public double findMedian() {
-		return lower.size() == upper.size() ? ((double) lower.peek() + (double) upper.peek()) * 0.5
-				: (double) upper.peek();
+		return lower.size() != upper.size() ? (double) upper.peek()
+				: ((double) lower.peek() + (double) upper.peek()) * 0.5;
+
+		//To avoid Overflow: This will work, if the input range is within one data type range. Eg: int, long etc.
+		/*return lower.size() != upper.size() ?  upper.peek()
+				: (lower.peek() + (upper.peek() - lower.peek()) * 0.5);*/
 	}
 
 	//Remove from Heap takes O(n) time 
@@ -382,6 +382,10 @@ public class HeapPatterns {
 	public double findMedian(int[] nums) {
 		return left.size() != right.size() ? (double) nums[right.first()]
 				: ((double) nums[left.first()] + (double) nums[right.first()]) * 0.5;
+
+		//To avoid Overflow: This will work, if the input range is within one data type range. Eg: int, long etc.
+		/*return left.size() != right.size() ? nums[right.first()]
+				: nums[left.first()] + (nums[right.first()] - nums[left.first()]) / 2;*/
 	}
 
 	// Using Lambda Expression
@@ -423,7 +427,6 @@ public class HeapPatterns {
 		return result;
 	}
 
-	
 	/*************************** Misc ************************************/
 	/* Check Binary Heap Tree(Tree data structure):
 	 It should be a complete tree (i.e. all levels except last should be full).

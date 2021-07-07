@@ -252,14 +252,34 @@ public class BinarySearchPatterns {
 		return low;
 	}
 
-	// Find Peak Element
+	/* Find Peak Element:
+	 * 	Here is an observation: Any element in the array can lead us to a peak. Look at any element in the array. It's slope
+	 *  is either tilted one way or the other. If we follow the slope up, we will eventually reach a peak element. There are 
+	 *  a couple exceptions of course - if an element is a peak or a valley. If it's a peak, we've found a result. 
+	 *  If it's a valley (opposite of peak), we can go either direction - there's a peak on either side.
+	 *  
+	 *  So if we sample any element of the array, we can confidently say that there is a peak element either on it's left, 
+	 *  or it's right. This smells of binary search.
+	 *  We look at an element a[mid],
+	 *  	If the element is sloping up towards the left, we only consider left of mid. i.e h=m-1
+	 *  	If sloping up towards right, we only consider right of mid. i.e l=m+1
+	 *  	If it's a valley, we can go either direction. i.e l=m+1 or h=m-1
+	 *  	If it's a peak, we return the result. 
+	 */
 	public int findPeakElement(int[] nums) {
 		int l = 0, h = nums.length - 1, m = 0;
 		while (l <= h) {
 			m = l + (h - l) / 2;
-			if (m > 0 && nums[m - 1] > nums[m]) h = m - 1;
-			else if (m < nums.length - 1 && nums[m] < nums[m + 1]) l = m + 1;
-			else return m;
+			int left = m > 0 ? nums[m - 1] : Integer.MIN_VALUE;
+			int right = m < nums.length - 1 ? nums[m + 1] : Integer.MIN_VALUE;
+
+			if (left > nums[m]) { //Sloping up left and Valley
+				h = m - 1;
+			} else if (nums[m] < right) {//Sloping up right
+				l = m + 1;
+			} else { //Peak
+				return m;
+			}
 		}
 		return 0;
 	}

@@ -9,18 +9,9 @@ public class TestRecursionProblems extends Recursion {
 		TestRecursionProblems ob = new TestRecursionProblems();
 
 		// Methods to understand the recursion concepts
-		// ob.testSingleRecursion();
-		// ob.testMultipleRecursion();
+		ob.testSingleRecursion();
+		ob.testMultipleRecursion();
 		// ob.testIterativeVsRecursive();
-
-		// Recursion Problems
-		// ob.testSimpleProblems();
-
-		// ob.testType1Problems();
-
-		// ob.testSubSequenceProblems();
-
-		ob.testMiscProblems();
 	}
 
 	public void testSingleRecursion() {
@@ -28,11 +19,10 @@ public class TestRecursionProblems extends Recursion {
 		System.out.println("\nDecimal to Bin:" + decimalToBin(5));
 
 		System.out.println("\nHead Recursive call:");
-		headRecursiveCall(5);
-		// System.out.println("Total no of calls in headRecursiveCall: " + count);
+		increasingNumber(5);
 
 		System.out.println("\nTail Recursive call:");
-		tailRecursiveCall(5);
+		decreasingNumber(5);
 		// System.out.println("\nTotal no of calls in tailRecursiveCall: " + count);
 	}
 
@@ -40,8 +30,8 @@ public class TestRecursionProblems extends Recursion {
 		System.out.println("\nFib of value n:" + fibRecursive(6));
 		// System.out.println("\nFib of value n:" + fibIterative(6));
 
-		System.out.println("\nBinary Recursive Call:");
-		binaryRecursiveCall(3);
+		System.out.println("\nPrint Zig Zag:");
+		printZigZag(3);
 
 		int[] arr = { 0, 1, 89, 144, 2, 233, 5, 8, 377, 3, 1, 13, 21, 34, 55, 610 };
 		System.out.println("Before sorting:");
@@ -79,33 +69,4 @@ public class TestRecursionProblems extends Recursion {
 		System.out.println("\nNo of executions: " + tripleRecursionCount);
 	}
 
-	public void testSimpleProblems() {
-	}
-
-	public void testType1Problems() {
-	}
-
-	// SubSequence related problems
-	public void testSubSequenceProblems() {
-		// 1.Array Subsequence Problems
-		// testArraySubSequenceProblems();
-
-		// 2.String Subsequence Problems
-		testStringSubSequenceProblems();
-	}
-
-	public void testArraySubSequenceProblems() {
-	}
-
-	public void testStringSubSequenceProblems() {
-	}
-
-	public void testMiscProblems() {
-		//combination1(4);
-		int[] arr = { 1, 2, 3 };
-		combinationSum41(arr, 4);
-
-		int[] arr2 = { 3, 5, 1 };
-		coinChange(arr2, 5);
-	}
 }

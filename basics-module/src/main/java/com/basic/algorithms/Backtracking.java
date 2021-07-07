@@ -142,11 +142,15 @@ public class Backtracking {
 		}
 	}
 
-	/* Combination Sum :
+	/* Combination Sum : 
 	 * Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates 
 	 * where the chosen numbers sum to target. You may return the combinations in any order.
 	 * The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least 
 	 * one of the chosen numbers is different.
+	 * 
+	 * Time Complexity: Factorial Complexity
+	 * Space Complexity: O(Target); because in the worst case, both our buffer and the recursion stack will be the size of the target. 
+	 * (if we use all 1's to make target)
 	 */
 	public List<List<Integer>> combinationSum(int[] nums, int target) {
 		List<List<Integer>> res = new ArrayList<>();

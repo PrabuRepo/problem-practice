@@ -190,6 +190,8 @@ public class WordProblems {
 	 *   2.By iterating chars in the string and check whether substring is present in the dictionary.
 	 *       - wordBreakI12 -> Backtracking solution
 	 *       - wordBreakI22 -> DP solution 
+	 *   Note: Approach2 is preferable, because sometimes dictionary could be real dictionary which contains all the 
+	 *         English words. In this case, iterating given string is better than dictionary. 
 	 */
 	// Using DFS Search: It throws TLE
 	public boolean wordBreakI11(String s, List<String> wordDict) {
@@ -316,7 +318,6 @@ public class WordProblems {
 					lookup[j].add(subStr);
 				}
 			}
-
 		}
 
 		List<String> result = new ArrayList<>();
