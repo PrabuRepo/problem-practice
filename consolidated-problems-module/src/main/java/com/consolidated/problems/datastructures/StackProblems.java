@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Stack;
 
 public class StackProblems {
-	/********************** Type1: Parse the expression/String *******************/
+	/********************** Parse the expression/String *******************/
 	//	Mini Parser - NestedInteger
 	//	Nested List Weight Sum I, II - DFS/BFS
 
@@ -216,7 +216,7 @@ public class StackProblems {
 		return maxLen;
 	}
 
-	/********************** Type2: Monotonic Stack Problems *******************/
+	/********************** Monotonic Stack Problems *******************/
 	//Daily Temperatures
 	public int[] dailyTemperatures(int[] T) {
 		int[] result = new int[T.length];
@@ -405,7 +405,7 @@ public class StackProblems {
 		return sb.length() == 0 ? "0" : sb.toString();
 	}
 
-	/********************** Type3: Stack design problems *******************/
+	/********************** Stack design problems *******************/
 	//	Implement Stack using Queues
 	//	Sort Stack - Recursion/Temp Task
 	//	Three in One - MultiStack
@@ -449,7 +449,6 @@ public class StackProblems {
 		while (listIterator.hasNext()) System.out.print(listIterator.next() + " ");
 	}
 
-	/***************** Operations on Stack *****************/
 	// Reverse a stack using recursion - start
 	public void reverseStack(Stack<Integer> stack) {
 		System.out.println("Before reverse:");
@@ -581,7 +580,7 @@ public class StackProblems {
 		}
 	}
 
-	/***************************** Other Problems ******************************************/
+	/***************************** Uncategorized Problems ******************************************/
 	// Complete the freqQuery function below.
 	static List<Integer> freqQuery(List<List<Integer>> queries) {
 		Map<Integer, Integer> map = new HashMap<>();

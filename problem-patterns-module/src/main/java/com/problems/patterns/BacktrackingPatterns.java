@@ -21,6 +21,7 @@ public class BacktrackingPatterns {
 
 	DPStringPatterns dpStringPatterns;
 
+	/********************* Backtracking Patterns – Auxiliary Buffer ***********************/
 	/* Factor Combinations
 	 * Numbers can be regarded as product of its factors. For example, 
 	 * 	8 = 2 x 2 x 2; 2 x 4.

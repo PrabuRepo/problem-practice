@@ -1,18 +1,13 @@
 package com.consolidated.problems.algorithms;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Stack;
-import java.util.TreeMap;
 
-import com.common.model.Interval;
 import com.common.utilities.Utils;
 
 public class SortingAlgorithms {
 
-	/************************* Type1: Basic Sorting Problems ************************************/
+	/************************* Basic Sorting Problems ************************************/
 	/*
 	 * Merge Sorted Array:Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one sorted array.
 	 */
@@ -73,7 +68,7 @@ public class SortingAlgorithms {
 	//TODO: Maximum Gap - Bucket Sort/Radix Sort
 	//TODO: Sort Big File/External Sort - Study this
 
-	/*********************** Type2: Rearrangement Problems **************************************/
+	/*********************** Quick Select/Partititon **************************************/
 	// Sort Colors/Sort an array of 0s, 1s and 2s
 	// 1.Using count array - With additional space
 	public int[] sort012Approach1(int[] a) {
@@ -313,6 +308,35 @@ public class SortingAlgorithms {
 		}
 	}
 
+	/********************************* Cyclic Sort/Marker Alg ************************/
+	// 6.Find the Corrupt Pair
+	/*
+	 * Given an array containing n+1 numbers taken from the range 1 to n. One of the numbers got duplicated which also resulted in one number going
+	 * missing. Find these numbers.
+	 * Approach1: Cyclic Sort:
+	 * Approach2: Marker Approach
+	 */
+	public int[] findCorruptPair(int[] nums) {
+		// rearrange the array using cyclic sort.
+		int i = 0, n = nums.length;
+		while (i < n) {
+			int val = nums[i] - 1;
+			if (nums[val] != nums[i]) Utils.swap(nums, val, i);
+			else i++;
+		}
+
+		for (i = 0; i < nums.length; i++)
+			if (nums[i] != i + 1) return new int[] { nums[i], i + 1 };
+
+		return new int[] { 0, 0 };
+	}
+
+	// 8.Find the First K Missing Positive Numbers (hard)
+
+	// 9.Insert into a Cyclic Sorted List - Additional Prob - Check this
+
+	/****************** Data Rearrangement Problems ***********************/
+
 	/* Alternative Sorting:
 	 * Given an array of integers, print the array in such a way that the first element is first maximum and second
 	 * element is first minimum and so on.
@@ -335,7 +359,7 @@ public class SortingAlgorithms {
 
 	// Relative Sorting - Sorting based on another array
 
-	/****************** Type3: Min no of swap required to sort array ***********************/
+	/****************** Pattern Name?? ***********************/
 	//Approach1: Brute Force Approach: Time: O(n), Space: O(n)
 	public int findUnsortedSubarray1(int[] nums) {
 		int begin = nums.length - 1;
@@ -418,212 +442,6 @@ public class SortingAlgorithms {
 			stack.push(i);
 		}
 		return r - l > 0 ? r - l + 1 : 0;
-	}
-
-	/********************************* Type4: Cyclic Sort/Marker Alg ************************/
-	// 6.Find the Corrupt Pair
-	/*
-	 * Given an array containing n+1 numbers taken from the range 1 to n. One of the numbers got duplicated which also resulted in one number going
-	 * missing. Find these numbers.
-	 * Approach1: Cyclic Sort:
-	 * Approach2: Marker Approach
-	 */
-	public int[] findCorruptPair(int[] nums) {
-		// rearrange the array using cyclic sort.
-		int i = 0, n = nums.length;
-		while (i < n) {
-			int val = nums[i] - 1;
-			if (nums[val] != nums[i]) Utils.swap(nums, val, i);
-			else i++;
-		}
-
-		for (i = 0; i < nums.length; i++)
-			if (nums[i] != i + 1) return new int[] { nums[i], i + 1 };
-
-		return new int[] { 0, 0 };
-	}
-
-	// 8.Find the First K Missing Positive Numbers (hard)
-
-	// 9.Insert into a Cyclic Sorted List - Additional Prob - Check this
-
-	/************************* Type: Revisit and Add Category ************************************/
-
-	/*
-	 * Given a sorted array in non-decreasing order, return an array of squares of each number, also 
-	 * in non-decreasing order.
-	 * For example: [-4,-2,-1,0,3,5] -> [0,1,4,9,16,25]
-	 */
-	/*
-	 * Solution:
-	 * Approach1: Sorting Approach: Time: O(nlogn), Space: O(1)
-	 * 	Doing this problem in O(nlog(n)) time is pretty trivial - just square all the numbers and then
-	 * 	sort them.
-	 *
-	 * Approach2: Linear Solution -> Time: O(n), Space: O(n)
-	 *	There is a pattern in the input array. The largest squares will be at either end of the array.
-	 *	The lowest -ve number and the highest +ve number will be the largest squares. So, if we look at
-	 *	either ends of the array, we can go inwards and find smaller squares. This will give us squares 
-	 *  in descending order - from largest to smallest.
-	 *  Keep in mind that we will need to store the output somewhere. We will need to allocate a separate
-	 *  array for that. Unfortunately, we cannot do this in-place (i.e, by rearranging the input array).
-	 *  We allocate a new array and fill it from the back (since our squares are presented from largest to
-	 *  smallest).
-	 *	
-	 */
-	public int[] sortedSquares(int[] arr) {
-		if (arr == null || arr.length <= 1) return arr;
-
-		int n = arr.length, l = 0, h = n - 1, i = n - 1;
-		int[] result = new int[n];
-
-		while (l <= h) {
-			if (Math.abs(arr[l]) >= Math.abs(arr[h])) {
-				result[i--] = arr[l] * arr[l];
-				l++;
-			} else {
-				result[i--] = arr[h] * arr[h];
-				h--;
-			}
-		}
-
-		return result;
-	}
-
-	/********************* Type1: Interval Patterns - Selection Problems **************************/
-	/*
-	 * Max length chain/Maximum Length of Pair Chain: 
-	 * Time Complexity: O(nlogn)
-	 */
-	public int findLongestChain(int[][] pairs) {
-		int count = 1, i = 0, j = 1;
-		Arrays.sort(pairs, (a, b) -> a[0] - b[0]);
-		while (i < pairs.length && j < pairs.length) {
-			if (pairs[i][1] < pairs[j][0]) {
-				count++;
-				i = j;
-				j++;
-			} else {
-				if (pairs[i][1] > pairs[j][1]) i = j;
-				j++;
-			}
-		}
-
-		return count;
-	}
-
-	/******************** Type1: Interval Patterns - Interval Manipulations ***********************/
-
-	/* Data Stream as Disjoint Intervals:
-	 * Given a data stream input of non-negative integers a1, a2, ..., an, ..., summarize the numbers seen so far as a list
-	 * of disjoint intervals. For example, suppose the integers from the data stream are 1, 3, 7, 2, 6, ..., then the
-	 * summary will be: 
-	 * [1, 1] 
-	 * [1, 1], [3, 3] 
-	 * [1, 1], [3, 3], [7, 7] 
-	 * [1, 3], [7, 7] 
-	 * [1, 3], [6, 7]
-	 */
-	/** Initialize your data structure here. */
-	LinkedList<Integer> list = new LinkedList<>();
-	TreeMap<Integer, Interval> tree = new TreeMap<>();
-
-	// Brute Force Approach
-	public void addNum1(int val) {
-		/*list.add(val);
-		Collections.sort(list);*/
-		int i = 0;
-		for (i = 0; i < list.size(); i++) {
-			if (val == list.get(i)) return;
-			if (val < list.get(i)) {
-				list.add(i, val);
-				break;
-			}
-		}
-		if (list.isEmpty() || list.size() == i) list.add(val);
-	}
-
-	public List<Interval> getIntervals1() {
-		List<Interval> intervals = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			int s = i;
-			while (i < list.size() - 1 && (list.get(i) + 1 == list.get(i + 1) || list.get(i) == list.get(i + 1))) i++;
-
-			intervals.add(new Interval(list.get(s), list.get(i)));
-		}
-		return intervals;
-	}
-
-	public void addNum2(int val) {
-		if (tree.containsKey(val)) return;
-		Integer l = tree.lowerKey(val);
-		Integer h = tree.higherKey(val);
-		if (l != null && h != null && tree.get(l).end + 1 == val && h == val + 1) {
-			tree.get(l).end = tree.get(h).end;
-			tree.remove(h);
-		} else if (l != null && tree.get(l).end + 1 >= val) {
-			tree.get(l).end = Math.max(tree.get(l).end, val);
-		} else if (h != null && h == val + 1) {
-			tree.put(val, new Interval(val, tree.get(h).end));
-			tree.remove(h);
-		} else {
-			tree.put(val, new Interval(val, val));
-		}
-	}
-
-	public List<Interval> getIntervals2() {
-		return new ArrayList<>(tree.values());
-	}
-
-	//TODO: Move below problems to appropriate category
-
-	/*
-	 * Triplet Sum: Given 3 arrays a,b,c of different sizes, find the number of distinct triplets(p,q,r) 
-	 * where p is an element of a, written as p->a,q->b and r->c, satisfying the criteria: p<=q && q>=r.
-	 * For example, a={3,5,7} b={3,6} and c={4,6,9}, we find four distinct triplets: (3,6,4), (3,6,6), (5,6,4), (5,6,6)
-	 */
-	// Approach1: Brute Force Approach
-	static long triplets1(int[] a, int[] b, int[] c) {
-		int count = 0, p, q, r;
-
-		for (int i = 0; i < a.length; i++) {
-			p = a[i];
-			if (i > 0 && a[i - 1] == a[i]) continue;
-			for (int j = 0; j < b.length; j++) {
-				q = b[j];
-				if (p > q || (j > 0 && b[j - 1] == b[j])) continue;
-				for (int k = 0; k < c.length; k++) {
-					r = c[k];
-					if (k > 0 && a[k - 1] == a[k]) continue;
-
-					if (q >= r) count++;
-				}
-			}
-		}
-		return count;
-	}
-
-	// Approach2: Sorting & compare with b[] array- Time Complexity-O(n^3)
-	static long triplets(int[] a, int[] b, int[] c) {
-		Arrays.sort(a);
-		Arrays.sort(b);
-		Arrays.sort(c);
-
-		int p = 0, r = 0;
-		long pCount = 0, rCount = 0, total = 0;
-		for (int q = 0; q < b.length; q++) {
-			while (p < a.length && a[p] <= b[q]) {
-				if (p == 0 || a[p - 1] != a[p]) pCount++;
-				p++;
-			}
-			while (r < c.length && c[r] <= b[q]) {
-				if (r == 0 || c[r - 1] != c[r]) rCount++;
-				r++;
-			}
-			if (q == 0 || b[q - 1] != b[q]) total += pCount * rCount;
-		}
-
-		return total;
 	}
 
 }

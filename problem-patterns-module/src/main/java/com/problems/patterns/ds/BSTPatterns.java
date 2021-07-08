@@ -9,7 +9,7 @@ import com.common.model.TreeNode;
 
 public class BSTPatterns {
 
-	/****************** Type1:Basic/Checking/Construction/Conversion/Searching ************************/
+	/****************** Basic/Checking/Construction/Conversion/Searching ************************/
 
 	public boolean isValidBST(TreeNode root) {
 		return isValidBST(root, null, null);
@@ -196,7 +196,7 @@ public class BSTPatterns {
 		return curr.val;
 	}
 
-	/**************************** Type2: Traversal Modification **************************/
+	/**************************** Traversal Modification **************************/
 
 	//	Recover Binary Search Tree -Inorder/Morris Traversal
 	TreeNode firstNode = null;

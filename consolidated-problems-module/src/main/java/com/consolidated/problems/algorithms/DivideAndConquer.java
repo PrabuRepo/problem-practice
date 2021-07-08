@@ -565,7 +565,7 @@ public class DivideAndConquer {
 		return -1;
 	}
 
-	/******************* Misc Problems *********************/
+	/******************* Uncategorized Problems *********************/
 
 	// Square root of an integer - Refer MathAlgorithms.java for this solution
 

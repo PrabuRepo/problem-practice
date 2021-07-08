@@ -28,14 +28,14 @@ public class GraphPatterns {
 
 	private CloneProblems cloneProblems = new CloneProblems();
 
-	/*************************** Type1: Graph DS Problems *******************/
+	/*************************** Graph DS Problems *******************/
 	public void cloneGraph() {
 		cloneProblems.cloneGraph1(null);
 		cloneProblems.cloneGraph2(null);
 		cloneProblems.cloneGraph3(null);
 	}
 
-	/*************************** Type2: Graph Cycle *******************/
+	/*************************** Graph Cycle *******************/
 
 	// Course Schedule I:
 	//Topo Sort - BFS Approach - Using LinkedList array
@@ -193,7 +193,7 @@ public class GraphPatterns {
 
 	}
 
-	/*************************** Type3: Topo Sort(DFS/BFS(Kahn�s)) *******************/
+	/*************************** Topo Sort(DFS/BFS(Kahn�s)) *******************/
 	//	Course Schedule II - Find course order - Using topo sort(reverse)
 	//BFS Solution: Time: O(V+E) and Space: O(V+E)
 	public int[] findOrder(int n, int[][] prereq) {
@@ -381,7 +381,7 @@ public class GraphPatterns {
 		}
 	}
 
-	/*************************** Type4: Graph Traversals(BFS/DFS/UF) *******************/
+	/*************************** Graph Traversals(BFS/DFS/UF) *******************/
 	//Minimum Height Trees - BFS
 	/*
 	some statement for tree in graph theory:

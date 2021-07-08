@@ -8,7 +8,7 @@ import com.common.utilities.Utils;
 
 public class StringProblems {
 
-	/************************* 1.Using 2 Pointers & Simple Problems *************/
+	/************************* Using 2 Pointers & Simple Problems ******************/
 	// Reverse String
 	public String reverseString(String s) {
 		if (s == null) return s;
@@ -120,7 +120,7 @@ public class StringProblems {
 		return true;
 	}
 
-	/*************** 3.Sting Pretty Print **************/
+	/********************* Sting Pretty Print ***************************/
 	/* ZigZag Conversion:
 	 * The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of 
 	 * rows like this: (you may want to display this pattern in a fixed font for better legibility)
@@ -177,7 +177,7 @@ public class StringProblems {
 		return sb.toString();
 	}
 
-	/************************* 4.String Math ************************/
+	/********************************* String Math ****************************/
 
 	/* Compare Version Numbers:
 	 * Compare two version numbers version1 and version2. 
@@ -251,7 +251,7 @@ public class StringProblems {
 		return result;
 	}
 
-	/************************* 5.Hashing ************************/
+	/********************* Hashing(Using a Length-256 Integer Array) ***********************/
 	// Valid Anagram
 	// Approach1: Using Hashing; Time Complexity-O(n)
 	public boolean isAnagram(String s, String t) {

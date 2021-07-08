@@ -1,21 +1,110 @@
 package com.consolidated.problems.algorithms;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
 
 import com.common.model.HuffmanCode;
+import com.common.model.Interval;
 
 public class GreedyAlgorithms {
 
-	/************************* Type1: Sweepline ***************************/
+	/******************** Interval Patterns - Pattern1 ***********************/
+	/*
+	 * Max length chain/Maximum Length of Pair Chain: 
+	 * Time Complexity: O(nlogn)
+	 */
+	public int findLongestChain(int[][] pairs) {
+		int count = 1, i = 0, j = 1;
+		Arrays.sort(pairs, (a, b) -> a[0] - b[0]);
+		while (i < pairs.length && j < pairs.length) {
+			if (pairs[i][1] < pairs[j][0]) {
+				count++;
+				i = j;
+				j++;
+			} else {
+				if (pairs[i][1] > pairs[j][1]) i = j;
+				j++;
+			}
+		}
+
+		return count;
+	}
+
+	/******************** Interval Patterns - Pattern2 ***********************/
+
+	/* Data Stream as Disjoint Intervals:
+	 * Given a data stream input of non-negative integers a1, a2, ..., an, ..., summarize the numbers seen so far as a list
+	 * of disjoint intervals. For example, suppose the integers from the data stream are 1, 3, 7, 2, 6, ..., then the
+	 * summary will be: 
+	 * [1, 1] 
+	 * [1, 1], [3, 3] 
+	 * [1, 1], [3, 3], [7, 7] 
+	 * [1, 3], [7, 7] 
+	 * [1, 3], [6, 7]
+	 */
+	/** Initialize your data structure here. */
+	LinkedList<Integer> list = new LinkedList<>();
+	TreeMap<Integer, Interval> tree = new TreeMap<>();
+
+	// Brute Force Approach
+	public void addNum1(int val) {
+		/*list.add(val);
+		Collections.sort(list);*/
+		int i = 0;
+		for (i = 0; i < list.size(); i++) {
+			if (val == list.get(i)) return;
+			if (val < list.get(i)) {
+				list.add(i, val);
+				break;
+			}
+		}
+		if (list.isEmpty() || list.size() == i) list.add(val);
+	}
+
+	public List<Interval> getIntervals1() {
+		List<Interval> intervals = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			int s = i;
+			while (i < list.size() - 1 && (list.get(i) + 1 == list.get(i + 1) || list.get(i) == list.get(i + 1))) i++;
+
+			intervals.add(new Interval(list.get(s), list.get(i)));
+		}
+		return intervals;
+	}
+
+	public void addNum2(int val) {
+		if (tree.containsKey(val)) return;
+		Integer l = tree.lowerKey(val);
+		Integer h = tree.higherKey(val);
+		if (l != null && h != null && tree.get(l).end + 1 == val && h == val + 1) {
+			tree.get(l).end = tree.get(h).end;
+			tree.remove(h);
+		} else if (l != null && tree.get(l).end + 1 >= val) {
+			tree.get(l).end = Math.max(tree.get(l).end, val);
+		} else if (h != null && h == val + 1) {
+			tree.put(val, new Interval(val, tree.get(h).end));
+			tree.remove(h);
+		} else {
+			tree.put(val, new Interval(val, val));
+		}
+	}
+
+	public List<Interval> getIntervals2() {
+		return new ArrayList<>(tree.values());
+	}
+
+	/************************* Sweepline ***************************/
 	//TODO: Time Intersection
 	//TODO: Number of Airplanes in the Sky
 
-	/*************************** Type2: Optimal Solution Problem ******************/
+	/*************************** Optimal Solution Problem ******************/
 	/* Minimum number of Coins:
 	 * Given a value N, total sum you have. You have to make change for Rs. N, and there is infinite supply of each of the
 	 * denominations in Indian currency
@@ -73,28 +162,7 @@ public class GreedyAlgorithms {
 		return minDiff;
 	}
 
-	/*
-	 * Max length chain/Maximum Length of Pair Chain: 
-	 * Time Complexity: O(nlogn)
-	 */
-	public int findLongestChain(int[][] pairs) {
-		int count = 1, i = 0, j = 1;
-		Arrays.sort(pairs, (a, b) -> a[0] - b[0]);
-		while (i < pairs.length && j < pairs.length) {
-			if (pairs[i][1] < pairs[j][0]) {
-				count++;
-				i = j;
-				j++;
-			} else {
-				if (pairs[i][1] > pairs[j][1]) i = j;
-				j++;
-			}
-		}
-
-		return count;
-	}
-
-	/****************************** Type3: Possibilities ****************************/
+	/****************************** Possibilities ****************************/
 
 	/*
 	 * Largest number possible:
@@ -207,7 +275,7 @@ public class GreedyAlgorithms {
 		return start1 != nums1.length;
 	}
 
-	/*************************** Type4: Other Greedy Problems ******************/
+	/*************************** Uncategorized Problems ******************/
 	/*
 	 * Huffman Coding & Decoding:
 	 *    Huffman coding is a lossless data compression algorithm. The idea is to assign variable-length codes to input characters, 

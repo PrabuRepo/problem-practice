@@ -16,7 +16,756 @@ import java.util.Set;
 import com.common.utilities.Utils;
 
 public class ArrayProblems {
-	/**************************** Type1: Array Manipulations ***********************************/
+
+	/**************************** Two Pointers *****************************************/
+	// Triplet/All 3 Sum in Array/3Sum Smaller
+	// Pythagorean Triplet
+	// Count Triplets - GP Triplets
+	// 4Sum I, II
+	// Pairs - Hashset
+
+	/*Pairs: You will be given an array of integers and a target value. Determine the number of pairs of array elements 
+	 * that have a difference equal to a target value.
+	 * For example, given an array of [1, 2, 3, 4] and a target value of 1, we have three values meeting the condition.
+	 */
+	// Approach1: BruteForce Approach: Time Complexity: O(n^2)
+	public int pairs1(int k, int[] arr) {
+		int count = 0;
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = i + 1; j < arr.length; j++) {
+				if (Math.abs(arr[i] - arr[j]) == k) count++;
+			}
+		}
+
+		return count;
+	}
+
+	// Approach2: Two Ptr Approach: Time Complexity: O(nlogn)
+	public int pairs2(int k, int[] arr) {
+		int count = 0;
+		Arrays.sort(arr);
+
+		int l = 0, r = 1;
+		while (r < arr.length) {
+			int diff = arr[r] - arr[l];
+			if (diff == k) {
+				count++;
+				r++;
+			} else if (diff < k) {
+				r++;
+			} else {
+				l++;
+			}
+		}
+
+		return count;
+	}
+
+	// Approach3: Two Ptr Approach: Time Complexity: O(n)
+	public int pairs3(int k, int[] arr) {
+		int count = 0;
+		HashSet<Integer> set = new HashSet<>();
+
+		for (int i = 0; i < arr.length; i++)
+			set.add(arr[i]);
+
+		for (int i = 0; i < arr.length; i++)
+			if (set.contains(arr[i] + k)) count++;
+
+		return count;
+	}
+
+	// Count Triplets - GP Triplets
+	long countTriplets(List<Long> arr, long r) {
+		long count = 0, target = 0, gp = (r + r * r);
+		HashSet<Long> set;
+		for (int i = 0; i < arr.size(); i++) {
+			target = arr.get(i) * gp; // i.e arr.get(i)*gp = arr.get(i)*(1+r+r*r) - arr.get(i)
+			System.out.println(target);
+			set = new HashSet<>();
+			for (int j = i + 1; j < arr.size(); j++) {
+				System.out.println(target - arr.get(j));
+				if (set.contains(arr.get(j))) count++;
+				else set.add(target - arr.get(j));
+			}
+		}
+
+		return count;
+	}
+
+	public int[][] threeSumZero(int[] nums) {
+		Arrays.sort(nums);
+		List<int[]> res = new ArrayList<>();
+		for (int i = 0; i < nums.length - 2; i++) {
+			if (i > 0 && nums[i - 1] == nums[i]) continue;
+			if (nums[i] > 0) break;
+			int left = i + 1;
+			int right = nums.length - 1;
+			while (left < right) {
+				long sum = (long) nums[i] + (long) nums[left] + (long) nums[right];
+				if (sum == 0) {
+					res.add(new int[] { nums[i], nums[left], nums[right] });
+					while (left < right && nums[left] == nums[left + 1]) left++;
+					while (left < right && nums[right] == nums[right - 1]) right--;
+				}
+				if (sum > 0) right--;
+				else left++;
+			}
+		}
+		return res.toArray(new int[res.size()][]);
+	}
+
+	// Using List:
+	public ArrayList<ArrayList<Integer>> threeSumZero(ArrayList<Integer> A) {
+		ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+		if (A == null || A.size() <= 2) return result;
+		Collections.sort(A);
+		// System.out.println(A.toString());
+		ArrayList<Integer> temp = null;
+		for (int i = 0; i < A.size(); i++) {
+			if (i > 0 && A.get(i - 1).equals(A.get(i))) continue;
+			int l = i + 1, h = A.size() - 1;
+			while (l < h) {
+				// System.out.println(A.get(i)+ ", " + A.get(l) +", "+A.get(h));
+				long sum = (long) A.get(i) + (long) A.get(l) + (long) A.get(h);
+				if (sum == 0) {
+					// System.out.println("Sum: "+sum);
+					temp = new ArrayList<>();
+					temp.add(A.get(i));
+					temp.add(A.get(l));
+					temp.add(A.get(h));
+					result.add(temp);
+
+					// Skip the duplicate
+					while (l < h && A.get(l).equals(A.get(l + 1))) l++;
+					while (l < h && A.get(h).equals(A.get(h - 1))) h--;
+				}
+				if (sum <= 0) l++;
+				else h--;
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * Pythagorean Triplet in an array: Given an array of integers, write a function that returns true if there is a 
+	 * triplet (a, b, c) that satisfies a2 + b2 = c2.
+	 */
+	// 1.Brute Force Approach: Time Complexity-O(n^3)
+	public boolean isPythagoreanTriplet1(int[] arr) {
+		int n = arr.length;
+		int a, b, c;
+		for (int i = 0; i < n; i++) {
+			a = arr[i] * arr[i];
+			for (int j = i + 1; j < n; j++) {
+				b = arr[j] * arr[j];
+				for (int k = j + 1; k < n; k++) {
+					c = arr[k] * arr[k];
+					if (a + b == c || a + c == b || a == b + c) {
+						System.out.println(arr[i] + " " + arr[j] + " " + arr[k]);
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	// Using Two Ptr:
+	public boolean isPythagoreanTriplet2(int[] arr) {
+		int n = arr.length;
+
+		for (int i = 0; i < n; i++)
+			arr[i] = arr[i] * arr[i];
+
+		Arrays.sort(arr);
+
+		for (int i = n - 1; i > 1; i--) {
+			if (sumPresent1(arr, 0, i - 1, arr[i], arr[i])) return true;
+		}
+		return false;
+	}
+
+	// Using 2 ptr approach
+	public boolean sumPresent1(int[] nums, int l, int h, int firstValue, int target) {
+		// target -= firstValue; // Remove first value from the target, two find the remaining two values
+
+		while (l < h) {
+			if (nums[l] + nums[h] == target) {
+				System.out.println("The Triplet is: " + firstValue + ", " + nums[l] + ", " + nums[h]);
+				return true;
+			} else if (nums[l] + nums[h] > target) {
+				h--;
+			} else {
+				l++;
+			}
+		}
+
+		return false;
+	}
+
+	// Using sort & hash DS
+	public boolean isPythagoreanTriplet3(int[] arr) {
+		int n = arr.length;
+		HashSet<Integer> set = new HashSet<>();
+
+		for (int i = 0; i < n; i++)
+			set.add(arr[i] * arr[i]);
+
+		int a = 0, b = 0;
+		for (int i = 0; i < n - 1; i++) {
+			a = arr[i] * arr[i];
+
+			for (int j = i + 1; j < n; j++) {
+				b = arr[j] * arr[j];
+				if (set.contains(a + b)) {
+					System.out.println(arr[i] + " " + arr[j] + " " + (int) Math.sqrt(a + b));
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/*
+	 * Triplet Sum: Given 3 arrays a,b,c of different sizes, find the number of distinct triplets(p,q,r) 
+	 * where p is an element of a, written as p->a,q->b and r->c, satisfying the criteria: p<=q && q>=r.
+	 * For example, a={3,5,7} b={3,6} and c={4,6,9}, we find four distinct triplets: (3,6,4), (3,6,6), (5,6,4), (5,6,6)
+	 */
+	// Approach1: Brute Force Approach
+	static long triplets1(int[] a, int[] b, int[] c) {
+		int count = 0, p, q, r;
+
+		for (int i = 0; i < a.length; i++) {
+			p = a[i];
+			if (i > 0 && a[i - 1] == a[i]) continue;
+			for (int j = 0; j < b.length; j++) {
+				q = b[j];
+				if (p > q || (j > 0 && b[j - 1] == b[j])) continue;
+				for (int k = 0; k < c.length; k++) {
+					r = c[k];
+					if (k > 0 && a[k - 1] == a[k]) continue;
+
+					if (q >= r) count++;
+				}
+			}
+		}
+		return count;
+
+	}
+
+	// Approach2: Sorting & compare with b[] array- Time Complexity-O(n^3)
+	static long triplets(int[] a, int[] b, int[] c) {
+		Arrays.sort(a);
+		Arrays.sort(b);
+		Arrays.sort(c);
+
+		int p = 0, r = 0;
+		long pCount = 0, rCount = 0, total = 0;
+		for (int q = 0; q < b.length; q++) {
+			while (p < a.length && a[p] <= b[q]) {
+				if (p == 0 || a[p - 1] != a[p]) pCount++;
+				p++;
+			}
+			while (r < c.length && c[r] <= b[q]) {
+				if (r == 0 || c[r - 1] != c[r]) rCount++;
+				r++;
+			}
+			if (q == 0 || b[q - 1] != b[q]) total += pCount * rCount;
+		}
+
+		return total;
+	}
+
+	// 4Sum I:
+	// Brute Force Approach
+	public List<List<Integer>> fourSum(int[] nums, int target) {
+		int n = nums.length;
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> eachList = new ArrayList<>();
+		for (int i = 0; i < n - 3; i++) {
+			target -= nums[i];
+			for (int j = i + 1; j < n - 2; j++) {
+				target -= nums[j];
+				for (int k = j + 1; k < n; k++) {
+					target -= nums[k];
+					for (int l = 0; l < n; l++) {
+						target -= nums[k];
+						if (target == 0 && !result.contains(eachList)) result.add(new ArrayList<>(eachList));
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	// Approach2: Two Ptr Approach: Time Complexity-O(n^3)
+	public List<List<Integer>> fourSum2(int[] nums, int target) {
+		int n = nums.length;
+		Arrays.sort(nums); // Sort the array to remove the duplicate order
+		List<List<Integer>> result = new ArrayList<>();
+
+		for (int i = 0; i < n - 3; i++) {
+			for (int j = i + 1; j < n - 2; j++) {
+				int l = j + 1;
+				int h = n - 1;
+				while (l < h) {
+					int sum = nums[i] + nums[j] + nums[l] + nums[h];
+					if (sum == target) {
+						List<Integer> eachList = Arrays.asList(nums[i], nums[j], nums[l], nums[h]);
+						if (!result.contains(eachList)) result.add(eachList);
+						l++;
+						h--;
+					} else if (sum < target) {
+						l++;
+					} else {
+						h--;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/*
+	 * 4SumII: 
+	 * Given four lists A, B, C, D of integer values, compute how many tuples (i, j, k, l) there are such that
+	 *  A[i] + B[j] + C[k] + D[l] is zero.
+	 */
+	// Approach1: BruteForce Approach: Time Complexity-O(n^4)
+	public int fourSumCount1(int[] A, int[] B, int[] C, int[] D) {
+		int n = A.length, count = 0;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				for (int k = 0; k < n; k++)
+					for (int l = 0; l < n; l++)
+						if (0 == A[i] + B[j] + C[k] + D[l]) count++;
+		return count;
+	}
+
+	// Approach2: Efficient Approach: Time Complexity-O(n^2), Space Complexity-O(n^2)
+	public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+		int n = A.length, count = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++) {
+				int sum = A[i] + B[j];
+				map.put(sum, map.getOrDefault(sum, 0) + 1);
+			}
+
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++) {
+				int sum = C[i] + D[j];
+				count += map.getOrDefault(-sum, 0);
+			}
+
+		return count;
+	}
+
+	/*********************** Unsorted: Forward & Reverse Traversals **************************/
+	/* Element with left side smaller and right side greater
+	 * Given an unsorted array of size N. Find the first element in array such that all of its left elements are smaller and 
+	 * all right elements to it are greater than it.
+	 * Note: Left and right side elements can be equal to required element. And extreme elements cannot be required element.
+	 * Approach1: Brute Force Approach
+	 *    	A simple solution is to consider every element one by one. For every element, compare it with all elements on the left
+	 *  and all elements on right. Time complexity of this solution is O(n^2).
+	 * Approach2: Efficient Approach
+	 * 	   Create two arrays leftMax[] and rightMin[].Traverse input array from left to right and fill leftMax[] such that leftMax[i] 
+	 * contains maximum element from 0 to i-1 in input array. Traverse input array from right to left and fill rightMin[] such that
+	 * rightMin[i] contains minimum element from to n-1 to i+1 in input array. Traverse input array. For every element arr[i], check
+	 * if arr[i] is greater than leftMax[i] and smaller than rightMin[i]. If yes, return i.
+	 * Approach3:
+	 * 		Further Optimization to the above approach is to use only one extra array and traverse input array only twice. The first 
+	 * traversal is the same as above and fills leftMax[]. Next traversal traverses from the right and keeps track of the minimum. 
+	 * The second traversal also finds the required element.
+	 */
+	// Approach3: TC: O(n) & SC: O(2n)
+	public static int findElement1(int[] arr) {
+		int n = arr.length;
+		int[] leftMax = new int[n];
+		int[] rightMin = new int[n];
+		leftMax[0] = arr[0];
+		for (int i = 1; i < n; i++)
+			leftMax[i] = Math.max(leftMax[i - 1], arr[i]);
+		// System.out.println(Arrays.toString(leftMax));
+		rightMin[n - 1] = arr[n - 1];
+		for (int i = n - 2; i >= 0; i--)
+			rightMin[i] = Math.min(arr[i], rightMin[i + 1]);
+		// System.out.println(Arrays.toString(rightMin));
+		for (int i = 1; i < n - 1; i++) {
+			if (arr[i] == leftMax[i] && arr[i] == rightMin[i]) return arr[i];
+		}
+		return -1;
+	}
+
+	// Efficient Approach: TC: O(n) & SC: O(n)
+	public static int findElement(int[] arr) {
+		int m = arr[0], n = arr.length;
+		int ans = -1;
+		for (int i = 1; i < n; i++) {
+			if (arr[i] >= m) {
+				m = arr[i];
+				if (ans == -1 && i < n - 1) ans = m;
+			} else if (arr[i] < ans) {
+				ans = -1;
+			}
+		}
+		return ans;
+	}
+
+	/* Leaders in an array:
+	 * Given an array of positive integers. Your task is to find the leaders in the array.
+	 * Note: An element of array is leader if it is greater than or equal to all the elements to its right side. Also, the
+	 * rightmost element is always a leader. 
+	 */
+	public static void leadersInArray3(int[] arr) {
+		int currMax = Integer.MIN_VALUE;
+		ArrayList<Integer> result = new ArrayList<>();
+		for (int i = arr.length - 1; i >= 0; i--) {
+			if (arr[i] > currMax) {
+				currMax = arr[i];
+				result.add(arr[i]);
+			}
+		}
+		for (int i = result.size() - 1; i >= 0; i--) {
+			System.out.print(result.get(i) + " ");
+		}
+	}
+
+	public static void leadersInArray(int[] arr) {
+		PriorityQueue<Integer> queue = new PriorityQueue<>(Collections.reverseOrder());
+		for (int i = 0; i < arr.length; i++)
+			queue.add(arr[i]);
+		for (int i = 0; i < arr.length; i++) {
+			queue.remove(arr[i]);
+			if (queue.isEmpty() || arr[i] > queue.peek()) System.out.print(arr[i] + " ");
+		}
+	}
+
+	/*
+	 * Given a sorted array in non-decreasing order, return an array of squares of each number, also 
+	 * in non-decreasing order.
+	 * For example: [-4,-2,-1,0,3,5] -> [0,1,4,9,16,25]
+	 */
+	/*
+	 * Solution:
+	 * Approach1: Sorting Approach: Time: O(nlogn), Space: O(1)
+	 * 	Doing this problem in O(nlog(n)) time is pretty trivial - just square all the numbers and then
+	 * 	sort them.
+	 *
+	 * Approach2: Linear Solution -> Time: O(n), Space: O(n)
+	 *	There is a pattern in the input array. The largest squares will be at either end of the array.
+	 *	The lowest -ve number and the highest +ve number will be the largest squares. So, if we look at
+	 *	either ends of the array, we can go inwards and find smaller squares. This will give us squares 
+	 *  in descending order - from largest to smallest.
+	 *  Keep in mind that we will need to store the output somewhere. We will need to allocate a separate
+	 *  array for that. Unfortunately, we cannot do this in-place (i.e, by rearranging the input array).
+	 *  We allocate a new array and fill it from the back (since our squares are presented from largest to
+	 *  smallest).
+	 *	
+	 */
+	public int[] sortedSquares(int[] arr) {
+		if (arr == null || arr.length == 0) return arr;
+
+		int n = arr.length, l = 0, h = n - 1, i = n - 1;
+		int[] result = new int[n];
+
+		while (l <= h) {
+			if (Math.abs(arr[l]) >= Math.abs(arr[h])) {
+				result[i--] = arr[l] * arr[l];
+				l++;
+			} else {
+				result[i--] = arr[h] * arr[h];
+				h--;
+			}
+		}
+
+		return result;
+	}
+
+	/* Find Majority Element in an Array/Majority Element I, II
+	 * Given an array of size n, find the majority element. The majority element is the element that appears more than n/2 times.
+	 */
+	//Using Sorting:
+	public int majorityElement1(int[] nums) {
+		Arrays.sort(nums);
+		return nums[nums.length / 2];
+	}
+
+	// Hashtable 
+	public int majorityElement2(int[] nums) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int ret = 0;
+		for (int num : nums) {
+			if (!map.containsKey(num)) map.put(num, 1);
+			else map.put(num, map.get(num) + 1);
+			if (map.get(num) > nums.length / 2) {
+				ret = num;
+				break;
+			}
+		}
+		return ret;
+	}
+
+	/* Using Moore’s Voting Algorithm: Time Complexity:O(n)
+	 * The algorithm for the first phase that works in O(n) is known as Moore’s Voting Algorithm. Basic idea of the algorithm 
+	 * is that if each occurrence of an element e can be cancelled with all the other elements that are different from e then
+	 * e will exist till end if it is a majority element.
+	*/
+	public int majorityElement3(int[] nums) {
+		if (nums == null || nums.length == 0) return -1;
+		int count = 0, element = 0;
+		for (int num : nums) {
+			if (count == 0) element = num;
+
+			count = (num == element) ? count + 1 : count - 1;
+		}
+
+		// check array, verify element is majority
+		count = 0;
+		for (int num : nums) {
+			if (num == element) count++;
+		}
+
+		return count > nums.length / 2 ? element : -1;
+	}
+
+	public int majorityElement4(int[] nums) {
+		if (nums == null || nums.length == 0) return -1;
+
+		int element = nums[0], count = 1, n = nums.length;
+		for (int i = 1; i < n; i++) {
+			if (nums[i] == element) {
+				count++;
+			} else if (count > 0) {
+				count--;
+			} else {
+				element = nums[i];
+				count = 1;
+			}
+		}
+
+		// check array, verify element is majority
+		count = 0;
+		for (int num : nums) {
+			if (num == element) count++;
+		}
+
+		return count > n / 2 ? element : -1;
+	}
+
+	/* Majority of 1/K element:
+	 * You are given an array of numbers. Find a number that occurs more than 1/K of the time.
+	 * For example:
+	 * 	A = [2,4,5,2,4,2,2,1,5] and K = 3, Result = 2, which occurs more than Length/3 times.
+	 * 	B = [2,4,5,2,4,2,6,1,5] and K = 3, No result as there is no number occurring > Length/3 times.
+	 * 
+	 * Time: O(n), Space: O(k)
+	 */
+	public int majorityKElement(int[] nums, int k) {
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int num : nums) {
+			//Update count of each num
+			map.put(num, map.getOrDefault(num, 0) + 1);
+
+			//Reduce the count for all the element, if k unique element exist
+			if (map.size() == k) {
+				for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+					if (entry.getValue() == 1) {
+						map.remove(entry.getKey());
+					} else {
+						map.put(entry.getKey(), map.get(entry.getKey()) - 1);
+					}
+				}
+			}
+		}
+
+		//Below are verification process:
+		//1.Clear the count in Map
+		for (int key : map.keySet()) {
+			map.put(key, 0);
+		}
+
+		//2.Calculate the count of each key in the map
+		for (int num : nums) {
+			if (map.containsKey(num)) {
+				map.put(num, map.get(num) + 1);
+			}
+		}
+
+		//3.Check if any of them have majority
+		for (int key : map.keySet()) {
+			if (map.get(key) > nums.length / k) return key;
+		}
+
+		return -1;
+	}
+
+	/*
+	 * Majority Element II:
+	 */
+	//TODO:
+	public List<Integer> majorityElementII(int[] arr) {
+		return null;
+	}
+
+	/* Third Maximum Number
+	 * Given a non-empty array of integers, return the third maximum number in this array. If it does not exist, return the 
+	 * maximum number. The time complexity must be in O(n).
+	 */
+	public int thirdMax(int[] nums) {
+		Integer first = null, second = null, third = null;
+		for (Integer num : nums) {
+			if (num.equals(first) || num.equals(second) || num.equals(third)) continue;
+			if (first == null || first <= num) {
+				third = second;
+				second = first;
+				first = num;
+			} else if (second == null || second <= num) {
+				third = second;
+				second = num;
+			} else if (third == null || third <= num) {
+				third = num;
+			}
+		}
+		return third == null ? first : third;
+	}
+
+	/* Increasing Triplet Subsequence -> Similar to 3rd max No
+	 * Given an unsorted array return whether an increasing subsequence of length 3 exists or not in the array.
+	 * Formally the function should:
+	 * 	 Return true if there exists i, j, k
+	 * 	 such that arr[i] < arr[j] < arr[k] given 0 <= i < j < k <= n-1 else return false.
+	 */
+	public boolean increasingTriplet(int[] nums) {
+		int first = Integer.MAX_VALUE;
+		int second = Integer.MAX_VALUE;
+		for (int i = 0; i < nums.length; i++) {
+			if (first >= nums[i]) first = nums[i];// update first to be a smaller value
+			else if (second >= nums[i]) second = nums[i]; // update second to be a smaller value
+			else return true;
+		}
+		return false;
+	}
+
+	/**************************** Prefix Sum ***********************************/
+
+	/**************************** Range Problems ***********************************/
+	/* Summary Ranges:
+	 * Given a sorted integer array without duplicates, return the summary of its ranges.
+	 * Example 1:
+	 * 	Input:  [0,1,2,4,5,7]; Output: ["0->2","4->5","7"]
+	 * Explanation: 0,1,2 form a continuous range; 4,5 form a continuous range.
+	 */
+	// Simplified Program
+	public List<String> summaryRanges(int[] nums) {
+		List<String> result = new ArrayList<>();
+		int n = nums.length;
+		if (n == 0) return result;
+		String start;
+		for (int i = 0; i < n; i++) {
+			start = String.valueOf(nums[i]);
+			while (i + 1 < n && nums[i] + 1 == nums[i + 1]) i++;
+			if (!start.equals(String.valueOf(nums[i]))) start += "->" + String.valueOf(nums[i]);
+			result.add(start);
+		}
+		return result;
+	}
+
+	// Brute Force Approach:
+	public List<String> summaryRanges2(int[] nums) {
+		List<String> result = new ArrayList<>();
+		int n = nums.length;
+		if (n == 0) return result;
+		if (n == 1) {
+			result.add(String.valueOf(nums[0]));
+			return result;
+		}
+		int start, end;
+		start = end = nums[0];
+		for (int i = 1; i < n; i++) {
+			if (nums[i - 1] + 1 == nums[i]) {
+				end = nums[i];
+			} else {
+				if (start == end) result.add(String.valueOf(start));
+				else result.add(start + "->" + end);
+				start = end = nums[i];
+			}
+		}
+		if (start == end) result.add(String.valueOf(start));
+		else result.add(start + "->" + end);
+		return result;
+	}
+
+	/*
+	 * Missing Ranges: Given a sorted integer array where the range of elements are [lower, upper] inclusive, return its
+	 * missing ranges. 
+	 * For example, given [0, 1, 3, 50, 75], lower = 0 and upper = 99, return ["2", "4->49", "51->74", "76->99"].
+	 */
+	public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+
+		List<String> result = new ArrayList<>();
+		int n = nums.length;
+		if (n == 0) return result;
+
+		int prev = lower - 1;
+		for (int i = 0; i <= n; i++) {
+			int curr = i == n ? upper : nums[i];
+
+			if (prev + 2 == curr) result.add(String.valueOf(prev + 1));
+			else if (prev + 2 < curr) result.add(String.valueOf(prev + 1) + "->" + String.valueOf(curr - 1));
+
+			prev = curr;
+		}
+
+		result.stream().forEach(k -> System.out.print(k + " "));
+		return result;
+	}
+
+	/*
+	 * Range Addition(1D) I/Array Manipulation: 
+	 *    Assume you have an array of length n initialized with all 0's and are given k update operations.
+	 * Each operation is represented as a triplet: [startIndex, endIndex, inc] which increments each element of subarray
+	 * A[startIndex ... endIndex] (startIndex and endIndex inclusive) with inc. Return the modified array after all k
+	 * operations were executed. 
+	 * Example: Given: length = 5,
+		updates = [
+		    [1,  3,  2],
+		    [2,  4,  3],
+		    [0,  2, -2]
+		]
+		Output: [-2, 0, 3, 5, 3]
+	 */
+	/* Solution: For each update, increment the start index by inc, decrement the end index + 1 by inc. Then do a moving sum at 
+	 * last. Time Complexity:O(k+n)
+	 */
+	public int[] getModifiedArray(int length, int[][] updates) {
+		int[] result = new int[length];
+
+		int si, ei, val;
+		for (int[] update : updates) { // O(k) time
+			si = update[0];
+			ei = update[1];
+			val = update[2];
+			result[si] += val;
+			if (ei + 1 < length) result[ei + 1] -= val;
+		}
+
+		// Sum the result indices
+		int sum = 0;
+		for (int i = 0; i < length; i++) {
+			sum += result[i];
+			result[i] = sum;
+		}
+
+		return result;
+	}
+
+	/**************************** Shuffle Problems ***********************************/
+
+	/**************************** Array Manipulations ***********************************/
 	// Reverse array in groups
 	public void reverseKGroup1(int[] arr, int k) {
 		int l = 0, r = 0, n = arr.length;
@@ -307,27 +1056,6 @@ public class ArrayProblems {
 		return minDiff;
 	}
 
-	// Triple sum - No of distinct triplets(p < q > r)
-	public long triplets(int[] a, int[] b, int[] c) {
-		Arrays.sort(a);
-		Arrays.sort(b);
-		Arrays.sort(c);
-		int p = 0, r = 0;
-		long pCount = 0, rCount = 0, total = 0;
-		for (int q = 0; q < b.length; q++) {
-			while (p < a.length && a[p] <= b[q]) {
-				if (p == 0 || a[p - 1] != a[p]) pCount++;
-				p++;
-			}
-			while (r < c.length && c[r] <= b[q]) {
-				if (r == 0 || c[r - 1] != c[r]) rCount++;
-				r++;
-			}
-			if (q == 0 || b[q - 1] != b[q]) total += pCount * rCount;
-		}
-		return total;
-	}
-
 	// Shuffle an Array
 	int[] original;
 	int[] shuffled;
@@ -356,660 +1084,7 @@ public class ArrayProblems {
 		return shuffled;
 	}
 
-	/**************************** Type2: Number Problems ***********************************/
-	/* Element with left side smaller and right side greater
-	 * Given an unsorted array of size N. Find the first element in array such that all of its left elements are smaller and 
-	 * all right elements to it are greater than it.
-	 * Note: Left and right side elements can be equal to required element. And extreme elements cannot be required element.
-	 * Approach1: Brute Force Approach
-	 *    	A simple solution is to consider every element one by one. For every element, compare it with all elements on the left
-	 *  and all elements on right. Time complexity of this solution is O(n^2).
-	 * Approach2: Efficient Approach
-	 * 	   Create two arrays leftMax[] and rightMin[].Traverse input array from left to right and fill leftMax[] such that leftMax[i] 
-	 * contains maximum element from 0 to i-1 in input array. Traverse input array from right to left and fill rightMin[] such that
-	 * rightMin[i] contains minimum element from to n-1 to i+1 in input array. Traverse input array. For every element arr[i], check
-	 * if arr[i] is greater than leftMax[i] and smaller than rightMin[i]. If yes, return i.
-	 * Approach3:
-	 * 		Further Optimization to the above approach is to use only one extra array and traverse input array only twice. The first 
-	 * traversal is the same as above and fills leftMax[]. Next traversal traverses from the right and keeps track of the minimum. 
-	 * The second traversal also finds the required element.
-	 */
-	// Approach3: TC: O(n) & SC: O(2n)
-	public static int findElement1(int[] arr) {
-		int n = arr.length;
-		int[] leftMax = new int[n];
-		int[] rightMin = new int[n];
-		leftMax[0] = arr[0];
-		for (int i = 1; i < n; i++)
-			leftMax[i] = Math.max(leftMax[i - 1], arr[i]);
-		// System.out.println(Arrays.toString(leftMax));
-		rightMin[n - 1] = arr[n - 1];
-		for (int i = n - 2; i >= 0; i--)
-			rightMin[i] = Math.min(arr[i], rightMin[i + 1]);
-		// System.out.println(Arrays.toString(rightMin));
-		for (int i = 1; i < n - 1; i++) {
-			if (arr[i] == leftMax[i] && arr[i] == rightMin[i]) return arr[i];
-		}
-		return -1;
-	}
-
-	// Efficient Approach: TC: O(n) & SC: O(n)
-	public static int findElement(int[] arr) {
-		int m = arr[0], n = arr.length;
-		int ans = -1;
-		for (int i = 1; i < n; i++) {
-			if (arr[i] >= m) {
-				m = arr[i];
-				if (ans == -1 && i < n - 1) ans = m;
-			} else if (arr[i] < ans) {
-				ans = -1;
-			}
-		}
-		return ans;
-	}
-
-	/* Leaders in an array:
-	 * Given an array of positive integers. Your task is to find the leaders in the array.
-	 * Note: An element of array is leader if it is greater than or equal to all the elements to its right side. Also, the
-	 * rightmost element is always a leader. 
-	 */
-	public static void leadersInArray3(int[] arr) {
-		int currMax = Integer.MIN_VALUE;
-		ArrayList<Integer> result = new ArrayList<>();
-		for (int i = arr.length - 1; i >= 0; i--) {
-			if (arr[i] > currMax) {
-				currMax = arr[i];
-				result.add(arr[i]);
-			}
-		}
-		for (int i = result.size() - 1; i >= 0; i--) {
-			System.out.print(result.get(i) + " ");
-		}
-	}
-
-	public static void leadersInArray(int[] arr) {
-		PriorityQueue<Integer> queue = new PriorityQueue<>(Collections.reverseOrder());
-		for (int i = 0; i < arr.length; i++)
-			queue.add(arr[i]);
-		for (int i = 0; i < arr.length; i++) {
-			queue.remove(arr[i]);
-			if (queue.isEmpty() || arr[i] > queue.peek()) System.out.print(arr[i] + " ");
-		}
-	}
-
-	/* Find Majority Element in an Array/Majority Element I, II
-	 * Given an array of size n, find the majority element. The majority element is the element that appears more than n/2 times.
-	 */
-	//Using Sorting:
-	public int majorityElement1(int[] nums) {
-		Arrays.sort(nums);
-		return nums[nums.length / 2];
-	}
-
-	// Hashtable 
-	public int majorityElement2(int[] nums) {
-		Map<Integer, Integer> map = new HashMap<>();
-		int ret = 0;
-		for (int num : nums) {
-			if (!map.containsKey(num)) map.put(num, 1);
-			else map.put(num, map.get(num) + 1);
-			if (map.get(num) > nums.length / 2) {
-				ret = num;
-				break;
-			}
-		}
-		return ret;
-	}
-
-	/* Using Moore’s Voting Algorithm: Time Complexity:O(n)
-	 * The algorithm for the first phase that works in O(n) is known as Moore’s Voting Algorithm. Basic idea of the algorithm 
-	 * is that if each occurrence of an element e can be cancelled with all the other elements that are different from e then
-	 * e will exist till end if it is a majority element.
-	*/
-	public int majorityElement3(int[] nums) {
-		if (nums == null || nums.length == 0) return -1;
-		int count = 0, element = 0;
-		for (int num : nums) {
-			if (count == 0) element = num;
-
-			count = (num == element) ? count + 1 : count - 1;
-		}
-
-		// check array, verify element is majority
-		count = 0;
-		for (int num : nums) {
-			if (num == element) count++;
-		}
-
-		return count > nums.length / 2 ? element : -1;
-	}
-
-	public int majorityElement4(int[] nums) {
-		if (nums == null || nums.length == 0) return -1;
-
-		int element = nums[0], count = 1, n = nums.length;
-		for (int i = 1; i < n; i++) {
-			if (nums[i] == element) {
-				count++;
-			} else if (count > 0) {
-				count--;
-			} else {
-				element = nums[i];
-				count = 1;
-			}
-		}
-
-		// check array, verify element is majority
-		count = 0;
-		for (int num : nums) {
-			if (num == element) count++;
-		}
-
-		return count > n / 2 ? element : -1;
-	}
-
-	/* Majority of 1/K element:
-	 * You are given an array of numbers. Find a number that occurs more than 1/K of the time.
-	 * For example:
-	 * 	A = [2,4,5,2,4,2,2,1,5] and K = 3, Result = 2, which occurs more than Length/3 times.
-	 * 	B = [2,4,5,2,4,2,6,1,5] and K = 3, No result as there is no number occurring > Length/3 times.
-	 * 
-	 * Time: O(n), Space: O(k)
-	 */
-	public int majorityKElement(int[] nums, int k) {
-		Map<Integer, Integer> map = new HashMap<>();
-		for (int num : nums) {
-			//Update count of each num
-			map.put(num, map.getOrDefault(num, 0) + 1);
-
-			//Reduce the count for all the element, if k unique element exist
-			if (map.size() == k) {
-				for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-					if (entry.getValue() == 1) {
-						map.remove(entry.getKey());
-					} else {
-						map.put(entry.getKey(), map.get(entry.getKey()) - 1);
-					}
-				}
-			}
-		}
-
-		//Below are verification process:
-		//1.Clear the count in Map
-		for (int key : map.keySet()) {
-			map.put(key, 0);
-		}
-
-		//2.Calculate the count of each key in the map
-		for (int num : nums) {
-			if (map.containsKey(num)) {
-				map.put(num, map.get(num) + 1);
-			}
-		}
-
-		//3.Check if any of them have majority
-		for (int key : map.keySet()) {
-			if (map.get(key) > nums.length / k) return key;
-		}
-
-		return -1;
-	}
-
-	/*
-	 * Majority Element II:
-	 */
-	//TODO:
-	public List<Integer> majorityElementII(int[] arr) {
-		return null;
-	}
-
-	/* Third Maximum Number
-	 * Given a non-empty array of integers, return the third maximum number in this array. If it does not exist, return the 
-	 * maximum number. The time complexity must be in O(n).
-	 */
-	public int thirdMax(int[] nums) {
-		Integer first = null, second = null, third = null;
-		for (Integer num : nums) {
-			if (num.equals(first) || num.equals(second) || num.equals(third)) continue;
-			if (first == null || first <= num) {
-				third = second;
-				second = first;
-				first = num;
-			} else if (second == null || second <= num) {
-				third = second;
-				second = num;
-			} else if (third == null || third <= num) {
-				third = num;
-			}
-		}
-		return third == null ? first : third;
-	}
-
-	/* Increasing Triplet Subsequence -> Similar to 3rd max No
-	 * Given an unsorted array return whether an increasing subsequence of length 3 exists or not in the array.
-	 * Formally the function should:
-	 * 	 Return true if there exists i, j, k
-	 * 	 such that arr[i] < arr[j] < arr[k] given 0 <= i < j < k <= n-1 else return false.
-	 */
-	public boolean increasingTriplet(int[] nums) {
-		int first = Integer.MAX_VALUE;
-		int second = Integer.MAX_VALUE;
-		for (int i = 0; i < nums.length; i++) {
-			if (first >= nums[i]) first = nums[i];// update first to be a smaller value
-			else if (second >= nums[i]) second = nums[i]; // update second to be a smaller value
-			else return true;
-		}
-		return false;
-	}
-
-	/**************************** Type3: Range Problems ***********************************/
-	/* Summary Ranges:
-	 * Given a sorted integer array without duplicates, return the summary of its ranges.
-	 * Example 1:
-	 * 	Input:  [0,1,2,4,5,7]; Output: ["0->2","4->5","7"]
-	 * Explanation: 0,1,2 form a continuous range; 4,5 form a continuous range.
-	 */
-	// Simplified Program
-	public List<String> summaryRanges(int[] nums) {
-		List<String> result = new ArrayList<>();
-		int n = nums.length;
-		if (n == 0) return result;
-		String start;
-		for (int i = 0; i < n; i++) {
-			start = String.valueOf(nums[i]);
-			while (i + 1 < n && nums[i] + 1 == nums[i + 1]) i++;
-			if (!start.equals(String.valueOf(nums[i]))) start += "->" + String.valueOf(nums[i]);
-			result.add(start);
-		}
-		return result;
-	}
-
-	// Brute Force Approach:
-	public List<String> summaryRanges2(int[] nums) {
-		List<String> result = new ArrayList<>();
-		int n = nums.length;
-		if (n == 0) return result;
-		if (n == 1) {
-			result.add(String.valueOf(nums[0]));
-			return result;
-		}
-		int start, end;
-		start = end = nums[0];
-		for (int i = 1; i < n; i++) {
-			if (nums[i - 1] + 1 == nums[i]) {
-				end = nums[i];
-			} else {
-				if (start == end) result.add(String.valueOf(start));
-				else result.add(start + "->" + end);
-				start = end = nums[i];
-			}
-		}
-		if (start == end) result.add(String.valueOf(start));
-		else result.add(start + "->" + end);
-		return result;
-	}
-
-	/*
-	 * Missing Ranges: Given a sorted integer array where the range of elements are [lower, upper] inclusive, return its
-	 * missing ranges. 
-	 * For example, given [0, 1, 3, 50, 75], lower = 0 and upper = 99, return ["2", "4->49", "51->74", "76->99"].
-	 */
-	public List<String> findMissingRanges(int[] nums, int lower, int upper) {
-
-		List<String> result = new ArrayList<>();
-		int n = nums.length;
-		if (n == 0) return result;
-
-		int prev = lower - 1;
-		for (int i = 0; i <= n; i++) {
-			int curr = i == n ? upper : nums[i];
-
-			if (prev + 2 == curr) result.add(String.valueOf(prev + 1));
-			else if (prev + 2 < curr) result.add(String.valueOf(prev + 1) + "->" + String.valueOf(curr - 1));
-
-			prev = curr;
-		}
-
-		result.stream().forEach(k -> System.out.print(k + " "));
-		return result;
-	}
-
-	/*
-	 * Range Addition(1D) I/Array Manipulation: 
-	 *    Assume you have an array of length n initialized with all 0's and are given k update operations.
-	 * Each operation is represented as a triplet: [startIndex, endIndex, inc] which increments each element of subarray
-	 * A[startIndex ... endIndex] (startIndex and endIndex inclusive) with inc. Return the modified array after all k
-	 * operations were executed. 
-	 * Example: Given: length = 5,
-		updates = [
-		    [1,  3,  2],
-		    [2,  4,  3],
-		    [0,  2, -2]
-		]
-		Output: [-2, 0, 3, 5, 3]
-	 */
-	/* Solution: For each update, increment the start index by inc, decrement the end index + 1 by inc. Then do a moving sum at 
-	 * last. Time Complexity:O(k+n)
-	 */
-	public int[] getModifiedArray(int length, int[][] updates) {
-		int[] result = new int[length];
-
-		int si, ei, val;
-		for (int[] update : updates) { // O(k) time
-			si = update[0];
-			ei = update[1];
-			val = update[2];
-			result[si] += val;
-			if (ei + 1 < length) result[ei + 1] -= val;
-		}
-
-		// Sum the result indices
-		int sum = 0;
-		for (int i = 0; i < length; i++) {
-			sum += result[i];
-			result[i] = sum;
-		}
-
-		return result;
-	}
-
-	/**************************** Type4: Two Ptr *****************************************/
-	// Triplet/All 3 Sum in Array/3Sum Smaller
-	// Pythagorean Triplet
-	// Count Triplets - GP Triplets
-	// 4Sum I, II
-	// Pairs - Hashset
-
-	/*Pairs: You will be given an array of integers and a target value. Determine the number of pairs of array elements 
-	 * that have a difference equal to a target value.
-	 * For example, given an array of [1, 2, 3, 4] and a target value of 1, we have three values meeting the condition.
-	 */
-	// Approach1: BruteForce Approach: Time Complexity: O(n^2)
-	public int pairs1(int k, int[] arr) {
-		int count = 0;
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = i + 1; j < arr.length; j++) {
-				if (Math.abs(arr[i] - arr[j]) == k) count++;
-			}
-		}
-
-		return count;
-	}
-
-	// Approach2: Two Ptr Approach: Time Complexity: O(nlogn)
-	public int pairs2(int k, int[] arr) {
-		int count = 0;
-		Arrays.sort(arr);
-
-		int l = 0, r = 1;
-		while (r < arr.length) {
-			int diff = arr[r] - arr[l];
-			if (diff == k) {
-				count++;
-				r++;
-			} else if (diff < k) {
-				r++;
-			} else {
-				l++;
-			}
-		}
-
-		return count;
-	}
-
-	// Approach3: Two Ptr Approach: Time Complexity: O(n)
-	public int pairs3(int k, int[] arr) {
-		int count = 0;
-		HashSet<Integer> set = new HashSet<>();
-
-		for (int i = 0; i < arr.length; i++)
-			set.add(arr[i]);
-
-		for (int i = 0; i < arr.length; i++)
-			if (set.contains(arr[i] + k)) count++;
-
-		return count;
-	}
-
-	// Count Triplets - GP Triplets
-	long countTriplets(List<Long> arr, long r) {
-		long count = 0, target = 0, gp = (r + r * r);
-		HashSet<Long> set;
-		for (int i = 0; i < arr.size(); i++) {
-			target = arr.get(i) * gp; // i.e arr.get(i)*gp = arr.get(i)*(1+r+r*r) - arr.get(i)
-			System.out.println(target);
-			set = new HashSet<>();
-			for (int j = i + 1; j < arr.size(); j++) {
-				System.out.println(target - arr.get(j));
-				if (set.contains(arr.get(j))) count++;
-				else set.add(target - arr.get(j));
-			}
-		}
-
-		return count;
-	}
-
-	public int[][] threeSumZero(int[] nums) {
-		Arrays.sort(nums);
-		List<int[]> res = new ArrayList<>();
-		for (int i = 0; i < nums.length - 2; i++) {
-			if (i > 0 && nums[i - 1] == nums[i]) continue;
-			if (nums[i] > 0) break;
-			int left = i + 1;
-			int right = nums.length - 1;
-			while (left < right) {
-				long sum = (long) nums[i] + (long) nums[left] + (long) nums[right];
-				if (sum == 0) {
-					res.add(new int[] { nums[i], nums[left], nums[right] });
-					while (left < right && nums[left] == nums[left + 1]) left++;
-					while (left < right && nums[right] == nums[right - 1]) right--;
-				}
-				if (sum > 0) right--;
-				else left++;
-			}
-		}
-		return res.toArray(new int[res.size()][]);
-	}
-
-	// Using List:
-	public ArrayList<ArrayList<Integer>> threeSumZero(ArrayList<Integer> A) {
-		ArrayList<ArrayList<Integer>> result = new ArrayList<>();
-		if (A == null || A.size() <= 2) return result;
-		Collections.sort(A);
-		// System.out.println(A.toString());
-		ArrayList<Integer> temp = null;
-		for (int i = 0; i < A.size(); i++) {
-			if (i > 0 && A.get(i - 1).equals(A.get(i))) continue;
-			int l = i + 1, h = A.size() - 1;
-			while (l < h) {
-				// System.out.println(A.get(i)+ ", " + A.get(l) +", "+A.get(h));
-				long sum = (long) A.get(i) + (long) A.get(l) + (long) A.get(h);
-				if (sum == 0) {
-					// System.out.println("Sum: "+sum);
-					temp = new ArrayList<>();
-					temp.add(A.get(i));
-					temp.add(A.get(l));
-					temp.add(A.get(h));
-					result.add(temp);
-
-					// Skip the duplicate
-					while (l < h && A.get(l).equals(A.get(l + 1))) l++;
-					while (l < h && A.get(h).equals(A.get(h - 1))) h--;
-				}
-				if (sum <= 0) l++;
-				else h--;
-			}
-		}
-		return result;
-	}
-
-	/*
-	 * Pythagorean Triplet in an array: Given an array of integers, write a function that returns true if there is a 
-	 * triplet (a, b, c) that satisfies a2 + b2 = c2.
-	 */
-	// 1.Brute Force Approach: Time Complexity-O(n^3)
-	public boolean isPythagoreanTriplet1(int[] arr) {
-		int n = arr.length;
-		int a, b, c;
-		for (int i = 0; i < n; i++) {
-			a = arr[i] * arr[i];
-			for (int j = i + 1; j < n; j++) {
-				b = arr[j] * arr[j];
-				for (int k = j + 1; k < n; k++) {
-					c = arr[k] * arr[k];
-					if (a + b == c || a + c == b || a == b + c) {
-						System.out.println(arr[i] + " " + arr[j] + " " + arr[k]);
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	// Using Two Ptr:
-	public boolean isPythagoreanTriplet2(int[] arr) {
-		int n = arr.length;
-
-		for (int i = 0; i < n; i++)
-			arr[i] = arr[i] * arr[i];
-
-		Arrays.sort(arr);
-
-		for (int i = n - 1; i > 1; i--) {
-			if (sumPresent1(arr, 0, i - 1, arr[i], arr[i])) return true;
-		}
-		return false;
-	}
-
-	// Using 2 ptr approach
-	public boolean sumPresent1(int[] nums, int l, int h, int firstValue, int target) {
-		// target -= firstValue; // Remove first value from the target, two find the remaining two values
-
-		while (l < h) {
-			if (nums[l] + nums[h] == target) {
-				System.out.println("The Triplet is: " + firstValue + ", " + nums[l] + ", " + nums[h]);
-				return true;
-			} else if (nums[l] + nums[h] > target) {
-				h--;
-			} else {
-				l++;
-			}
-		}
-
-		return false;
-	}
-
-	// Using sort & hash DS
-	public boolean isPythagoreanTriplet3(int[] arr) {
-		int n = arr.length;
-		HashSet<Integer> set = new HashSet<>();
-
-		for (int i = 0; i < n; i++)
-			set.add(arr[i] * arr[i]);
-
-		int a = 0, b = 0;
-		for (int i = 0; i < n - 1; i++) {
-			a = arr[i] * arr[i];
-
-			for (int j = i + 1; j < n; j++) {
-				b = arr[j] * arr[j];
-				if (set.contains(a + b)) {
-					System.out.println(arr[i] + " " + arr[j] + " " + (int) Math.sqrt(a + b));
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	// 4Sum I:
-	// Brute Force Approach
-	public List<List<Integer>> fourSum(int[] nums, int target) {
-		int n = nums.length;
-		List<List<Integer>> result = new ArrayList<>();
-		List<Integer> eachList = new ArrayList<>();
-		for (int i = 0; i < n - 3; i++) {
-			target -= nums[i];
-			for (int j = i + 1; j < n - 2; j++) {
-				target -= nums[j];
-				for (int k = j + 1; k < n; k++) {
-					target -= nums[k];
-					for (int l = 0; l < n; l++) {
-						target -= nums[k];
-						if (target == 0 && !result.contains(eachList)) result.add(new ArrayList<>(eachList));
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	// Approach2: Two Ptr Approach: Time Complexity-O(n^3)
-	public List<List<Integer>> fourSum2(int[] nums, int target) {
-		int n = nums.length;
-		Arrays.sort(nums); // Sort the array to remove the duplicate order
-		List<List<Integer>> result = new ArrayList<>();
-
-		for (int i = 0; i < n - 3; i++) {
-			for (int j = i + 1; j < n - 2; j++) {
-				int l = j + 1;
-				int h = n - 1;
-				while (l < h) {
-					int sum = nums[i] + nums[j] + nums[l] + nums[h];
-					if (sum == target) {
-						List<Integer> eachList = Arrays.asList(nums[i], nums[j], nums[l], nums[h]);
-						if (!result.contains(eachList)) result.add(eachList);
-						l++;
-						h--;
-					} else if (sum < target) {
-						l++;
-					} else {
-						h--;
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	/*
-	 * 4SumII: 
-	 * Given four lists A, B, C, D of integer values, compute how many tuples (i, j, k, l) there are such that
-	 *  A[i] + B[j] + C[k] + D[l] is zero.
-	 */
-	// Approach1: BruteForce Approach: Time Complexity-O(n^4)
-	public int fourSumCount1(int[] A, int[] B, int[] C, int[] D) {
-		int n = A.length, count = 0;
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n; j++)
-				for (int k = 0; k < n; k++)
-					for (int l = 0; l < n; l++)
-						if (0 == A[i] + B[j] + C[k] + D[l]) count++;
-		return count;
-	}
-
-	// Approach2: Efficient Approach: Time Complexity-O(n^2), Space Complexity-O(n^2)
-	public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
-		int n = A.length, count = 0;
-		Map<Integer, Integer> map = new HashMap<>();
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n; j++) {
-				int sum = A[i] + B[j];
-				map.put(sum, map.getOrDefault(sum, 0) + 1);
-			}
-
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < n; j++) {
-				int sum = C[i] + D[j];
-				count += map.getOrDefault(-sum, 0);
-			}
-
-		return count;
-	}
-
-	/**************************** Type5: Fixed Space Array Problems **************************/
+	/**************************** Uncategorized Problems **************************/
 	/*Count frequencies of array elements in range 1 to n: 
 	 * Given an unsorted array of n integers which can contain integers from 1 to n. Some elements can be repeated multiple 
 	 * times and some other elements can be absent from the array. Count frequency of all elements that are present and 
@@ -1149,10 +1224,6 @@ public class ArrayProblems {
 
 		return result;
 	}
-
-	/*************************** Type6: Greedy/Optimization *********************************/
-
-	/************* Clean up ********/
 
 	int minimumSwaps(int[] arr) {
 		int count = 0, n = arr.length;

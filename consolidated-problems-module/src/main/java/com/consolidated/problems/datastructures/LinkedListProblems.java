@@ -32,7 +32,7 @@ public class LinkedListProblems {
 
 	CloneProblems cloneProblems = new CloneProblems();
 
-	/************************* Type1: DS Manipulations **********************************/
+	/************************* DS Manipulations **********************************/
 	// Insert an element at specific position in the list
 	public ListNode insert(ListNode head, int data, int pos) {
 		ListNode newLLNode = new ListNode(data);
@@ -144,7 +144,7 @@ public class LinkedListProblems {
 		System.out.print(head.data + " ");
 	}
 
-	/************************* Type2:Fast & Slow ptrs **********************************/
+	/************************* Fast & Slow Pointers **********************************/
 	// Finding middle element in a linked list
 	public ListNode middleNode1(ListNode head) {
 		return fastAndSlowPtrPatterns.middleNode1(head);
@@ -192,7 +192,7 @@ public class LinkedListProblems {
 		fastAndSlowPtrPatterns.removeLoop3(head);
 	}
 
-	/************************* Type3: In-place Reversal **********************************/
+	/************************* In-place Reversal of a LL **********************************/
 
 	/* Reverse a doubly linked list
 	 * Thought: Reversing the "Doubly linked list" is not significant as in the case of Singly linked list. 
@@ -230,7 +230,7 @@ public class LinkedListProblems {
 		return curr;
 	}
 
-	/************************* Type4: DS Rearrangement **********************************/
+	/************************* DS Rearrangement **********************************/
 	/*Largest Node on the Right for Each Node in a Linked List
 	 *   1. Brute Force Approach: O(n^2)
 	 *   2. Reverse the List & find the max for each Node
@@ -444,7 +444,7 @@ public class LinkedListProblems {
 		cloneProblems.copyRandomList2(null);
 	}
 
-	/******************* Type4: DS manipulation on mulitple objects ****************************/
+	/******************* DS manipulation on more than one list ****************************/
 
 	// Intersection of Two Linked Lists
 	public ListNode getIntersectionNode(ListNode head1, ListNode head2) {

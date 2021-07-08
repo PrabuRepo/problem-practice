@@ -12,7 +12,7 @@ import com.common.model.ListNode;
 
 public class MathProblems {
 
-	/********************** Type1: Number Types ****************************/
+	/********************** Number Types ****************************/
 
 	/*
 	 * Lexicographical Numbers:
@@ -272,7 +272,7 @@ public class MathProblems {
 		return Arrays.asList(arr);
 	}
 
-	/********************** Type2: Math Formulas ****************************/
+	/********************** Math Formulas ****************************/
 
 	/*
 	 *  Power of Two:
@@ -384,7 +384,7 @@ public class MathProblems {
 		return false;
 	}
 
-	/********************** Type3: Conversions ****************************/
+	/********************** Conversions ****************************/
 
 	/* Gray Code:
 	 *    The gray code is a binary numeral system where two successive values differ in only one bit.
@@ -568,7 +568,7 @@ public class MathProblems {
 		return sb.toString();
 	}
 
-	/********************** Type4: Arithmetic Operations ****************************/
+	/********************** Arithmetic Operations ****************************/
 
 	// Add Binary - Binary String Problem
 	public String addBinary(String s1, String s2) {
@@ -977,7 +977,7 @@ public class MathProblems {
 		return sb.toString();
 	}
 
-	/********************** Type5: Math Proofs/Tricks ****************************/
+	/********************** Math Proofs/Tricks ****************************/
 	/* Add Digits: Given a non-negative integer num, repeatedly add all its digits until the result has only one digit.
 	 * The problem, widely known as digit root problem, has a congruence formula:
 	 * For base b (decimal case b = 10), the digit root of an integer is:
@@ -1140,7 +1140,7 @@ public class MathProblems {
 		return count;
 	}
 
-	/********************** Type6: Geometry ****************************/
+	/********************** Geometry ****************************/
 	/*
 	 * Max Points on a Line: Given n points on a 2D plane, find the maximum number of points that lie on the same straight line.
 	 * Ref: https://leetcode.com/problems/max-points-on-a-line/discuss/47113/A-java-solution-with-notes
@@ -1191,6 +1191,5 @@ public class MathProblems {
 		if (b == 0) return a;
 		return gcd(b, a % b);
 	}
-	/********* clean up below ****/
 
 }

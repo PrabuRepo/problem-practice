@@ -14,8 +14,11 @@ import com.common.model.TreeNode;
  *    4.Memory Optimization - This will be same time as Bottom up approach, but space efficient. Eg: Two variable approach
  */
 public class DynamicProgramming {
+	/***************************** DP-Stock Problems *********************/
 
-	/***************************** Pattern 1: Rolling Array/Fibonacci Patterns *********************/
+	/***************************** DP-Uncategorized Problems *********************/
+
+	/***************************** DP-Rolling Array Patterns *********************/
 	//TODO: Number factors
 	//TODO: Minimum jumps with fee
 
@@ -78,9 +81,9 @@ public class DynamicProgramming {
 		return node;
 	}
 
-	/***************************** Pattern 2: Pattern Name?? *************************/
+	/***************************** DP-Knapsack Patterns *************************/
 
-	/***************************** Pattern 3: 0/1 Knapsack *************************/
+	/***************************** 1. 0/1 Knapsack *************************/
 
 	/* Partition Equal Subset Sum/Equal Subset Sum Partition/Partition problem: 
 	 * It's similar to Subset Sum Problem which asks us to find if there is a subset whose sum equals to target value. 
@@ -215,7 +218,7 @@ public class DynamicProgramming {
 		return dp[cap];
 	}
 
-	/***************************** Pattern 4: Unbounded Knapsack *************************/
+	/***************************** 2.Unbounded Knapsack *************************/
 
 	// Rod cutting - Exactly same as unbounded knapsack solution
 	// 1.Recursive Approach - Time Complexity: O(2^n); Additional Space: O(1); recursion space: O(n)
@@ -327,7 +330,121 @@ public class DynamicProgramming {
 		return result[n];
 	}
 
-	/********************* Pattern 5: String-Palindromic substring/subseq Probs ***********************/
+	/********************* DP-Grid based problems **********************/
+	//Unique Paths I/Number of paths - DP
+	//Matrix Product: Max Product Path in the Matrix
+	//Maximal Square - DP(2D sequences)
+	//Bomb Enemy
+
+	/********************* DP-Array-SubSequence Probs **********************/
+
+	// Minimum number of deletions to make a sorted sequence:
+	/* Approach1: 
+	 * A simple solution is to remove all subsequences one by one and check if remaining set of elements are in sorted
+	 * order or not. Time complexity of this solution is exponential.
+	 */
+
+	// Approach3:
+	/* An efficient approach uses the concept of finding the length of the longest increasing subsequence of a given
+	 * sequence.
+	 */
+
+	public int minimumNumberOfDeletions(int arr[], int n) {
+		// Find longest increasing subsequence
+		int len = LIS4(arr);
+
+		// After removing elements other than the lis, we get sorted sequence.
+		return (n - len);
+	}
+
+	// Longest Zig-Zag Subsequence or Longest Alternating subsequence
+
+	// Approach3: DP-Bottom Up Approach
+	public int longestZigZagSubsequence(int arr[], int n) {
+		int dp[][] = new int[n][2];
+
+		for (int i = 0; i < n; i++)
+			dp[i][0] = dp[i][1] = 1;
+
+		int res = 1;
+
+		for (int i = 1; i < n; i++) {
+			for (int j = 0; j < i; j++) {
+				if (arr[j] < arr[i] && dp[i][0] < dp[j][1] + 1) {
+					dp[i][0] = dp[j][1] + 1;
+				}
+
+				if (arr[j] > arr[i] && dp[i][1] < dp[j][0] + 1) {
+					dp[i][1] = dp[j][0] + 1;
+				}
+			}
+
+			if (res < Math.max(dp[i][0], dp[i][1])) {
+				res = Math.max(dp[i][0], dp[i][1]);
+			}
+		}
+
+		return res;
+	}
+
+	/* Box Stacking:
+	 * You are given a set of n types of rectangular 3-D boxes, where the i^th box has height h(i), width w(i) and depth
+	 * d(i) (all real numbers).
+	 * You want to create a stack of boxes which is as tall as possible, but you can only stack a box on top of another box 
+	 * if the dimensions of the 2-D base of the lower box are each strictly larger than those of the 2-D base of the higher
+	 * box. Of course, you can rotate a box so that any side functions as its base. It is also allowable to use multiple 
+	 * instances of the same type of box.
+	 */
+	public int boxStacking(int[][] dimensions) {
+		// 1.Create all rotations of boxes, always keep length greater or equal to width
+		Box[] boxes = new Box[3 * dimensions.length];
+		for (int i = 0; i < dimensions.length; i++) {
+			boxes[i * 3] = createBox(dimensions[i][0], dimensions[i][1], dimensions[i][2]);
+			boxes[i * 3 + 1] = createBox(dimensions[i][1], dimensions[i][0], dimensions[i][2]);
+			boxes[i * 3 + 2] = createBox(dimensions[i][2], dimensions[i][1], dimensions[i][0]);
+		}
+
+		// 2.Sort: Decreasing Order based on (length * width)
+		Arrays.sort(boxes, (a, b) -> ((b.length * b.width)) - (a.length * a.width));
+
+		// 3.Find the max height using Longest Increasing Sequence algorithm
+		int dp[] = new int[boxes.length];
+		int result[] = new int[boxes.length];
+
+		for (int i = 0; i < dp.length; i++) {
+			dp[i] = boxes[i].height;
+			result[i] = i;
+		}
+
+		int max = dp[0];
+		for (int i = 1; i < dp.length; i++) {
+			for (int j = 0; j < i; j++) {
+				if (boxes[i].length < boxes[j].length && boxes[i].width < boxes[j].width) {
+					if (dp[i] < dp[j] + boxes[i].height) {
+						// dp[] array used to find max height.
+						dp[i] = dp[j] + boxes[i].height;
+						// result[] array used to find the dimensions
+						result[i] = j;
+					}
+				}
+			}
+			max = Math.max(max, dp[i]);
+		}
+
+		return max;
+	}
+
+	private Box createBox(int height, int side1, int side2) {
+		Box box = new Box();
+		box.height = height;
+		box.length = Math.max(side1, side2);
+		box.width = Math.min(side1, side2);
+		return box;
+	}
+
+	/********************* DP-String Patterns **********************/
+
+	/********************* 1.String-Palindromic substring/subseq Probs ***********************/
 
 	/* Minimum number of deletions to make a string palindrome:
 	 * Given a string of size ‘n’. The task is to remove or delete minimum number of characters from the string so that
@@ -501,7 +618,7 @@ public class DynamicProgramming {
 		return true;
 	}
 
-	/************************** Pattern 6: String-Substring/Subsequence Probs *******************/
+	/************************** 2.String-Substring/Subsequence Probs *******************/
 	// Shortest Common Supersequence:
 	// Solution: Modification of LCS;
 	// 1.Recursion
@@ -800,113 +917,7 @@ public class DynamicProgramming {
 		return dp[m][n];
 	}
 
-	/***************************** Pattern 7: Array-Subsequence Probs *******************************/
-
-	// Minimum number of deletions to make a sorted sequence:
-	/* Approach1: 
-	 * A simple solution is to remove all subsequences one by one and check if remaining set of elements are in sorted
-	 * order or not. Time complexity of this solution is exponential.
-	 */
-
-	// Approach3:
-	/* An efficient approach uses the concept of finding the length of the longest increasing subsequence of a given
-	 * sequence.
-	 */
-
-	public int minimumNumberOfDeletions(int arr[], int n) {
-		// Find longest increasing subsequence
-		int len = LIS4(arr);
-
-		// After removing elements other than the lis, we get sorted sequence.
-		return (n - len);
-	}
-
-	// Longest Zig-Zag Subsequence or Longest Alternating subsequence
-
-	// Approach3: DP-Bottom Up Approach
-	public int longestZigZagSubsequence(int arr[], int n) {
-		int dp[][] = new int[n][2];
-
-		for (int i = 0; i < n; i++)
-			dp[i][0] = dp[i][1] = 1;
-
-		int res = 1;
-
-		for (int i = 1; i < n; i++) {
-			for (int j = 0; j < i; j++) {
-				if (arr[j] < arr[i] && dp[i][0] < dp[j][1] + 1) {
-					dp[i][0] = dp[j][1] + 1;
-				}
-
-				if (arr[j] > arr[i] && dp[i][1] < dp[j][0] + 1) {
-					dp[i][1] = dp[j][0] + 1;
-				}
-			}
-
-			if (res < Math.max(dp[i][0], dp[i][1])) {
-				res = Math.max(dp[i][0], dp[i][1]);
-			}
-		}
-
-		return res;
-	}
-
-	/* Box Stacking:
-	 * You are given a set of n types of rectangular 3-D boxes, where the i^th box has height h(i), width w(i) and depth
-	 * d(i) (all real numbers).
-	 * You want to create a stack of boxes which is as tall as possible, but you can only stack a box on top of another box 
-	 * if the dimensions of the 2-D base of the lower box are each strictly larger than those of the 2-D base of the higher
-	 * box. Of course, you can rotate a box so that any side functions as its base. It is also allowable to use multiple 
-	 * instances of the same type of box.
-	 */
-	public int boxStacking(int[][] dimensions) {
-		// 1.Create all rotations of boxes, always keep length greater or equal to width
-		Box[] boxes = new Box[3 * dimensions.length];
-		for (int i = 0; i < dimensions.length; i++) {
-			boxes[i * 3] = createBox(dimensions[i][0], dimensions[i][1], dimensions[i][2]);
-			boxes[i * 3 + 1] = createBox(dimensions[i][1], dimensions[i][0], dimensions[i][2]);
-			boxes[i * 3 + 2] = createBox(dimensions[i][2], dimensions[i][1], dimensions[i][0]);
-		}
-
-		// 2.Sort: Decreasing Order based on (length * width)
-		Arrays.sort(boxes, (a, b) -> ((b.length * b.width)) - (a.length * a.width));
-
-		// 3.Find the max height using Longest Increasing Sequence algorithm
-		int dp[] = new int[boxes.length];
-		int result[] = new int[boxes.length];
-
-		for (int i = 0; i < dp.length; i++) {
-			dp[i] = boxes[i].height;
-			result[i] = i;
-		}
-
-		int max = dp[0];
-		for (int i = 1; i < dp.length; i++) {
-			for (int j = 0; j < i; j++) {
-				if (boxes[i].length < boxes[j].length && boxes[i].width < boxes[j].width) {
-					if (dp[i] < dp[j] + boxes[i].height) {
-						// dp[] array used to find max height.
-						dp[i] = dp[j] + boxes[i].height;
-						// result[] array used to find the dimensions
-						result[i] = j;
-					}
-				}
-			}
-			max = Math.max(max, dp[i]);
-		}
-
-		return max;
-	}
-
-	private Box createBox(int height, int side1, int side2) {
-		Box box = new Box();
-		box.height = height;
-		box.length = Math.max(side1, side2);
-		box.width = Math.min(side1, side2);
-		return box;
-	}
-
-	/******************************* Others: Uncategorized ********************/
+	/******************************* Uncategorized Problems ********************/
 	/*
 	* Text Justification/Word Wrap Problem - GeeksforGeeks:
 	* Given a sequence of words, and a limit on the number of characters that can be put in one line (line width). Put line breaks in the

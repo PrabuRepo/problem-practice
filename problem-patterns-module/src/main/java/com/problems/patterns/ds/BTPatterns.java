@@ -10,7 +10,7 @@ import com.common.model.TreeNode;
 //Binary Tree Patterns - DFS/BFS
 public class BTPatterns {
 
-	/*********************** 4.BT Checking ***********************/
+	/*********************** BT Checking ***********************/
 	// Check if given BT is Height Balanced/Balanced Binary Tree:
 	// Approach 1: Time Complexity: O(n^2)
 	public boolean isBinaryTreeBalanced1(TreeNode root) {
@@ -45,7 +45,7 @@ public class BTPatterns {
 		return Math.abs(left - right) <= 1 ? 1 + Math.max(left, right) : Integer.MIN_VALUE;
 	}
 
-	/*********************** 5.BT Print, Path, Sum & LCA Problems ***************/
+	/*********************** BT Print, Path, Sum & LCA Problems ***************/
 	// Lowest Common Ancestor of a BT
 	/*
 	 * LCA - Approach -1 : This method assumes that keys are present in Binary Tree.
@@ -252,7 +252,7 @@ public class BTPatterns {
 		return Math.max(0, node.val + Math.max(left, right));
 	}
 
-	/****************************** 6.BT Construction, Conversion **********************************/
+	/****************************** BT Construction, Conversion **********************************/
 
 	//Construct Binary Tree from Preorder and Inorder Traversal
 	public TreeNode constructTreeFromInAndPreOrder(char[] inOrder, char[] preOrder) {
@@ -417,7 +417,7 @@ public class BTPatterns {
 		return head;
 	}
 
-	/************************* 7.BT Traversal Modification Probs, Misc Probs **************************/
+	/************************* BT Traversal Modification Probs, Misc Probs **************************/
 	//Connect Nodes at Same Level/Populating Next Right Pointers in Each Node I, II
 	// Approach1: Using extended level order traversal - Level order traversal with null markers;
 	// Time Complexity: O(n) & Space Complexity: O(n)

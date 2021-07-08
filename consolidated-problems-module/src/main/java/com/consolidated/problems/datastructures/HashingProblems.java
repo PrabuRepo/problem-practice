@@ -19,7 +19,7 @@ public class HashingProblems {
 
 	private static final int EXTENDED_ASCII_CHAR_SIZE = 256;
 
-	/************************* Type1: Hashing(Array/Set/Map) Problems ************************/
+	/************************* Hashing(Array/Set/Map) Problems ************************/
 	/* Unique Word Abbreviation
 	 * An abbreviation of a word follows the form <first letter><number><last letter>. Below are some examples of word
 	 * abbreviations:Assume you have a dictionary and given a word, find whether its abbreviation is unique in the dictionary. A word's abbreviation is unique if no other word from the dictionary has the same abbreviation.
@@ -624,7 +624,7 @@ public class HashingProblems {
 		return true;
 	}
 
-	/***************************** Type2: Sliding Window: String ******************************/
+	/***************************** Sliding Window: String ******************************/
 	/* Window Sliding Technique: 
 	 * 	This technique shows how a nested for loop in few problems can be converted to single for loop and hence reducing the time 
 	 *  complexity.
@@ -935,7 +935,7 @@ public class HashingProblems {
 		return result;
 	}
 
-	/***************************** Type3: Sliding Window: Array ******************************/
+	/***************************** Sliding Window: Array ******************************/
 	/* Maximum Subarray - Kadane’s Algorithm:
 	 * Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest
 	 * sum and return its sum. 

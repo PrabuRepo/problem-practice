@@ -10,7 +10,7 @@ import com.problems.patterns.ds.StackPatterns;
 
 public class TwoPointerPatterns {
 
-	/********************* Sorted: 2 ptr *******************/
+	/*************************** Sorted: Two Pointer ************************/
 	// Two Sum: Given an array of integers, return indices of the two numbers such that they add up to a specific target.
 	// 1. Brute force approach: Time Complexity:(n^2)
 	public int[] twoSum1(int[] nums, int target) {

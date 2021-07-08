@@ -20,40 +20,54 @@ public class MatrixProblems {
 	private static final int[] rowSet8 = { -1, 1, 0, 0, -1, -1, 1, 1 };
 	private static final int[] colSet8 = { 0, 0, -1, 1, -1, 1, -1, 1 };
 
+	/**************************** Basic Matrix Problems *************************/
+	// Set Matrix Zeroes or Zero Matrix
+	// Print Matrix Diagonally   -  down to up side
+	// 2D Array - maximum hourglass sum
+
+	/**************************** Use Math Logic/DS in Matrix *************************/
+	//Valid Sudoku - HashSet
+	//Perfect Rectangle(Without Overlapping) - Math Logic
+
+	//Island Perimeter - Math Logic
+	public int islandPerimeter1(int[][] grid) {
+		int perimeter = 0;
+		if (grid.length == 0 || grid[0].length == 0) return perimeter;
+
+		for (int i = 0; i < grid.length; i++)
+			for (int j = 0; j < grid[0].length; j++)
+				if (grid[i][j] == 1) perimeter += findCellPerimeter(grid, i, j);
+
+		return perimeter;
+	}
+
+	private int findCellPerimeter(int[][] grid, int i, int j) {
+		int cellPerimeter = 0;
+		if (i == 0 || grid[i - 1][j] == 0) cellPerimeter++;
+		if (i == grid.length - 1 || grid[i + 1][j] == 0) cellPerimeter++;
+		if (j == 0 || grid[i][j - 1] == 0) cellPerimeter++;
+		if (j == grid[0].length - 1 || grid[i][j + 1] == 0) cellPerimeter++;
+		return cellPerimeter;
+	}
+
+	//Best Meeting Point - Math Logic
+
+	/**************************** Binary Search in Matrix *************************/
+	//Smallest Rectangle Enclosing Black Pixels - DFS/Bin Search
+
 	/************** Matrix 4/8 directions flow problems (Top/Bottom/Left/Right) ***************/
 	// Matrix 4/8 directions flow problems: These problems can be solved using DFS, BFS, Union Find, Back or simple
 	// search
 
-	/*Flood Fill/Paint Fill Algorithm:
-	 * Flood fill Algorithm – how to implement fill() in paint?
-	 * 	In MS-Paint, when we take the brush to a pixel and click, the color of the region of that pixel is replaced with 
-	 * a new selected color. 
-	 * Following is the problem statement to do this task:
-	 * Given a 2D screen, location of a pixel in the screen ie(x,y) and a color(K), your task is to replace color of the 
-	 * given pixel and all adjacent(excluding diagonally adjacent) same colored pixels with the given color K.
-	 */
-	public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
-		int rSize = image.length, cSize = image[0].length;
-		if (sc < 0 || sc >= rSize || sr < 0 || sr >= cSize || image[sr][sc] == newColor) return image;
+	/**************************** 1.Modify/Change the Region *************************/
 
-		floodFill(image, newColor, image[sr][sc], sr, sc);
+	/**************************** 2.Find the Region/Data *************************/
 
-		return image;
-	}
+	/**************************** 3.Find one path from src to dest *************************/
 
-	// Solution using DFS
-	public void floodFill(int[][] matrix, int newColor, int oldColor, int i, int j) {
-		int rSize = matrix.length, cSize = matrix[0].length;
-		// Validation
-		if (i < 0 || i >= rSize || j < 0 || j >= cSize || matrix[i][j] != oldColor) return;
+	/**************************** 4.Find the dist from multiple src & dest *************************/
 
-		// Functionality based on the problem
-		matrix[i][j] = newColor;
-
-		// Traverse 4 directions
-		for (int dir = 0; dir < 4; dir++)
-			floodFill(matrix, newColor, oldColor, i + rowSet4[dir], j + colSet4[dir]);
-	}
+	//TODO: Remove the duplicate problems in below
 
 	// Find the number of islands
 	// Approach using DFS & BFS
@@ -752,28 +766,6 @@ public class MatrixProblems {
 		}
 
 		return count;
-	}
-
-	/*********************** Others *************/
-
-	public int islandPerimeter1(int[][] grid) {
-		int perimeter = 0;
-		if (grid.length == 0 || grid[0].length == 0) return perimeter;
-
-		for (int i = 0; i < grid.length; i++)
-			for (int j = 0; j < grid[0].length; j++)
-				if (grid[i][j] == 1) perimeter += findCellPerimeter(grid, i, j);
-
-		return perimeter;
-	}
-
-	private int findCellPerimeter(int[][] grid, int i, int j) {
-		int cellPerimeter = 0;
-		if (i == 0 || grid[i - 1][j] == 0) cellPerimeter++;
-		if (i == grid.length - 1 || grid[i + 1][j] == 0) cellPerimeter++;
-		if (j == 0 || grid[i][j - 1] == 0) cellPerimeter++;
-		if (j == grid[0].length - 1 || grid[i][j + 1] == 0) cellPerimeter++;
-		return cellPerimeter;
 	}
 
 }

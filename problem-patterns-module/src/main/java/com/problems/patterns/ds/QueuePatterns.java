@@ -10,7 +10,7 @@ import java.util.Queue;
 
 public class QueuePatterns {
 
-	/********************* Type1: Queue Simple Problems ****************/
+	/********************* Queue Simple Problems ****************/
 
 	//Circular tour/Gas Station - Circular Queue & Greed Alg
 	/* There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
@@ -148,7 +148,7 @@ public class QueuePatterns {
 		return sb.toString();
 	}
 
-	/********************* Type2: Monotonic Queue Problems ****************/
+	/********************* Monotonic Queue Problems ****************/
 	/*
 	 * Monotonic Queue: A monotonic Queue is a data structure the elements from the front to the end is strictly either increasing or decreasing.
 	 * Monotonic increasing queue: add an element e in queue and pop out the element; s.peek()>=e (violation).

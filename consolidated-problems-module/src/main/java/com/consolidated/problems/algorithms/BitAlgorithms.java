@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class BitAlgorithms {
-	/*************************** Type1: Check/Scan the bits *******************/
+	/*************************** Check/Scan the bits *******************/
 	// Check whether K-th bit is set or not
 	public String checkKthBit(int data, int k) {
 		return ((data & (1 << k)) >= 1) ? "Yes" : "No";
@@ -273,7 +273,7 @@ public class BitAlgorithms {
 		return n - (1 << c1) - (1 << (c0 - 1)) + 1;
 	}
 
-	/*************************** Type2: Modify the bits *******************/
+	/*************************** Modify the bits *******************/
 	// Set kth bit
 	public int setKthBit(int data, int k) {
 		int testBit = 1 << k;
@@ -356,7 +356,7 @@ public class BitAlgorithms {
 		System.out.println("Result: " + Integer.toBinaryString(N));
 	}
 
-	/*************************** Type3: Apply the Bit Magic to Problems *******************/
+	/*************************** Apply the Bit Magic to Problems *******************/
 	// Alone in a couple/Single Number I, II, III
 	public int findAloneInCouple(int[] arr) {
 		int result = arr[0];

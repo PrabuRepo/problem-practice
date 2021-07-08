@@ -19,7 +19,281 @@ import com.common.utilities.Utils;
 
 public class HeapProblems {
 
-	/********************* Type1: Search Kth element *************************/
+	/************************ Merge K data sets/K-way merge *************************/
+	// Merge K sorted linked lists;
+	/* Linear Merge Algorithm: Merge the List one by one 
+	 * Time Complexity: O(Nk) where N = nk; k = no of linked list; n = no of elements in the list
+	 */
+	public ListNode mergeKSortedLinkedList1(ListNode[] lists) {
+		int k = lists.length;
+		if (k == 0) return null;
+
+		ListNode result = null;
+		for (int i = 0; i < k; i++)
+			result = merge(result, lists[i]);
+		return result;
+	}
+
+	public ListNode merge(ListNode head1, ListNode head2) {
+		if (head1 == null) return head2;
+		if (head2 == null) return head1;
+
+		ListNode result = null;
+		if (head1.data < head2.data) {
+			result = head1;
+			result.next = merge(head1.next, head2);
+		} else {
+			result = head2;
+			result.next = merge(head1, head2.next);
+		}
+		return result;
+	}
+
+	// Using Min Heap: O(NLogk); where N = nk; k = no of linked list; n = no of elements in the list
+	public ListNode mergeKSortedLinkedList2(ListNode[] nodes, int k) {
+		if (k == 0) return null;
+		if (k == 1) return nodes[0];
+		PriorityQueue<ListNode> queue = new PriorityQueue<>((o1, o2) -> o1.data - o2.data);
+		for (int i = 0; i < k; i++)
+			if (nodes[i] != null) queue.add(nodes[i]);
+
+		ListNode dummy = new ListNode(0);
+		ListNode temp = dummy;
+		while (!queue.isEmpty()) {
+			ListNode curr = queue.poll();
+			// Add next val in the queue
+			if (curr.next != null) queue.add(curr.next);
+			temp.next = curr;
+			temp = temp.next;
+		}
+		return dummy.next;
+	}
+
+	// Merge k sorted arrays:
+	/* 
+	 * 1.BruteForce Approach: A simple solution is to create an output array of size n*k and one by one copy all
+	 * arrays to it. Finally, sort the output array using any O(nLogn) sorting algorithm.
+	 * This approach takes O(NlogN) time, where N=nk, k - no of arrays; n - no of elements in each array
+	 */
+	public int[] mergeKSortedArrays1(int[][] arr) {
+		int k = arr.length, n = arr[0].length;
+		// Assuming equal size array
+		int[] output = new int[n * k];
+		int index = 0;
+		// Copy all the elements in ouput array
+		for (int i = 0; i < k; i++) {
+			for (int j = 0; j < n; j++) {
+				output[index++] = arr[i][j];
+			}
+		}
+		// Sort
+		Arrays.sort(output);
+		System.out.println("After Merge: " + Arrays.toString(output));
+		return output;
+	}
+
+	// Merge Sorted Arrays using PriorityQueue;
+	// Time Complexity: O(Nlogk) where N=nk, k - no of arrays; n - no of elements in each array
+	public int[] mergeKSortedArrays2(int[][] arr) {
+		int size = 0;
+		PriorityQueue<Cell> queue = new PriorityQueue<>((a, b) -> a.data - b.data);
+		for (int i = 0; i < arr.length; i++) {
+			queue.add(new Cell(i, 0, arr[i][0]));
+			// To count the no elements, if it diff size array; otherwise directly calculate from input
+			size += arr[i].length;
+		}
+
+		int[] result = new int[size];
+		int index = 0;
+		while (!queue.isEmpty()) {
+			Cell curr = queue.poll();
+			result[index++] = curr.data;
+			if (curr.j < arr[curr.i].length - 1) queue.add(new Cell(curr.i, curr.j + 1, arr[curr.i][curr.j + 1]));
+		}
+
+		System.out.println("After merge:" + Arrays.toString(result));
+		return result;
+	}
+
+	/*
+	 * Shortest Range in K sorted lists/Smallest range/Minimize the absolute difference
+	 */
+	/* Smallest Range:
+	 * You have k lists of sorted integers in ascending order. Find the smallest range that includes at least one number
+	 * from each of the k lists. We define the range [a,b] is smaller than range [c,d] if b-a < d-c or a < c if b-a ==
+	 * d-c. 
+	 * Example 1: Input:[[4,10,15,24,26], [0,9,12,20], [5,18,22,30]] 
+	 * Output: [20,24] 
+	 * Explanation: List 1: [4, 10, 15, 24,26], 24 is in range [20,24]. List 2: [0, 9, 12, 20], 20 is in range [20,24]. 
+	 * List 3: [5, 18, 22, 30], 22 is in range [20,24].	 
+	 */
+	// TODO: Modify this to use Container to to hold the indices
+	// Apply Merge K List Algorithm
+	public int[] smallestRange(List<List<Integer>> nums) {
+		int[] result = new int[2];
+		if (nums.size() == 0) return result;
+
+		PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[2] - b[2]); // i,j,val
+		int max = Integer.MIN_VALUE, minRange = Integer.MAX_VALUE;
+
+		// Set the first value in entire list
+		for (int i = 0; i < nums.size(); i++) {
+			max = Math.max(max, nums.get(i).get(0));
+			queue.add(new int[] { i, 0, nums.get(i).get(0) });
+		}
+
+		while (queue.size() == nums.size()) {
+			int[] curr = queue.poll();
+			int i = curr[0], j = curr[1], min = curr[2];
+
+			// update the result
+			if (max - min < minRange) {
+				result[0] = min;
+				result[1] = max;
+				minRange = max - min;
+			}
+
+			// Check next value from the top element
+			j++;
+
+			if (nums.get(i) != null && j >= nums.get(i).size()) continue;
+
+			int nextVal = nums.get(i).get(j);
+			max = Math.max(max, nextVal);
+
+			queue.add(new int[] { i, j, nextVal });
+		}
+
+		return result;
+	}
+
+	/*
+	 * Minimize the absolute difference: 
+	 * Given three sorted arrays A, B and Cof not necessarily same sizes.
+	 * Calculate the minimum absolute difference between the maximum and minimum number from the triplet a, b, c such that a, b, c
+	 * belongs arrays A, B, C respectively.i.e. minimize | max(a,b,c) - min(a,b,c) |.
+	 * Example :Input: A : [ 1, 4, 5, 8, 10 ], B : [ 6, 9, 15 ], C : [ 2, 3, 6, 6 ]
+	 * 			Output: 1
+	 */
+	public static int minAbsoluteDiff(ArrayList<Integer> A, ArrayList<Integer> B, ArrayList<Integer> C) {
+		int diff = Integer.MAX_VALUE;
+		int i = 0, j = 0, k = 0;
+		int p = A.size(), q = B.size(), r = C.size();
+		while (i < p && j < q && k < r) {
+			int maximum = Math.max(A.get(i), Math.max(B.get(j), C.get(k)));
+			int minimum = Math.min(A.get(i), Math.min(B.get(j), C.get(k)));
+
+			if (maximum - minimum < diff) {
+				diff = maximum - minimum;
+			}
+
+			if (diff == 0) break;
+
+			if (A.get(i) == minimum) i++;
+			else if (B.get(j) == minimum) j++;
+			else k++;
+		}
+
+		return diff;
+	}
+
+	/* Kth Smallest Element in a Sorted Matrix: 
+	 * Given a n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest element in the matrix.
+	 * Note that it is the kth smallest element in the sorted order, not the kth distinct element.
+	 * 	Example:
+	 * 	matrix = [[ 1,  5,  9],	[10, 11, 13],[12, 13, 15]], k = 8, return 13.
+	 */
+	public int kthSmallest2(int[][] matrix, int k) {
+		if (matrix == null || matrix.length == 0) return 0;
+		int r = matrix.length, c = matrix[0].length;
+		if (k > r * c) return 0;
+
+		// Priority Queue arranged based on val
+		PriorityQueue<Cell> queue = new PriorityQueue<>((ob1, ob2) -> ob1.data - ob2.data);
+
+		// Add 1st row in the matrix: TC: O(n)( Build a min heap which takes O(n) time)
+		for (int j = 0; j < c; j++)
+			queue.add(new Cell(0, j, matrix[0][j]));
+
+		// Remove one by one and next row element corresponding to val; TC:O(klogn)(Heapify k times which takes O(kLogn)
+		// time.)
+		for (int i = 1; i < k; i++) {
+			Cell cell = queue.poll();
+			if (cell.i < r - 1) queue.add(new Cell(cell.i + 1, cell.j, matrix[cell.i + 1][cell.j]));
+		}
+
+		return queue.peek().data;
+	}
+
+	/* Find K Pairs with Smallest Sums: 
+	 * You are given two integer arrays nums1 and nums2 sorted in ascending order and an integer k.
+	 * Define a pair (u,v) which consists of one element from the first array and one element from the second array.
+	 * Find the k pairs (u1,v1),(u2,v2) ...(uk,vk) with the smallest sums.
+	 * 	Example 1: Input: nums1 = [1,7,11], nums2 = [2,4,6], k = 3	Output: [[1,2],[1,4],[1,6]]
+	 * 	Explanation: The first 3 pairs are returned from the sequence:
+	 *          [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]
+	 */
+	// Approach1: Brute Force using Binary Min Heap
+	public List<int[]> kSmallestPairs1(int[] nums1, int[] nums2, int k) {
+		List<int[]> result = new ArrayList<>();
+		if (nums1.length == 0 || nums2.length == 0 || k == 0) return result;
+		PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> (a[2] - b[2]));
+		for (int i = 0; i < nums1.length; i++)
+			for (int j = 0; j < nums2.length; j++)
+				minHeap.add(new int[] { nums1[i], nums2[j], nums1[i] + nums2[j] });
+
+		while (k-- > 0 && minHeap.size() > 0) {
+			int[] data = minHeap.poll();
+			result.add(new int[] { data[0], data[1] });
+		}
+		return result;
+	}
+
+	// Approach2: Better Approach:
+	public List<int[]> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+		PriorityQueue<Cell> pq = new PriorityQueue<Cell>((a, b) -> a.data - b.data);
+		int m = nums1.length, n = nums2.length;
+		List<int[]> res = new ArrayList<int[]>();
+		if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0 || k <= 0) return res;
+
+		for (int j = 0; j <= n - 1; j++)
+			pq.offer(new Cell(0, j, nums1[0] + nums2[j]));
+
+		for (int i = 0; i < Math.min(k, m * n); i++) {
+			Cell t = pq.poll();
+			res.add(new int[] { nums1[t.i], nums2[t.j] });
+			if (t.i == m - 1) continue;
+			pq.offer(new Cell(t.i + 1, t.j, nums1[t.i + 1] + nums2[t.j]));
+		}
+		return res;
+	}
+
+	// Approach3: Efficient Approach: Understand the approach
+	// Ref:https://leetcode.com/problems/find-k-pairs-with-smallest-sums/discuss/84551/simple-Java-O(KlogK)-solution-with-explanation
+	public List<int[]> kSmallestPairs3(int[] nums1, int[] nums2, int k) {
+		List<int[]> res = new ArrayList();
+		if (nums1.length == 0 || nums2.length == 0 || k == 0) return res;
+		// Heap -- n[0] x, n[1] y
+		PriorityQueue<int[]> minIndexHeap = new PriorityQueue<>(
+				(a, b) -> nums1[a[0]] + nums2[a[1]] - nums1[b[0]] - nums2[b[1]]);
+		minIndexHeap.offer(new int[] { 0, 0 });
+		int len1 = nums1.length, len2 = nums2.length;
+		for (int i = 0; i < k && !minIndexHeap.isEmpty(); i++) {
+			int[] min = minIndexHeap.poll();
+			res.add(new int[] { nums1[min[0]], nums2[min[1]] });
+
+			if (min[1] != len2 - 1) minIndexHeap.offer(new int[] { min[0], min[1] + 1 });
+
+			if (min[1] == 0 && min[0] != len1 - 1) minIndexHeap.offer(new int[] { min[0] + 1, 0 });
+		}
+		return res;
+	}
+
+	/*
+	 * Kth Smallest Number in M Sorted Lists:???
+	 */
+
+	/*********************** Kth Element Pattern *************************/
 	// Kth Smallest Element in Unsorted Array
 	/* Find the kth Smallest element in an unsorted array. Note that it is the kth largest element in the sorted order,
 	 * not the kth distinct element.
@@ -312,280 +586,7 @@ public class HeapProblems {
 		return null;
 	}
 
-	/********************* Type2: Merge K data sets/K-way merge *************************/
-	// Merge K sorted linked lists;
-	/* Linear Merge Algorithm: Merge the List one by one 
-	 * Time Complexity: O(Nk) where N = nk; k = no of linked list; n = no of elements in the list
-	 */
-	public ListNode mergeKSortedLinkedList1(ListNode[] lists) {
-		int k = lists.length;
-		if (k == 0) return null;
-
-		ListNode result = null;
-		for (int i = 0; i < k; i++)
-			result = merge(result, lists[i]);
-		return result;
-	}
-
-	public ListNode merge(ListNode head1, ListNode head2) {
-		if (head1 == null) return head2;
-		if (head2 == null) return head1;
-
-		ListNode result = null;
-		if (head1.data < head2.data) {
-			result = head1;
-			result.next = merge(head1.next, head2);
-		} else {
-			result = head2;
-			result.next = merge(head1, head2.next);
-		}
-		return result;
-	}
-
-	// Using Min Heap: O(NLogk); where N = nk; k = no of linked list; n = no of elements in the list
-	public ListNode mergeKSortedLinkedList2(ListNode[] nodes, int k) {
-		if (k == 0) return null;
-		if (k == 1) return nodes[0];
-		PriorityQueue<ListNode> queue = new PriorityQueue<>((o1, o2) -> o1.data - o2.data);
-		for (int i = 0; i < k; i++)
-			if (nodes[i] != null) queue.add(nodes[i]);
-
-		ListNode dummy = new ListNode(0);
-		ListNode temp = dummy;
-		while (!queue.isEmpty()) {
-			ListNode curr = queue.poll();
-			// Add next val in the queue
-			if (curr.next != null) queue.add(curr.next);
-			temp.next = curr;
-			temp = temp.next;
-		}
-		return dummy.next;
-	}
-
-	// Merge k sorted arrays:
-	/* 
-	 * 1.BruteForce Approach: A simple solution is to create an output array of size n*k and one by one copy all
-	 * arrays to it. Finally, sort the output array using any O(nLogn) sorting algorithm.
-	 * This approach takes O(NlogN) time, where N=nk, k - no of arrays; n - no of elements in each array
-	 */
-	public int[] mergeKSortedArrays1(int[][] arr) {
-		int k = arr.length, n = arr[0].length;
-		// Assuming equal size array
-		int[] output = new int[n * k];
-		int index = 0;
-		// Copy all the elements in ouput array
-		for (int i = 0; i < k; i++) {
-			for (int j = 0; j < n; j++) {
-				output[index++] = arr[i][j];
-			}
-		}
-		// Sort
-		Arrays.sort(output);
-		System.out.println("After Merge: " + Arrays.toString(output));
-		return output;
-	}
-
-	// Merge Sorted Arrays using PriorityQueue;
-	// Time Complexity: O(Nlogk) where N=nk, k - no of arrays; n - no of elements in each array
-	public int[] mergeKSortedArrays2(int[][] arr) {
-		int size = 0;
-		PriorityQueue<Cell> queue = new PriorityQueue<>((a, b) -> a.data - b.data);
-		for (int i = 0; i < arr.length; i++) {
-			queue.add(new Cell(i, 0, arr[i][0]));
-			// To count the no elements, if it diff size array; otherwise directly calculate from input
-			size += arr[i].length;
-		}
-
-		int[] result = new int[size];
-		int index = 0;
-		while (!queue.isEmpty()) {
-			Cell curr = queue.poll();
-			result[index++] = curr.data;
-			if (curr.j < arr[curr.i].length - 1) queue.add(new Cell(curr.i, curr.j + 1, arr[curr.i][curr.j + 1]));
-		}
-
-		System.out.println("After merge:" + Arrays.toString(result));
-		return result;
-	}
-
-	/*
-	 * Shortest Range in K sorted lists/Smallest range/Minimize the absolute difference
-	 */
-	/* Smallest Range:
-	 * You have k lists of sorted integers in ascending order. Find the smallest range that includes at least one number
-	 * from each of the k lists. We define the range [a,b] is smaller than range [c,d] if b-a < d-c or a < c if b-a ==
-	 * d-c. 
-	 * Example 1: Input:[[4,10,15,24,26], [0,9,12,20], [5,18,22,30]] 
-	 * Output: [20,24] 
-	 * Explanation: List 1: [4, 10, 15, 24,26], 24 is in range [20,24]. List 2: [0, 9, 12, 20], 20 is in range [20,24]. 
-	 * List 3: [5, 18, 22, 30], 22 is in range [20,24].	 
-	 */
-	// TODO: Modify this to use Container to to hold the indices
-	// Apply Merge K List Algorithm
-	public int[] smallestRange(List<List<Integer>> nums) {
-		int[] result = new int[2];
-		if (nums.size() == 0) return result;
-
-		PriorityQueue<int[]> queue = new PriorityQueue<>((a, b) -> a[2] - b[2]); // i,j,val
-		int max = Integer.MIN_VALUE, minRange = Integer.MAX_VALUE;
-
-		// Set the first value in entire list
-		for (int i = 0; i < nums.size(); i++) {
-			max = Math.max(max, nums.get(i).get(0));
-			queue.add(new int[] { i, 0, nums.get(i).get(0) });
-		}
-
-		while (queue.size() == nums.size()) {
-			int[] curr = queue.poll();
-			int i = curr[0], j = curr[1], min = curr[2];
-
-			// update the result
-			if (max - min < minRange) {
-				result[0] = min;
-				result[1] = max;
-				minRange = max - min;
-			}
-
-			// Check next value from the top element
-			j++;
-
-			if (nums.get(i) != null && j >= nums.get(i).size()) continue;
-
-			int nextVal = nums.get(i).get(j);
-			max = Math.max(max, nextVal);
-
-			queue.add(new int[] { i, j, nextVal });
-		}
-
-		return result;
-	}
-
-	/*
-	 * Minimize the absolute difference: 
-	 * Given three sorted arrays A, B and Cof not necessarily same sizes.
-	 * Calculate the minimum absolute difference between the maximum and minimum number from the triplet a, b, c such that a, b, c
-	 * belongs arrays A, B, C respectively.i.e. minimize | max(a,b,c) - min(a,b,c) |.
-	 * Example :Input: A : [ 1, 4, 5, 8, 10 ], B : [ 6, 9, 15 ], C : [ 2, 3, 6, 6 ]
-	 * 			Output: 1
-	 */
-	public static int minAbsoluteDiff(ArrayList<Integer> A, ArrayList<Integer> B, ArrayList<Integer> C) {
-		int diff = Integer.MAX_VALUE;
-		int i = 0, j = 0, k = 0;
-		int p = A.size(), q = B.size(), r = C.size();
-		while (i < p && j < q && k < r) {
-			int maximum = Math.max(A.get(i), Math.max(B.get(j), C.get(k)));
-			int minimum = Math.min(A.get(i), Math.min(B.get(j), C.get(k)));
-
-			if (maximum - minimum < diff) {
-				diff = maximum - minimum;
-			}
-
-			if (diff == 0) break;
-
-			if (A.get(i) == minimum) i++;
-			else if (B.get(j) == minimum) j++;
-			else k++;
-		}
-
-		return diff;
-	}
-
-	/* Kth Smallest Element in a Sorted Matrix: 
-	 * Given a n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest element in the matrix.
-	 * Note that it is the kth smallest element in the sorted order, not the kth distinct element.
-	 * 	Example:
-	 * 	matrix = [[ 1,  5,  9],	[10, 11, 13],[12, 13, 15]], k = 8, return 13.
-	 */
-	public int kthSmallest2(int[][] matrix, int k) {
-		if (matrix == null || matrix.length == 0) return 0;
-		int r = matrix.length, c = matrix[0].length;
-		if (k > r * c) return 0;
-
-		// Priority Queue arranged based on val
-		PriorityQueue<Cell> queue = new PriorityQueue<>((ob1, ob2) -> ob1.data - ob2.data);
-
-		// Add 1st row in the matrix: TC: O(n)( Build a min heap which takes O(n) time)
-		for (int j = 0; j < c; j++)
-			queue.add(new Cell(0, j, matrix[0][j]));
-
-		// Remove one by one and next row element corresponding to val; TC:O(klogn)(Heapify k times which takes O(kLogn)
-		// time.)
-		for (int i = 1; i < k; i++) {
-			Cell cell = queue.poll();
-			if (cell.i < r - 1) queue.add(new Cell(cell.i + 1, cell.j, matrix[cell.i + 1][cell.j]));
-		}
-
-		return queue.peek().data;
-	}
-
-	/* Find K Pairs with Smallest Sums: 
-	 * You are given two integer arrays nums1 and nums2 sorted in ascending order and an integer k.
-	 * Define a pair (u,v) which consists of one element from the first array and one element from the second array.
-	 * Find the k pairs (u1,v1),(u2,v2) ...(uk,vk) with the smallest sums.
-	 * 	Example 1: Input: nums1 = [1,7,11], nums2 = [2,4,6], k = 3	Output: [[1,2],[1,4],[1,6]]
-	 * 	Explanation: The first 3 pairs are returned from the sequence:
-	 *          [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]
-	 */
-	// Approach1: Brute Force using Binary Min Heap
-	public List<int[]> kSmallestPairs1(int[] nums1, int[] nums2, int k) {
-		List<int[]> result = new ArrayList<>();
-		if (nums1.length == 0 || nums2.length == 0 || k == 0) return result;
-		PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> (a[2] - b[2]));
-		for (int i = 0; i < nums1.length; i++)
-			for (int j = 0; j < nums2.length; j++)
-				minHeap.add(new int[] { nums1[i], nums2[j], nums1[i] + nums2[j] });
-
-		while (k-- > 0 && minHeap.size() > 0) {
-			int[] data = minHeap.poll();
-			result.add(new int[] { data[0], data[1] });
-		}
-		return result;
-	}
-
-	// Approach2: Better Approach:
-	public List<int[]> kSmallestPairs(int[] nums1, int[] nums2, int k) {
-		PriorityQueue<Cell> pq = new PriorityQueue<Cell>((a, b) -> a.data - b.data);
-		int m = nums1.length, n = nums2.length;
-		List<int[]> res = new ArrayList<int[]>();
-		if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0 || k <= 0) return res;
-
-		for (int j = 0; j <= n - 1; j++)
-			pq.offer(new Cell(0, j, nums1[0] + nums2[j]));
-
-		for (int i = 0; i < Math.min(k, m * n); i++) {
-			Cell t = pq.poll();
-			res.add(new int[] { nums1[t.i], nums2[t.j] });
-			if (t.i == m - 1) continue;
-			pq.offer(new Cell(t.i + 1, t.j, nums1[t.i + 1] + nums2[t.j]));
-		}
-		return res;
-	}
-
-	// Approach3: Efficient Approach: Understand the approach
-	// Ref:https://leetcode.com/problems/find-k-pairs-with-smallest-sums/discuss/84551/simple-Java-O(KlogK)-solution-with-explanation
-	public List<int[]> kSmallestPairs3(int[] nums1, int[] nums2, int k) {
-		List<int[]> res = new ArrayList();
-		if (nums1.length == 0 || nums2.length == 0 || k == 0) return res;
-		// Heap -- n[0] x, n[1] y
-		PriorityQueue<int[]> minIndexHeap = new PriorityQueue<>(
-				(a, b) -> nums1[a[0]] + nums2[a[1]] - nums1[b[0]] - nums2[b[1]]);
-		minIndexHeap.offer(new int[] { 0, 0 });
-		int len1 = nums1.length, len2 = nums2.length;
-		for (int i = 0; i < k && !minIndexHeap.isEmpty(); i++) {
-			int[] min = minIndexHeap.poll();
-			res.add(new int[] { nums1[min[0]], nums2[min[1]] });
-
-			if (min[1] != len2 - 1) minIndexHeap.offer(new int[] { min[0], min[1] + 1 });
-
-			if (min[1] == 0 && min[0] != len1 - 1) minIndexHeap.offer(new int[] { min[0] + 1, 0 });
-		}
-		return res;
-	}
-
-	/*
-	 * Kth Smallest Number in M Sorted Lists:???
-	 */
-	/********************** Type3: Find top K frequent elements *************************/
+	/********************** Top 'K' Elements Pattern *************************/
 	/* Top K Frequent Elements:
 	 * Find top k (or most frequent) numbers in a stream:
 	 *  Given an array of n numbers. Your task is to read numbers from the array and keep at-most K numbers at the top (According 
@@ -909,7 +910,7 @@ public class HeapProblems {
 		return sb.toString();
 	}
 
-	/********************* Type4: Two Heap *************************/
+	/***************************** Two Heaps ********************************/
 
 	/*Find Median from Data Stream:
 	 * Median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value.
@@ -1091,7 +1092,7 @@ public class HeapProblems {
 
 		return result;
 	}
-	
+
 	/* Fraudulent Activity Notifications:
 	 * Given the number of trailing days and a client's total daily expenditures for a period of days, find and print
 	 * the number of times the client will receive a notification over all days.
@@ -1303,7 +1304,7 @@ public class HeapProblems {
 		return result[n - 1];
 	}
 
-	/*************************** Misc ************************************/
+	/*************************** Uncategorized Problems ************************************/
 	/* Check Binary Heap Tree(Tree data structure):
 	 It should be a complete tree (i.e. all levels except last should be full).
 	Every node’s value should be greater than or equal to its child node (considering max-heap).*/

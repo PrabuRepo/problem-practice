@@ -26,7 +26,7 @@ public class BTProblems implements TreeProperties, TreePaths {
 
 	BTPatterns bTPatterns = new BTPatterns();
 
-	/************************ Type1: Basics & Properties ************************/
+	/************************ Basics & Properties ************************/
 
 	//Time: O(n), Space:(1)
 	@Override
@@ -394,7 +394,7 @@ public class BTProblems implements TreeProperties, TreePaths {
 
 	}
 
-	/******************************** Type2: BT Traversals **************************/
+	/******************************** BT Traversals **************************/
 
 	//	Binary Tree Level Order Traversal I, II
 	/*
@@ -563,7 +563,7 @@ public class BTProblems implements TreeProperties, TreePaths {
 
 	//	TODO: Find Largest Value in Each Tree Row - Level Order
 
-	/************************ Type3: BT Views ************************/
+	/************************ BT Views ************************/
 	//	Print a Binary Tree in Vertical Order
 	/*
 	 * 2.Tree View Problems: 
@@ -864,7 +864,7 @@ public class BTProblems implements TreeProperties, TreePaths {
 		leafNodes(curr.right, result);
 	}
 
-	/************************ Type4: BT Checking ************************/
+	/************************ BT Checking ************************/
 	//	Write Code to Determine if Two Trees are Identical/Same Tree
 	public boolean isSameTree(TreeNode p, TreeNode q) {
 		if (p == null && q == null) return true;
@@ -965,7 +965,7 @@ public class BTProblems implements TreeProperties, TreePaths {
 		buildTree(root.right, sb);
 	}
 
-	/************************ Type5: BT Print, Path, Sum & LCA Problems ************************/
+	/************************ BT Print, Path, Sum & LCA Problems ************************/
 	@Override
 	public void pathFromRootToLeaf1(TreeNode root) {
 		List<List<Integer>> result = new ArrayList<>();
@@ -1242,7 +1242,7 @@ public class BTProblems implements TreeProperties, TreePaths {
 
 	//	TODO: Count Paths for a Sum
 
-	/************************ Type6: BT Construction, Conversion ************************/
+	/************************ BT Construction, Conversion ************************/
 	//	Construct Binary Tree from Inorder and Postorder Traversal
 	/*
 	 * If you are given two traversal sequences, can you construct the binary tree?
@@ -1342,7 +1342,7 @@ public class BTProblems implements TreeProperties, TreePaths {
 		}
 	}
 
-	/************************ Type7: BT Traversal Modification Probs, Misc Probs ****************/
+	/************************ BT Traversal Modification Probs, Misc Probs ****************/
 	//	Balanced Forest - Revisit this
 	//	Connect All Level Order Siblings
 	//	Tree Boundary

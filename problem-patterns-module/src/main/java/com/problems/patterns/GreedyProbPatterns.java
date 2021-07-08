@@ -6,7 +6,7 @@ import java.util.List;
 
 public class GreedyProbPatterns {
 
-	/************************* Type3: Optimal Solution Problem ***********************/
+	/************************* Optimal Solution Problem ***********************/
 	/* Queue Reconstruction by Height - Sort & Insertion:
 	 * Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers (h, k), 
 	 * where h is the height of the person and k is the number of people in front of this person who have a height greater 
@@ -33,7 +33,7 @@ public class GreedyProbPatterns {
 		return queue.toArray(new int[0][0]);
 	}
 
-	/****************************** Type4: Possibilities ****************************/
+	/****************************** Possibilities ****************************/
 
 	/* Patching Array:
 	 * Given a sorted positive integer array nums and an integer n, add/patch elements to the array such that any number

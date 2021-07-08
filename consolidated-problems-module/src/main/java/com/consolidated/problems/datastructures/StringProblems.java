@@ -11,7 +11,7 @@ import com.common.utilities.Utils;
 
 public class StringProblems {
 
-	/************************* Type1: Using 2 Pointers & Simple Problems *************/
+	/*************************** Using 2 Pointers & Simple Problems *****************/
 	// Reverse String
 	public String reverseString(String s) {
 		if (s == null) return s;
@@ -242,7 +242,7 @@ public class StringProblems {
 		return true;
 	}
 
-	/************************* Type2: String Comparison *************/
+	/************************* String Checking or Comparison *****************/
 
 	// Find Substring in a given string:
 	// TODO: Solve this using KMP & Rabin-Karp Algorithm
@@ -386,7 +386,7 @@ public class StringProblems {
 		else return 0;
 	}
 
-	/************************* Type3: String Modification/Rearrangements *************/
+	/************************* String Modification/Rearrangements *************/
 	// Recursively remove all adjacent duplicates
 	public String removeRecursiveDuplicates(String s) {
 		int n = s.length();
@@ -508,6 +508,7 @@ public class StringProblems {
 		return new String(arr);
 	}
 
+	/************************* String Pretty Print ************************/
 	// License Key Formatting:
 	public static String licenseKeyFormatting(String s, int K) {
 		if (s.length() == 0) return "";
@@ -565,7 +566,7 @@ public class StringProblems {
 		return sb.toString();
 	}
 
-	/************************* Type4: String Math *************/
+	/************************* String Math ************************/
 	/* String to Integer (atoi): Implement atoi which converts a string to an integer.
 	 */
 	public int atoi(final String str) {
@@ -800,7 +801,7 @@ public class StringProblems {
 		return sb.length() < str.length() ? sb.toString() : str;
 	}
 
-	/************************* Type5: Hashing(Using a Length-256 Integer Array) *************/
+	/*********************** Hashing(Using a Length-256 Integer Array) *************/
 	/*
 	 * 1.Is Unique:
 	 * Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional 
@@ -998,7 +999,7 @@ public class StringProblems {
 		return true;
 	}
 
-	/************************************ Type6: Substring Problems **************************/
+	/************************************ Substring Problems **************************/
 	/*
 	 * Special Palindrome Again:
 	 * A string is said to be a special palindromic string if either of two conditions is met:

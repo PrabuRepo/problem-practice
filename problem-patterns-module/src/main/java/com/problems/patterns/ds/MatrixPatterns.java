@@ -18,7 +18,7 @@ public class MatrixPatterns {
 
 	private WordProblems wordProblems = new WordProblems();
 
-	/************** Type1: Basic Matrix Problems ***************/
+	/************** Basic Matrix Problems ***************/
 	// Anti clock wise direction:
 	// Apprach1: Take transpose, reverse the column & use an additional space
 	public void rotateRightMatrix1(int[][] matrix) {
@@ -208,7 +208,7 @@ public class MatrixPatterns {
 		return mat;
 	}
 
-	/************** Type3: Binary Search in Matrix ***************/
+	/************** Binary Search in Matrix ***************/
 	/* Search element in a sorted matrix
 	 *   - Integers in each row are sorted from left to right.
 	 *   - The first integer of each row is greater than the last integer of the previous row.
@@ -249,7 +249,7 @@ public class MatrixPatterns {
 		return false;
 	}
 
-	/************** Type5: Matrix-4/8 directions Traversals ***************/
+	/************** Matrix-4/8 directions Traversals ***************/
 	// Matrix 4/8 directions flow problems: These problems can be solved using DFS, BFS, Union Find, Back or simple
 	// search
 	private static final int[] rowSet4 = { -1, 1, 0, 0 };
@@ -259,7 +259,7 @@ public class MatrixPatterns {
 	//4 Directions 
 	private static final int[][] DIRS = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
 
-	/************** 5.1.Modify/Change the Region: ***************/
+	/************** 1.Modify/Change the Region: ***************/
 	/*Flood Fill/Paint Fill Algorithm:
 	 * Flood fill Algorithm – how to implement fill() in paint?
 	 * 	In MS-Paint, when we take the brush to a pixel and click, the color of the region of that pixel is replaced with 
@@ -436,7 +436,7 @@ public class MatrixPatterns {
 		return i * cols + j;
 	}
 
-	/************** 5.2.Find the Region/Data: ***************/
+	/************** 2.Find the Region/Data: ***************/
 
 	// Number of Islands I: Time: O(m*n);
 	public int numIslands1(char[][] grid) {
@@ -591,7 +591,7 @@ public class MatrixPatterns {
 		wordProblems.wordSearchII3(board, words);
 	}
 
-	/************** 5.3.Find one path from src to dest: ***************/
+	/************** 3.Find one path from src to dest: ***************/
 	/*Rat in a Maze Problem:
 	 * Consider a rat placed at (0, 0) in a square matrix m[][] of order n and has to reach the destination at (n-1, n-1). 
 	 * Your task is to complete the function which returns a sorted array of strings denoting all the possible directions 
@@ -778,7 +778,7 @@ public class MatrixPatterns {
 				: distance[destination[0]][destination[1]];
 	}
 
-	/************** 5.4.Find the dist from multiple src & dest: ***************/
+	/************** 4.Find the dist from multiple src & dest: ***************/
 	/*
 	 * Find Shortest distance from a guard in a Bank: 
 	 * Given a matrix that is filled with ‘O’, ‘G’, and ‘W’ where 

@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
 public class SearchingAlgorithms {
-	/************************* Type1: Modified Binary Search Alg Problems ***********************/
+	/************************* Binary Search Alg Problems ***********************/
 	/*
 	 * Search for a Range or 
 	 * Find First and Last Position of Element in Sorted Array 
@@ -18,13 +18,11 @@ public class SearchingAlgorithms {
 	public int[] searchRange(int[] nums, int target) {
 		int[] range = { -1, -1 };
 
-		int leftIndex = binarySearch1(nums, target, 0,
-				nums.length - 1, true);
+		int leftIndex = binarySearch1(nums, target, 0, nums.length - 1, true);
 
 		if (leftIndex == -1) return range;
 
-		int rightIndex = binarySearch1(nums, target,
-				leftIndex, nums.length - 1, false);
+		int rightIndex = binarySearch1(nums, target, leftIndex, nums.length - 1, false);
 		range[0] = leftIndex;
 		range[1] = rightIndex;
 
@@ -32,20 +30,18 @@ public class SearchingAlgorithms {
 	}
 
 	// Binary Search to find the extreme left & right based on the flag
-	public int binarySearch1(int[] nums, int x, int l,
-			int h, boolean leftFlag) {
+	public int binarySearch1(int[] nums, int x, int l, int h, boolean leftFlag) {
 		int m = 0;
 		while (l <= h) {
 			m = l + (h - l) / 2;
 			if (nums[m] == x) { // Modification Here
 				if (leftFlag && m > 0 && nums[m - 1] == x) {
 					h = m - 1;
-				} else if (!leftFlag && m < nums.length - 1
-						&& nums[m + 1] == x) {
-							l = m + 1;
-						} else {
-							return m;
-						}
+				} else if (!leftFlag && m < nums.length - 1 && nums[m + 1] == x) {
+					l = m + 1;
+				} else {
+					return m;
+				}
 			} else if (x < nums[m]) {
 				h = m - 1;
 			} else {
@@ -70,14 +66,12 @@ public class SearchingAlgorithms {
 		if (nums.length == 0) return range;
 
 		// Search Left:
-		int left = searchLeft(nums, 0, nums.length - 1,
-				target);
+		int left = searchLeft(nums, 0, nums.length - 1, target);
 
 		if (nums[left] != target) return range;
 
 		// Search Right:
-		int right = searchRight(nums, left, nums.length - 1,
-				target);
+		int right = searchRight(nums, left, nums.length - 1, target);
 
 		range[0] = left;
 		range[1] = right;
@@ -85,8 +79,7 @@ public class SearchingAlgorithms {
 		return range;
 	}
 
-	public int searchLeft(int[] nums, int l, int h,
-			int target) {
+	public int searchLeft(int[] nums, int l, int h, int target) {
 		int m;
 		while (l < h) {
 			m = l + (h - l) / 2;
@@ -96,8 +89,7 @@ public class SearchingAlgorithms {
 		return l;
 	}
 
-	public int searchRight(int[] nums, int l, int h,
-			int target) {
+	public int searchRight(int[] nums, int l, int h, int target) {
 		int m;
 		while (l < h) {
 			// Modification:Make mid biased to the right
@@ -113,9 +105,7 @@ public class SearchingAlgorithms {
 		int[] range = { -1, -1 };
 		int leftIndex = binarySearch3(nums, target, true);
 
-		if (leftIndex == nums.length
-				|| nums[leftIndex] != target)
-			return range;
+		if (leftIndex == nums.length || nums[leftIndex] != target) return range;
 
 		int rightIndex = binarySearch3(nums, target, false);
 		range[0] = leftIndex;
@@ -126,8 +116,7 @@ public class SearchingAlgorithms {
 
 	// Binary Search to find the extreme left &
 	// right based on the flag
-	public int binarySearch3(int[] nums, int x,
-			boolean left) {
+	public int binarySearch3(int[] nums, int x, boolean left) {
 		// Modification: use h = nums.length
 		int l = 0, h = nums.length, m = 0;
 		while (l < h) {
@@ -149,15 +138,12 @@ public class SearchingAlgorithms {
 	public int[] searchRange4(int[] nums, int target) {
 		if (nums.length == 0) return new int[] { -1, -1 };
 
-		int left = searchLeft(nums, 0, nums.length - 1,
-				target);
+		int left = searchLeft(nums, 0, nums.length - 1, target);
 
-		if (nums[left] != target)
-			return new int[] { -1, -1 };
+		if (nums[left] != target) return new int[] { -1, -1 };
 
 		// Modification: Check target+1
-		int right = searchRight(nums, left, nums.length - 1,
-				target);
+		int right = searchRight(nums, left, nums.length - 1, target);
 
 		return new int[] { left, right - 1 };
 	}
@@ -187,9 +173,7 @@ public class SearchingAlgorithms {
 		while (l <= h) {
 			m = l + (h - l) / 2;
 			if (m > 0 && nums[m - 1] > nums[m]) h = m - 1;
-			else if (m < nums.length - 1
-					&& nums[m] < nums[m + 1])
-				l = m + 1;
+			else if (m < nums.length - 1 && nums[m] < nums[m + 1]) l = m + 1;
 			else return m;
 		}
 		return 0;
@@ -215,10 +199,7 @@ public class SearchingAlgorithms {
 		int l = 0, h = nums.length - 1;
 		while (l < h) {
 			int m = (l + h) / 2;
-			if ((m % 2 == 0 && nums[m] == nums[m + 1])
-					|| (m % 2 == 1
-							&& nums[m - 1] == nums[m]))
-				l = m + 1;
+			if ((m % 2 == 0 && nums[m] == nums[m + 1]) || (m % 2 == 1 && nums[m - 1] == nums[m])) l = m + 1;
 			else h = m;
 		}
 
@@ -254,8 +235,7 @@ public class SearchingAlgorithms {
 	}
 
 	// Find K Closest Elements
-	public List<Integer> findClosestElements(int[] arr,
-			int k, int x) {
+	public List<Integer> findClosestElements(int[] arr, int k, int x) {
 		// Modification here: h = arr.length-k
 		int l = 0, h = arr.length - k, m = 0;
 
@@ -277,8 +257,7 @@ public class SearchingAlgorithms {
 	}
 
 	// Search in Rotated Sorted Array
-	public int searchRotatedSortedArray1(int[] nums,
-			int target) {
+	public int searchRotatedSortedArray1(int[] nums, int target) {
 		int l = 0, h = nums.length - 1, m = 0;
 		while (l <= h) {
 			m = l + (h - l) / 2;
@@ -302,8 +281,7 @@ public class SearchingAlgorithms {
 	}
 
 	// Search in Rotated Sorted Array II
-	public boolean searchRotatedSortedArray2(int[] nums,
-			int target) {
+	public boolean searchRotatedSortedArray2(int[] nums, int target) {
 
 		int l = 0, h = nums.length - 1, m = 0;
 		while (l <= h) {
@@ -357,7 +335,6 @@ public class SearchingAlgorithms {
 	}
 
 	/************** Clean up below *******************/
-	/****************************** BS-Template-I *************************/
 	// Simple Binary Search Algorithm:
 	public int binarySearch(int[] a, int x) {
 		int mid, l = 0, h = a.length - 1;
@@ -405,13 +382,11 @@ public class SearchingAlgorithms {
 			if (nums[m] == target) return m;
 			else if (nums[m] <= nums[h]) {
 				// Check target between m to h, if so l = m+1
-				if (target > nums[m] && target <= nums[h])
-					l = m + 1;
+				if (target > nums[m] && target <= nums[h]) l = m + 1;
 				else h = m - 1;
 			} else {
 				// Check target between l to m, if so h = m-1
-				if (target >= nums[l] && target < nums[m])
-					h = m - 1;
+				if (target >= nums[l] && target < nums[m]) h = m - 1;
 				else l = m + 1;
 			}
 		}
@@ -462,17 +437,13 @@ public class SearchingAlgorithms {
 		while (l < h) {
 			int m = (l + h) / 2;
 			// Non duplicate present in second half
-			if ((m % 2 == 0 && nums[m] == nums[m + 1])
-					|| (m % 2 == 1
-							&& nums[m - 1] == nums[m]))
-				l = m + 1;
+			if ((m % 2 == 0 && nums[m] == nums[m + 1]) || (m % 2 == 1 && nums[m - 1] == nums[m])) l = m + 1;
 			else h = m; // Non duplicate present in first half
 		}
 
 		return nums[l];
 	}
 
-	/****************************** BS-Template-II *************************/
 	// Binary Search Algorithm: Find the left most similar value
 	public int firstBadVersion(int n) {
 		int l = 1, h = n, m = 0;
@@ -511,9 +482,7 @@ public class SearchingAlgorithms {
 		while (l <= h) {
 			m = l + (h - l) / 2;
 			if (m > 0 && nums[m - 1] > nums[m]) h = m - 1;
-			else if (m < nums.length - 1
-					&& nums[m] < nums[m + 1])
-				l = m + 1;
+			else if (m < nums.length - 1 && nums[m] < nums[m + 1]) l = m + 1;
 			else return m;
 		}
 		return 0;
@@ -561,7 +530,6 @@ public class SearchingAlgorithms {
 		return nums[h]; // nums[l]
 	}
 
-	/****************************** BS-Template-III *************************/
 	/*Search for a Range/Find First and Last Position of Element in Sorted Array:
 	 * Given a sorted array of integers, find the starting and ending position of a given target value. Your algorithm's
 	 * runtime complexity must be in the order of O(log n). If the target is not found in the array, return [-1, -1]. For
@@ -574,12 +542,9 @@ public class SearchingAlgorithms {
 		int[] range = { -1, -1 };
 		int leftIndex = binarySearch(nums, target, true);
 
-		if (leftIndex == nums.length
-				|| nums[leftIndex] != target)
-			return range;
+		if (leftIndex == nums.length || nums[leftIndex] != target) return range;
 
-		int rightIndex = binarySearch(nums, target, false)
-				- 1;
+		int rightIndex = binarySearch(nums, target, false) - 1;
 		range[0] = leftIndex;
 		range[1] = rightIndex;
 
@@ -587,8 +552,7 @@ public class SearchingAlgorithms {
 	}
 
 	// Binary Search to find the extreme left & right based on the flag
-	public int binarySearch(int[] nums, int x,
-			boolean left) {
+	public int binarySearch(int[] nums, int x, boolean left) {
 		int l = 0, h = nums.length, m = 0;
 		while (l < h) {
 			m = l + (h - l) / 2;
@@ -640,8 +604,7 @@ public class SearchingAlgorithms {
 		int leftIndex = binarySearch(arr, x, true);
 
 		/* If x doesn't exist in arr[] then return -1 */
-		if (leftIndex == arr.length || arr[leftIndex] != x)
-			return -1;
+		if (leftIndex == arr.length || arr[leftIndex] != x) return -1;
 
 		int rightIndex = binarySearch(arr, x, false);
 
@@ -682,13 +645,11 @@ public class SearchingAlgorithms {
 	 *               Output: [1,2,3,4]
 	 */
 	//2-ptr approach:
-	public List<Integer> findClosestElements1(int[] arr,
-			int k, int x) {
+	public List<Integer> findClosestElements1(int[] arr, int k, int x) {
 		int lo = 0;
 		int hi = arr.length - 1;
 		while (hi - lo >= k) {
-			if (Math.abs(arr[lo] - x) > Math
-					.abs(arr[hi] - x)) {
+			if (Math.abs(arr[lo] - x) > Math.abs(arr[hi] - x)) {
 				lo++;
 			} else {
 				hi--;
@@ -702,8 +663,7 @@ public class SearchingAlgorithms {
 	}
 
 	// Binary searh approach - O(logn)
-	public List<Integer> findClosestElements2(int[] arr,
-			int k, int x) {
+	public List<Integer> findClosestElements2(int[] arr, int k, int x) {
 		int l = 0, h = arr.length - k, m = 0;
 
 		while (l < h) {
@@ -725,20 +685,16 @@ public class SearchingAlgorithms {
 	//Time: O(n*logk)
 	//Space: O(k)
 
-	public List<Integer> findClosestElements32(int[] arr,
-			int k,
-			int x) {
+	public List<Integer> findClosestElements32(int[] arr, int k, int x) {
 		PriorityQueue<Integer> pq = new PriorityQueue<>();
 		List<Integer> result = new ArrayList<>();
 		for (int i = 0; i < arr.length; i++) {
 			if (pq.size() > k - 1) {
-				if (Math.abs(x - arr[i]) < Math
-						.abs(x - pq.peek())) {
+				if (Math.abs(x - arr[i]) < Math.abs(x - pq.peek())) {
 					pq.poll();
 					pq.add(arr[i]);
 				}
-			} else
-				pq.add(arr[i]);
+			} else pq.add(arr[i]);
 		}
 		int s = pq.size();
 		for (int i = 0; i < s; i++) {
@@ -748,13 +704,10 @@ public class SearchingAlgorithms {
 	}
 
 	// Interesting Approach: 
-	public List<Integer> findClosestElements3(int[] arr,
-			int k, int x) {
+	public List<Integer> findClosestElements3(int[] arr, int k, int x) {
 		// convert int[] to List<Integer> for better implementation simplicity
-		List<Integer> list = Arrays.stream(arr).boxed()
-				.collect(Collectors.toList());
-		Collections.sort(list, (a, b) -> a == b ? a - b
-				: Math.abs(a - x) - Math.abs(b - x));
+		List<Integer> list = Arrays.stream(arr).boxed().collect(Collectors.toList());
+		Collections.sort(list, (a, b) -> a == b ? a - b : Math.abs(a - x) - Math.abs(b - x));
 		list = list.subList(0, k);
 		Collections.sort(list);
 		return list;

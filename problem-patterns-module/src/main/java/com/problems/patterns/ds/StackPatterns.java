@@ -11,7 +11,7 @@ import com.common.utilities.Utils;
  */
 public class StackPatterns {
 
-	/********************** Type1: Parse the expression/String *******************/
+	/********************** Parse the expression/String *******************/
 	// Evaluate Post Fix Expression or Polish Notation -> Here input is string
 	public void evaluatePosfixExpression(String expr) {
 		Stack<Integer> stack = new Stack<>();
@@ -274,7 +274,7 @@ public class StackPatterns {
 		return stack.isEmpty() ? "/" : result.toString();
 	}
 
-	/********************** Type2: Monotonic Stack problems *******************/
+	/********************** Monotonic Stack problems *******************/
 	/*
 	 * 	Monotonic stack is actually a stack. It just uses some ingenious logic to keep the elements in the stack orderly
 	 * (monotone increasing or monotone decreasing) after each new element putting into the stack. Well,sounds like a heap?
@@ -503,7 +503,7 @@ public class StackPatterns {
 		return water;
 	}
 
-	/********************** Type3: Stack design problems *******************/
+	/********************** Stack design problems *******************/
 
 	/********************************** Util Methods **************************/
 	private int arithmeticOperation(char ch, int b, int a) {

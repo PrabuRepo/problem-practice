@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class SlidingWindowStringPatterns {
 
-	/***************************** Type1: Sliding Window: String ******************************/
+	/***************************** Sliding Window: String ******************************/
 	/* Window Sliding Technique: 
 	 * 	This technique shows how a nested for loop in few problems can be converted to single for loop and hence reducing the time 
 	 *  complexity.

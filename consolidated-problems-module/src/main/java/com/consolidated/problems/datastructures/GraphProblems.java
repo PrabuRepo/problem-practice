@@ -18,9 +18,9 @@ import java.util.Stack;
 import com.common.utilities.DisjointSet;
 
 public class GraphProblems {
-	/******************************* Type1: Graph DS Problems *****************/
+	/******************************* Graph DS Problems *****************/
 
-	/******************************* Type2: Graph Cycle *****************/
+	/******************************* Graph Cycle *****************/
 
 	/* Graph Valid Tree: Check if a given graph is tree or not
 	 * An undirected graph is tree if it has following properties. 
@@ -93,7 +93,7 @@ public class GraphProblems {
 		return ans;
 	}
 
-	/************************** Type3: Topo Sort(DFS/BFS(Kahn’s)) *******************/
+	/************************** Topo Sort(DFS/BFS(Kahn’s)) *******************/
 
 	/*
 	 * 7.Build Order: You are given a list of projects and a list of dependencies (which is a list of pairs of projects, where the 
@@ -353,7 +353,7 @@ public class GraphProblems {
 		result.addFirst(s);
 	}
 
-	/***************** Type4: Graph Traversals(BFS/DFS/UF) **************************/
+	/***************** Graph Traversals(BFS/DFS/UF) **************************/
 
 	// Minimum Height Trees
 	/*
@@ -854,7 +854,7 @@ public class GraphProblems {
 		return -1.0d;
 	}
 
-	/************************ Type5: Connectivity *******************************************/
+	/********************************** Connectivity *****************************************/
 	/* Circle of Strings - Euler Circuit
 	 * Is Graph Bipartite
 	 * https://www.geeksforgeeks.org/euler-circuit-directed-graph/

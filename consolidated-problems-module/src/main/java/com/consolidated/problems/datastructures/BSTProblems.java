@@ -13,7 +13,9 @@ public class BSTProblems {
 
 	BSTPatterns bstPatterns = new BSTPatterns();
 
-	/**************************** Type2: Traversal Modification **************************/
+	/********************** Basic/Checking/Construction/Conversion/Searching *******************/
+
+	/**************************** Traversal Modification **************************/
 	// Minimum Absolute Difference in BST:
 	int min = Integer.MAX_VALUE;
 	Integer prevVal = null;
