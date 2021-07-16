@@ -7,7 +7,14 @@ import java.util.Queue;
 import com.common.model.OrderIndex;
 import com.common.model.TreeNode;
 
-//Binary Tree Patterns - DFS/BFS
+/*
+ * All the tree problems can be solved by 
+ * 	1.DFS - Using Recursion or Stack
+ *  2.BFS - Using Queue
+ *  
+ *  In general, Space Complexity is O(h), height of the tree;
+ *    Space may be additional space or recursion stack 
+ */
 public class BTPatterns {
 
 	/*********************** BT Checking ***********************/
