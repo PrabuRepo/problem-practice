@@ -454,12 +454,12 @@ public class Graph {
 
 		@Override
 		public List<Integer> topologicalSortDfs() {
-			boolean[] visited = new boolean[N], recursionStack = new boolean[N];
+			boolean[] visited = new boolean[N], visiting = new boolean[N];
 			LinkedList<Integer> result = new LinkedList<>();
 
 			for (int i = 0; i < N; i++)
 				if (!visited[i]) {
-					if (topoSortUtil(i, visited, recursionStack, result)) {
+					if (topoSortUtil(i, visited, visiting, result)) {
 						//If there any cycle return null
 						return null;
 					}
@@ -469,25 +469,25 @@ public class Graph {
 		}
 
 		//This solution is DFS Algorithm + Detect Cycle Algo
-		private boolean topoSortUtil(int v, boolean[] visited, boolean[] recursionStack, LinkedList<Integer> result) {
+		private boolean topoSortUtil(int v, boolean[] visited, boolean[] visiting, LinkedList<Integer> result) {
 			// If this condition satisfies, then graph contains cycle
-			if (recursionStack[v]) return true;
+			if (visiting[v]) return true;
 
 			if (visited[v]) return false;
 
 			// Mark vertex as visited and set recursion stack
 			visited[v] = true;
-			recursionStack[v] = true;
+			visiting[v] = true;
 
 			ListIterator<Integer> listIterator = adjList[v].listIterator();
 			while (listIterator.hasNext()) {
 				int next = listIterator.next();
-				if (topoSortUtil(next, visited, recursionStack, result)) return true;
+				if (topoSortUtil(next, visited, visiting, result)) return true;
 			}
 
 			result.addFirst(v);
-			// Reset the recursion stack array
-			recursionStack[v] = false;
+			// Reset the recursion stack/Reset after visited the node 
+			visiting[v] = false;
 			return false;
 		}
 
@@ -539,34 +539,34 @@ public class Graph {
 
 		@Override
 		public boolean detectCycleInDG() {
-			boolean[] visited = new boolean[N], recursionStack = new boolean[N];
+			boolean[] visited = new boolean[N], visiting = new boolean[N];
 			for (int i = 0; i < N; i++) {
 				if (!visited[i]) {
-					if (hasCycle(i, visited, recursionStack)) return true;
+					if (hasCycle(i, visited, visiting)) return true;
 				}
 			}
 			return false;
 		}
 
-		private boolean hasCycle(int vertex, boolean[] visited, boolean[] recursionStack) {
+		private boolean hasCycle(int vertex, boolean[] visited, boolean[] visiting) {
 			// If this condition satisfies, then graph contains cycle
-			if (recursionStack[vertex]) return true;
+			if (visiting[vertex]) return true;
 
 			//if (visited[vertex]) return false;
 
 			// Mark vertex as visited and set recursion stack
 			visited[vertex] = true;
-			recursionStack[vertex] = true;
+			visiting[vertex] = true;
 
 			if (adjList[vertex] != null) {
 				ListIterator<Integer> iter = adjList[vertex].listIterator();
 				while (iter.hasNext()) {
 					int adjVertex = iter.next();
-					if (!visited[adjVertex] && hasCycle(adjVertex, visited, recursionStack)) return true;
+					if (!visited[adjVertex] && hasCycle(adjVertex, visited, visiting)) return true;
 				}
 			}
 			// Reset the recursion stack array
-			recursionStack[vertex] = false;
+			visiting[vertex] = false;
 			return false;
 		}
 
@@ -840,33 +840,33 @@ public class Graph {
 
 		@Override
 		public List<Integer> topologicalSortDfs() {
-			Set<Integer> visited = new HashSet<>(), recStack = new HashSet<>();
+			Set<Integer> visited = new HashSet<>(), visiting = new HashSet<>();
 			LinkedList<Integer> result = new LinkedList<>();
 			for (int i = 0; i < N; i++) {
 				if (!visited.contains(i)) {
-					if (topoSortUtil(i, visited, recStack, result)) return null;
+					if (topoSortUtil(i, visited, visiting, result)) return null;
 				}
 			}
 			return result;
 		}
 
 		//This solution is DFS Algorithm + Detect Cycle Algo
-		private boolean topoSortUtil(int v, Set<Integer> visited, Set<Integer> recStack, LinkedList<Integer> result) {
+		private boolean topoSortUtil(int v, Set<Integer> visited, Set<Integer> visiting, LinkedList<Integer> result) {
 			// If this condition satisfies, then adjMap contains cycle
-			if (recStack.contains(v)) return true;
+			if (visiting.contains(v)) return true;
 
 			// Mark vertex as visited and set recursion stack
 			visited.add(v);
-			recStack.add(v);
+			visiting.add(v);
 
 			if (adjMap.get(v) != null) {
 				for (int adjVertex : adjMap.get(v)) {
-					if (!visited.contains(adjVertex) && topoSortUtil(adjVertex, visited, recStack, result)) return true;
+					if (!visited.contains(adjVertex) && topoSortUtil(adjVertex, visited, visiting, result)) return true;
 				}
 			}
 			result.addFirst(v);
-			// Reset the recursion stack 
-			recStack.remove(v);
+			// Reset the recursion stack/Remove the node after visited
+			visiting.remove(v);
 			return false;
 		}
 
@@ -910,31 +910,31 @@ public class Graph {
 
 		@Override
 		public boolean detectCycleInDG() {
-			Set<Integer> visited = new HashSet<>(), recStack = new HashSet<>();
+			Set<Integer> visited = new HashSet<>(), visiting = new HashSet<>();
 			for (int i = 0; i < N; i++) {
 				if (!visited.contains(i)) {
-					if (hasCycle(i, visited, recStack)) return false;
+					if (hasCycle(i, visited, visiting)) return false;
 				}
 			}
 
 			return true;
 		}
 
-		private boolean hasCycle(int v, Set<Integer> visited, Set<Integer> recStack) {
+		private boolean hasCycle(int v, Set<Integer> visited, Set<Integer> visiting) {
 			// If this condition satisfies, then adjMap contains cycle
-			if (recStack.contains(v)) return true;
+			if (visiting.contains(v)) return true;
 
 			// Mark vertex as visited and set recursion stack
 			visited.add(v);
-			recStack.add(v);
+			visiting.add(v);
 
 			if (adjMap.get(v) != null) {
 				for (int adjVertex : adjMap.get(v)) {
-					if (!visited.contains(adjVertex) && hasCycle(adjVertex, visited, recStack)) return true;
+					if (!visited.contains(adjVertex) && hasCycle(adjVertex, visited, visiting)) return true;
 				}
 			}
-			// Reset the recursion stack 
-			recStack.remove(v);
+			// Reset the recursion stack/Remove the node after visited
+			visiting.remove(v);
 			return false;
 		}
 

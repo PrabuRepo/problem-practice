@@ -15,26 +15,70 @@ import java.util.Arrays;
 public class DPArraySeqPatterns {
 
 	/***************************** Pattern 7: Array-Subsequence Probs *******************************/
-	// Longest Increasing Sequence:
-	/* To make use of recursive calls, this function must return two things: 
-	1) Length of LIS ending with element arr[n-1]. We use max_ending_here for this purpose 
-	2) Overall maximum as the LIS may end with an element before arr[n-1] max_ref is used this purpose. 
-	The value of LIS of full array of size n is stored in max_ref which is our final result 
+	/* Longest Increasing Sequence:
+	 * Eg: 
+	 * 	Input: nums = [10,9,2,5,3,7,101,18], Output: 4
+	 * 	Input: nums = [0,1,0,3,2,3], Output: 4
+	 */
+	/* Recursive Soln:
+	 * 1. If the current element is greater than the previous element, then we can either pick it or dont pick it because we may get 
+	 *    a smaller element somewhere ahead which is greater than previous and picking that would be optimal. So we try both options.
+	 * 2. If the current element is smaller or equal to previous element, it can't be picked. 
 	*/
-	//Recursive1:
 	public int LIS1(int[] nums) {
 		if (nums.length <= 1) return nums.length;
-		return lengthOfLIS(nums, 0, Integer.MIN_VALUE);
+		//return lengthOfLIS(nums, 0, Integer.MIN_VALUE);
+		return lengthOfLIS1(nums, 0, Integer.MIN_VALUE);
 	}
 
+	//Recursion1:
+	public int lengthOfLIS1(int[] nums, int i, int prevNum) {
+		if (i >= nums.length) return 0;
+
+		// pick it if it is greater than previous picked element
+		return Math.max(prevNum < nums[i] ? 1 + lengthOfLIS1(nums, i + 1, nums[i]) : 0,
+				lengthOfLIS1(nums, i + 1, prevNum)); // return whichever choice gives max LIS
+	}
+
+	//Recursion2:
 	public int lengthOfLIS(int[] nums, int i, int prevNum) {
 		if (i >= nums.length) return 0;
 		int taken = 0, notTaken = 0;
-		if (prevNum < nums[i]) {
+		if (prevNum < nums[i]) { // pick it if it is greater than previous picked element
 			taken = 1 + lengthOfLIS(nums, i + 1, nums[i]);
 		}
 		notTaken = lengthOfLIS(nums, i + 1, prevNum);
-		return Math.max(taken, notTaken);
+		return Math.max(taken, notTaken); // return whichever choice gives max LIS
+	}
+
+	//Approach2: Top down approach 
+	/*
+	 * It wouldn't be scalable to store the state as (i, prev) because prev element can be any number in [-104, 104] 
+	 * meaning we would need to declare a matrix dp[n][1e8] which won't be possibl
+	 * DP with (i, prev) as state:
+	 * Instead, we could store the state of (i, prev_i), where prev_i denotes the index of previous chosen element. 
+	 * Thus we would use a dp matrix where dp[i][j] will denote the longest increasing subsequence from index i when
+	 * previous chosen element's index is j.
+	 */
+	//TODO: This solution is not working. Revisit this
+	public int LIS2(int[] nums) {
+		if (nums.length <= 1) return nums.length;
+		int[] dp = new int[nums.length + 1];
+		Arrays.fill(dp, -1);
+		return lengthOfLIS(nums, 0, -1, dp);
+	}
+
+	public int lengthOfLIS(int[] nums, int i, int prevIndex, int[] dp) {
+		if (i >= nums.length) return 0;
+
+		if (dp[prevIndex + 1] != -1) return dp[prevIndex + 1];
+
+		int taken = 0, notTaken = 0;
+		if (prevIndex == -1 || nums[prevIndex] < nums[i]) { // pick it if it is greater than previous picked element
+			taken = 1 + lengthOfLIS(nums, i + 1, i);
+		}
+		notTaken = lengthOfLIS(nums, i + 1, prevIndex);
+		return dp[prevIndex + 1] = Math.max(taken, notTaken); // return whichever choice gives max LIS
 	}
 
 	// Approach2: DP Approach : O(n^2)

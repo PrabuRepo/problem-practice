@@ -21,6 +21,9 @@ import com.problems.patterns.ds.BTPatterns;
  * All the tree problems can be solved by 
  * 	1.DFS - Using Recursion or Stack
  *  2.BFS - Using Queue
+ *  
+ *  In general, Space Complexity is O(h), height of the tree;
+ *    Space may be additional space or recursion stack 
  */
 public class BTProblems implements TreeProperties, TreePaths {
 
@@ -966,24 +969,42 @@ public class BTProblems implements TreeProperties, TreePaths {
 	}
 
 	/************************ BT Print, Path, Sum & LCA Problems ************************/
+	/*
+	 * Time: O(n), Space:O(h), height of the tree
+	 */
 	@Override
 	public void pathFromRootToLeaf1(TreeNode root) {
 		List<List<Integer>> result = new ArrayList<>();
-		pathFromRootToLeaf1(root, new ArrayList<>(), result);
+
+		pathFromRootToLeaf11(root, new ArrayList<>(), result);
+		pathFromRootToLeaf12(root, new Stack<>(), result);
+
 		result.forEach(k -> System.out.println(k));
 	}
 
-	private void pathFromRootToLeaf1(TreeNode root, List<Integer> path, List<List<Integer>> result) {
+	private void pathFromRootToLeaf11(TreeNode root, List<Integer> path, List<List<Integer>> result) {
 		if (root == null) return;
 
 		path.add(root.val);
 		if (root.left == null && root.right == null) result.add(new ArrayList<>(path));
 
-		pathFromRootToLeaf1(root.left, path, result);
-		pathFromRootToLeaf1(root.right, path, result);
+		pathFromRootToLeaf11(root.left, path, result);
+		pathFromRootToLeaf11(root.right, path, result);
 
 		// Remove the visited path from list, if node is not present in the path
 		if (!path.isEmpty()) path.remove(path.size() - 1);
+	}
+
+	private void pathFromRootToLeaf12(TreeNode root, Stack<Integer> path, List<List<Integer>> result) {
+		if (root == null) return;
+
+		path.push(root.val);
+		if (root.left == null && root.right == null) result.add(new ArrayList<>(path));
+
+		pathFromRootToLeaf12(root.left, path, result);
+		pathFromRootToLeaf12(root.right, path, result);
+
+		path.pop();
 	}
 
 	@Override

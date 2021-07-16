@@ -33,7 +33,7 @@ public class MaxStack {
 	}
 
 	public void testStackMax2() {
-		MaxStack2 stack = new MaxStack2();
+		MaxStack21 stack = new MaxStack21();
 		System.out.println("Stack (using Max variable): ");
 		stack.push(4);
 		stack.push(3);
@@ -52,6 +52,10 @@ public class MaxStack {
 }
 
 // Using additional Min Variable
+/*
+ * Time Complexity: O(1) for all the operations
+ * Space Complexity: O(n) 
+ */
 class MaxStack1 {
 	public StckNode top;
 
@@ -96,20 +100,23 @@ class StckNode {
 	}
 }
 
-// Design and Implement Special Stack Data Structure, using one auxiliary max stack
-class MaxStack2 extends Stack<Integer> {
+// Two Stacks Approach: Design and Implement Special Stack Data Structure, using one auxiliary max stack
+/*
+ * Time Complexity: O(1) for all the operations
+ * Space Complexity: O(n) for additional stack
+ */
+class MaxStack21 extends Stack<Integer> {
 	private static final long serialVersionUID = 53463461L;
 
-	// To hold the min values
+	// To hold the max values
 	Stack<Integer> maxStack;
 
-	public MaxStack2() {
+	public MaxStack21() {
 		maxStack = new Stack<>();
 	}
 
 	public void push(int data) {
-		if (this.empty()) maxStack.push(data);
-		else if (data >= max()) maxStack.push(data); // If there is any max data, push into maxStack
+		if (this.isEmpty() || data >= max()) maxStack.push(data);
 		// Push into main stack
 		super.push(data);
 	}
@@ -119,6 +126,38 @@ class MaxStack2 extends Stack<Integer> {
 
 		if (super.peek() == max()) maxStack.pop();
 		return super.pop();
+	}
+
+	public int max() {
+		return maxStack.isEmpty() ? Integer.MIN_VALUE : maxStack.peek();
+	}
+}
+
+//Two Stacks Approach: Modification of above
+class MaxStack22 {
+
+	//To hold all the values
+	Stack<Integer> stack;
+
+	// To hold the max values
+	Stack<Integer> maxStack;
+
+	public MaxStack22() {
+		stack = new Stack<>();
+		maxStack = new Stack<>();
+	}
+
+	public void push(int data) {
+		if (stack.isEmpty() || data >= max()) maxStack.push(data);
+		// Push into main stack
+		stack.push(data);
+	}
+
+	public Integer pop() {
+		if (stack.isEmpty()) return -1;
+
+		if (stack.peek() == max()) maxStack.pop();
+		return stack.pop();
 	}
 
 	public int max() {

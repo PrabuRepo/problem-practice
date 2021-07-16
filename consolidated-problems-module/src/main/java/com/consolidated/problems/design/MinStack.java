@@ -71,6 +71,10 @@ public class MinStack {
 }
 
 // Using additional Min Variable
+/*
+ * Time Complexity: O(1) for all the operations
+ * Space Complexity: O(n) to store max values
+ */
 class MinStack1 {
 	public StackNode top;
 
@@ -116,36 +120,40 @@ class StackNode {
 	}
 }
 
-// Design and Implement Special Stack Data Structure, using one auxiliary min stack
-class MinStack2 extends Stack<Integer> {
-	private static final long serialVersionUID = 53463461L;
+//Two Stacks Approach: Design and Implement Special Stack Data Structure, using one auxiliary min stack
+/*
+ * Time Complexity: O(1) for all the operations
+ * Space Complexity: O(n) for additional stack
+ */
+class MinStack2 {
 
-	// To hold the min values
-	Stack<Integer> min;
+	//To hold all the values
+	Stack<Integer> stack;
+
+	// To hold the minStack values
+	Stack<Integer> minStack;
 
 	public MinStack2() {
-		min = new Stack<>();
+		stack = new Stack<>();
+		minStack = new Stack<>();
 	}
 
 	public void push(int data) {
-		if (this.empty()) {
-			min.push(data);
-		} else {
-			if (data <= min()) min.push(data);
-		}
-		super.push(data);
+		if (stack.isEmpty() || data <= min()) minStack.push(data);
+
+		stack.push(data);
 	}
 
 	public Integer pop() {
-		if (!super.isEmpty()) {
-			if (super.peek() == min()) min.pop();
-			return super.pop();
-		}
-		return -1;
+		if (stack.isEmpty()) return -1;
+
+		if (stack.peek() == min()) minStack.pop();
+
+		return stack.pop();
 	}
 
 	public int min() {
-		return min.isEmpty() ? Integer.MIN_VALUE : min.peek();
+		return minStack.isEmpty() ? Integer.MIN_VALUE : minStack.peek();
 	}
 }
 
@@ -155,6 +163,9 @@ class MinStack2 extends Stack<Integer> {
  * thing to notes is, 2x – minEle will always be less than x (proved below), i.e., new minEle and while popping out this
  * element we will see that something unusual has happened as the popped element is less than the minEle. So we will be
  * updating minEle.
+ * 
+ * Time Complexity: O(1) for all the operations
+ * Space Complexity: O(1)
  */
 class MinStack3 {
 	public int minElement;
