@@ -64,19 +64,19 @@ public class MatrixPatterns {
 		System.out.println("Before: ");
 		Utils.printMatrix(matrix);
 
-		int n = matrix.length, temp = 0;
-		for (int i = 0; i < n / 2; i++) {
-			for (int j = i; j < n - i - 1; j++) {
+		int n = matrix.length - 1, temp = 0;
+		for (int i = 0; i < matrix.length / 2; i++) { //Note: Here 'i' is the layers in the matrix
+			for (int j = i; j < n - i; j++) { //Inner loop traverse for each layer starts from i to previous of n-i
 				// Save the top
 				temp = matrix[i][j];
 				// Move right to top
-				matrix[i][j] = matrix[j][n - i - 1];
+				matrix[i][j] = matrix[j][n - i];
 				// Move bottom to right
-				matrix[j][n - i - 1] = matrix[n - i - 1][n - j - 1];
+				matrix[j][n - i] = matrix[n - i][n - j];
 				// Move left to bottom
-				matrix[n - i - 1][n - j - 1] = matrix[n - j - 1][i];
+				matrix[n - i][n - j] = matrix[n - j][i];
 				// Assign the top(from temp) to left
-				matrix[n - j - 1][i] = temp;
+				matrix[n - j][i] = temp;
 			}
 		}
 
@@ -119,93 +119,24 @@ public class MatrixPatterns {
 		System.out.println("Before: ");
 		Utils.printMatrix(matrix);
 
-		int n = matrix.length, temp = 0;
-		for (int i = 0; i < n / 2; i++) {
-			for (int j = i; j < n - i - 1; j++) {
+		int n = matrix.length - 1, temp = 0;
+		for (int i = 0; i < matrix.length / 2; i++) { //Note: Here 'i' is the layers in the matrix
+			for (int j = i; j < n - i; j++) {//Inner loop traverse for each layer starts from i to previous of n-i
 				// Save the top
 				temp = matrix[i][j];
 				// Move left to top
-				matrix[i][j] = matrix[n - j - 1][i];
+				matrix[i][j] = matrix[n - j][i];
 				// Move bottom to left
-				matrix[n - j - 1][i] = matrix[n - i - 1][n - j - 1];
+				matrix[n - j][i] = matrix[n - i][n - j];
 				// Move right to bottom
-				matrix[n - i - 1][n - j - 1] = matrix[j][n - i - 1];
+				matrix[n - i][n - j] = matrix[j][n - i];
 				// Assign the top(from temp) to right
-				matrix[j][n - i - 1] = temp;
+				matrix[j][n - i] = temp;
 			}
 		}
 
 		System.out.println("After: ");
 		Utils.printMatrix(matrix);
-	}
-
-	/* Spiral Matrix:
-	 * Given a matrix of m x n elements (m rows, n columns), return all elements of the matrix in spiral order.
-	 * 	Example 1:
-		Input:
-			[
-			[ 1, 2, 3 ],
-			[ 4, 5, 6 ],
-			[ 7, 8, 9 ]
-			]
-		Output: [1,2,3,6,9,8,7,4,5]
-	 */
-
-	public int[] spiralOrder(int[][] matrix) {
-		int r = matrix.length, c = matrix[0].length;
-		int[] result = new int[r * c];
-
-		if (matrix.length == 0 || matrix[0].length == 0) return result;
-		int left = 0, right = c - 1, top = 0, bottom = r - 1, index = 0;
-
-		while (top <= bottom && left <= right) {
-			for (int j = left; j <= right; j++)
-				result[index++] = matrix[top][j];
-			top++;
-
-			for (int i = top; i <= bottom; i++)
-				result[index++] = matrix[i][right];
-			right--;
-
-			if (top > bottom || left > right) break;
-
-			for (int j = right; j >= left; j--)
-				result[index++] = matrix[bottom][j];
-			bottom--;
-
-			for (int i = bottom; i >= top; i--)
-				result[index++] = matrix[i][left];
-			left++;
-		}
-
-		return result;
-	}
-
-	/*
-	 * Spiral Matrix II: 
-	 * Given a positive integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
-	 */
-	public int[][] generateMatrix(int n) {
-		int l = 0, r = n - 1, t = 0, b = n - 1;
-		int[][] mat = new int[n][n];
-		int val = 1;
-		while (l <= r && t <= b) {
-			for (int j = l; j <= r; j++)
-				mat[t][j] = val++;
-			t++;
-			for (int i = t; i <= b; i++)
-				mat[i][r] = val++;
-			r--;
-			if (l > r || t > b) break;
-			for (int j = r; j >= l; j--)
-				mat[b][j] = val++;
-			b--;
-			for (int i = b; i >= t; i--)
-				mat[i][l] = val++;
-			l++;
-		}
-
-		return mat;
 	}
 
 	/************** Binary Search in Matrix ***************/

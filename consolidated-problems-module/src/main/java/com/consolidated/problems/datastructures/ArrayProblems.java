@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Random;
 import java.util.Set;
 
 import com.common.utilities.Utils;
@@ -794,20 +793,125 @@ public class ArrayProblems {
 		System.out.println(sb);
 	}
 
-	// Rotate Array/Arrays: Left Rotation
-	/*Right Rotation:
-	1. Rotate one by one - Time Complexity: O(nk)
-	2. Using Juggling Algorithm - Time Complexity: O(n)
-	3. Using Reversal Algorithm - Time Complexity: O(n)
-	*/
-	public void rotate(int[] nums, int k) {
+	/* Rotate Array: Right Rotation
+	 * 	 1. Using temp array - Time-O(n), Space: O(k)
+	 *   2. Rotate one by one - Time Complexity: O(nk)
+	 *   3. Using Juggling Algorithm - Time Complexity: O(n)
+	 *   4. Using Reversal Algorithm - Time Complexity: O(n)
+	 *   
+	 *  Eg: Input: nums = [1,2,3,4,5,6,7], k = 3; Output: [5,6,7,1,2,3,4] 
+	 */
+	//Using temp array - Time-O(n), Space: O(k)
+	public void rightRotation1(int[] nums, int k) {
+		if (nums == null || nums.length <= 1) return;
+
 		int n = nums.length;
-		if (n > 0 && k >= n) k = k % n;
-		if (n > 1 && k > 0) {
-			Utils.reverse(nums, 0, n - 1);
-			Utils.reverse(nums, 0, k - 1);
-			Utils.reverse(nums, k, n - 1);
+		if (k >= n) k = k % n;
+		if (k == 0) return;
+
+		//Store the last k elements in a temp array
+		int[] temp = Arrays.copyOfRange(nums, n - k, n);
+
+		//Shift rest of the arr with k interval
+		for (int i = n - 1; i < n - k; i--) {
+			nums[i] = nums[i - k];
 		}
+
+		//Store back the k elements in front
+		for (int i = 0; i < k; i++) {
+			nums[i] = temp[i];
+		}
+	}
+
+	//Rotate one by one 
+	public void rightRotation2(int[] nums, int k) {
+		if (nums == null || nums.length <= 1) return;
+
+		int n = nums.length;
+		if (k >= n) k = k % n;
+		if (k == 0) return;
+
+		while (k-- > 0) {
+			int lastElem = nums[n - 1];
+			for (int j = n - 1; j > 0; j--) {
+				nums[j] = nums[j - 1];
+			}
+			nums[0] = lastElem;
+		}
+	}
+
+	//Using Reversal Algorithm 
+	public void rightRotation4(int[] nums, int k) {
+		if (nums == null || nums.length <= 1) return;
+
+		int n = nums.length;
+		if (k >= n) k = k % n;
+		if (k == 0) return;
+
+		//Reverse the entire array.
+		Utils.reverse(nums, 0, n - 1);
+		//Reverse the first k elements.
+		Utils.reverse(nums, 0, k - 1);
+		//Reverse the rest of the elements.
+		Utils.reverse(nums, k, n - 1);
+	}
+
+	/* Rotate Array: Left Rotation
+	 * Input arr[] = [1, 2, 3, 4, 5, 6, 7], k = 2; Output: [3, 4, 5, 6, 7, 1, 2]
+	 */
+	//Using temp array - Time-O(n), Space: O(k)
+	public void leftRotation1(int[] nums, int k) {
+		if (nums == null || nums.length <= 1) return;
+
+		int n = nums.length;
+		if (k >= n) k = k % n;
+		if (k == 0) return;
+
+		//Store the first k elements in a temp array
+		int[] temp = Arrays.copyOfRange(nums, 0, k);
+
+		//Shift rest of the arr with k interval
+		for (int i = 0; i < n - k; i++) {
+			nums[i] = nums[i + k];
+		}
+
+		//Store back the k elements in front
+		for (int i = 0; i < k; i++) {
+			nums[n - k - i - 1] = temp[i];
+		}
+	}
+
+	//Rotate one by one 
+	public void leftRotation2(int[] nums, int k) {
+		if (nums == null || nums.length <= 1) return;
+
+		int n = nums.length;
+		if (k >= n) k = k % n;
+		if (k == 0) return;
+
+		while (k-- > 0) {
+			int firstElem = nums[0];
+			for (int j = 0; j < n - 1; j++) {
+				nums[j] = nums[j + 1];
+			}
+			nums[n - 1] = firstElem;
+		}
+	}
+
+	//Using Reversal Algorithm 
+	public void leftRotation4(int[] nums, int k) {
+		if (nums == null || nums.length <= 1) return;
+
+		int n = nums.length;
+		if (k >= n) k = k % n;
+		if (k == 0) return;
+
+		//Reverse the first k elements.
+		Utils.reverse(nums, 0, k - 1);
+		//Reverse the rest of the elements.
+		Utils.reverse(nums, k, n - 1);
+		//Reverse the entire array.
+		Utils.reverse(nums, 0, n - 1);
 	}
 
 	// Remove Duplicates from Sorted Array I, II
@@ -1054,34 +1158,6 @@ public class ArrayProblems {
 		for (int i = 0; i <= arr.length - m; i++)
 			minDiff = Math.min(minDiff, arr[i + m - 1] - arr[i]);
 		return minDiff;
-	}
-
-	// Shuffle an Array
-	int[] original;
-	int[] shuffled;
-	Random random;
-
-	public void init(int[] nums) {
-		original = nums;
-		shuffled = Arrays.copyOf(nums, nums.length);
-		random = new Random();
-	}
-
-	/** Resets the array to its original configuration and return it. */
-	public int[] reset() {
-		shuffled = Arrays.copyOf(original, original.length);
-		return shuffled;
-	}
-
-	/** Returns a random shuffling of the array. */
-	public int[] shuffle() {
-		int n = shuffled.length;
-		for (int i = 0; i < n; i++) {
-			int k = random.nextInt(n);
-			// Swap the number based on random index 'k'; Util Random generates number from 0 to n-1;
-			Utils.swap(shuffled, i, k);
-		}
-		return shuffled;
 	}
 
 	/**************************** Uncategorized Problems **************************/

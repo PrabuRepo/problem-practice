@@ -22,7 +22,7 @@ public class MatrixProblems {
 
 	/**************************** Basic Matrix Problems *************************/
 	// Set Matrix Zeroes or Zero Matrix
-	// Print Matrix Diagonally   -  down to up side
+
 	// 2D Array - maximum hourglass sum
 
 	/**************************** Use Math Logic/DS in Matrix *************************/
