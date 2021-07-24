@@ -7,29 +7,17 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import com.basic.algorithms.PatternSearchingAlgorithms;
 import com.common.utilities.Utils;
 
 public class StringProblems {
 
 	/*************************** Using 2 Pointers & Simple Problems *****************/
-	// Reverse String
-	public String reverseString(String s) {
-		if (s == null) return s;
-
-		char[] charArray = s.toCharArray();
-		int l = 0, r = charArray.length - 1;
-		while (l < r) {
-			Utils.swap(charArray, l, r);
-			l++;
-			r--;
-		}
-		return String.valueOf(charArray);
-	}
 
 	// Reverse Vowels of a String
 	public String reverseVowels(String s) {
 		char[] arr = s.toCharArray();
-		int l = 0, h = arr.length - 1, n = arr.length;
+		int l = 0, h = arr.length - 1;
 		while (l < h) {
 			while (l < h && !isVowel(arr[l])) l++;
 			while (h > l && !isVowel(arr[h])) h--;
@@ -47,7 +35,9 @@ public class StringProblems {
 				|| ch == 'O' || ch == 'U');
 	}
 
-	// Reverse the words in a String:
+	/* Reverse the words in a String:
+	 *   Eg: Input: s = "  hello world  ", Output: "world hello"
+	 */
 	/* Approach1: Using String API
 	 * I'm splitting on the regex for one-or-more whitespace, this takes care of multiple spaces/tabs/newlines/etc in
 	 * the input. Since the input could have leading/trailing whitespace, which would result in empty matches, I first
@@ -57,53 +47,57 @@ public class StringProblems {
 		// s+ to consider more than one space
 		String[] words = s.trim().split("\\s+");
 		if (words.length == 0) return "";
-		int n = words.length;
 		StringBuilder sb = new StringBuilder();
-		sb.append(words[n - 1].trim());
-		for (int i = n - 2; i >= 0; i--)
-			sb.append(" ").append(words[i].trim());
 
-		return sb.toString();
+		for (int i = words.length - 1; i >= 0; i--)
+			sb.append(words[i]).append(" ");
+
+		return sb.toString().trim();
 	}
 
 	public String reverseWords12(String str) {
 		if (str == null || str.length() == 0) return str;
 
-		String[] strArr = str.split(" ");
+		String[] words = str.split(" ");
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = strArr.length - 1; i >= 0; i--) {
-			if (strArr[i].length() == 0) continue;
-			sb.append(strArr[i]).append(" ");
+		for (int i = words.length - 1; i >= 0; i--) {
+			if (words[i].length() == 0) continue;
+			sb.append(words[i]).append(" ");
 		}
 		return sb.toString().trim();
 	}
 
-	// Approach2: Without using String API
+	/* Approach2: Without using String API
+	 *  1. Reverse the whole string 
+	 *  2. Reverse every word separately in the string
+	 */
 	public String reverseWords2(String s) {
 		if (s == null) return null;
 		char[] arr = s.toCharArray();
-		// Reverse the whole array of char's
+		// 1. Reverse the whole string 
 		reverse(arr, 0, arr.length - 1);
 
+		//2. Reverse every word separately in the string
 		int index = 0;
 		for (int i = 0; i < arr.length; i++) {
-			if (arr[i] != ' ') {
-				// Add the space b/w the words
-				if (index != 0) arr[index++] = ' ';
+			if (arr[i] == ' ') continue;
 
-				int j = i;
-				// Used to trim the leading spaces
-				while (j < arr.length && arr[j] != ' ') arr[index++] = arr[j++];
+			// Add the space b/w the words
+			if (index != 0) arr[index++] = ' ';
 
-				// Reverse the word
-				reverse(arr, index - (j - i), index - 1);
+			//Traverse the arr till reaching the space
+			int j = i;
+			while (j < arr.length && arr[j] != ' ') arr[index++] = arr[j++];
 
-				i = j;
-			}
+			// Then reverse the word
+			int len = j - i; //Length of word
+			reverse(arr, index - len, index - 1);
+
+			i = j;
 		}
-		return new String(arr).substring(0, index);
 
+		return new String(arr).substring(0, index);
 	}
 
 	public void reverse(char[] str, int i, int j) {
@@ -114,7 +108,9 @@ public class StringProblems {
 		}
 	}
 
-	// Reverse Words in a String III:
+	/* Reverse Words in a String III:
+	 *  Eg: Input: s = "Let's take LeetCode contest"; Output: "s'teL ekat edoCteeL tsetnoc"
+	 */
 	// Approach1: Using String API
 	public String reverseWords31(String s) {
 		String[] str = s.split(" ");
@@ -130,140 +126,48 @@ public class StringProblems {
 	public String reverseWords32(String s) {
 		char[] ca = s.toCharArray();
 		for (int i = 0; i < ca.length; i++) {
-			if (ca[i] != ' ') { // when i is a non-space
-				int j = i;
-				while (j + 1 < ca.length && ca[j + 1] != ' ') {
-					j++;
-				} // move j to the end of the word
-				reverse(ca, i, j);
-				i = j;
+			if (ca[i] != ' ') continue;
+
+			int j = i;
+			while (j + 1 < ca.length && ca[j + 1] != ' ') {
+				j++;
 			}
+
+			// move j to the end of the word
+			reverse(ca, i, j);
+			i = j;
+
 		}
 		return new String(ca);
 	}
 
-	// Simple Palindrome Problem
-	public boolean isPalindrome(char[] ch) {
-		int i = 0, j = ch.length - 1;
-		while (i < j) {
-			if (ch[i++] != ch[j--]) return false;
-		}
-		return true;
-	}
-
-	/*
-	 * Valid Palindrome:Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
-	 */
-
-	public int isPalindrome10(String str) {
-		if (str == null || str.length() <= 1) return 1;
-
-		int l = 0, h = str.length() - 1;
-		while (l < h) {
-			while (l < h && (str.charAt(l) == ' ' || !Character.isLetterOrDigit(str.charAt(l)))) l++;
-			while (l < h && (str.charAt(h) == ' ' || !Character.isLetterOrDigit(str.charAt(h)))) h--;
-
-			if (l == h) break;
-
-			if (Character.toLowerCase(str.charAt(l)) == Character.toLowerCase(str.charAt(h))) {
-				l++;
-				h--;
-			} else {
-				return 0;
-			}
-		}
-
-		return 1;
-	}
-
-	public boolean isPalindrome11(String s) {
-		if (s == null || s == "") return true;
-		StringBuilder sb = new StringBuilder();
-		int index = 0;
-		for (int i = 0; i < s.length(); i++) {
-			index = (int) s.charAt(i);
-			if ((index >= 97 && index <= 122) || (index >= 65 && index <= 90)) {
-				if (index <= 90) index += 32;
-				sb.append((char) index);
-			} else if (Character.isDigit(s.charAt(i))) {
-				sb.append(s.charAt(i));
-			}
-		}
-		// System.out.println(sb.toString());
-		char[] ch = sb.toString().toCharArray();
-		return isPalindrome(ch);
-	}
-
-	public boolean isPalindrome2(String s) {
-		if (s.isEmpty()) return true;
-
-		int l = 0, h = s.length() - 1;
-		char cHead, cTail;
-		while (l <= h) {
-			cHead = s.charAt(l);
-			cTail = s.charAt(h);
-			if (!Character.isLetterOrDigit(cHead)) {
-				l++;
-			} else if (!Character.isLetterOrDigit(cTail)) {
-				h--;
-			} else {
-				if (Character.toLowerCase(cHead) != Character.toLowerCase(cTail)) return false;
-				l++;
-				h--;
-			}
-		}
-
-		return true;
-	}
-
-	/*
-	 * Valid Palindrome II:Given a non-empty string s, you may delete at most one character. Judge whether you can make it a palindrome.
-	 */
-	public boolean validPalindrome(String s) {
-		int l = 0, r = s.length() - 1;
-		while (l < r && s.charAt(l) == s.charAt(r)) {
-			l++;
-			r--;
-		}
-
-		if (l >= r) return true;
-
-		if (isPalindrome(s, l + 1, r) || isPalindrome(s, l, r - 1)) return true;
-
-		return false;
-	}
-
-	public boolean isPalindrome(String s, int l, int r) {
-		while (l < r) {
-			if (s.charAt(l) != s.charAt(r)) return false;
-			l++;
-			r--;
-		}
-		return true;
-	}
-
 	/************************* String Checking or Comparison *****************/
 
+	private PatternSearchingAlgorithms patternSearchingAlgorithms;
+
 	// Find Substring in a given string:
-	// TODO: Solve this using KMP & Rabin-Karp Algorithm
-	// Time: O(m*n), m-str length & n-subStr length
+	// Brute Force Algorithm: Time: O(m*n), m-str length & n-subStr length
 	public int strStr(final String str, final String subStr) {
 		if (str == null || str.length() == 0) return -1;
 		if (subStr == null || subStr.length() == 0) return -1;
 
-		int n1 = str.length(), n2 = subStr.length();
-		for (int i = 0; i < n1; i++) {
-			char ch1 = str.charAt(i);
-			char ch2 = subStr.charAt(0);
-			if (ch1 != ch2) continue;
+		int n = str.length(), m = subStr.length(), j;
+		for (int i = 0; i <= n - m; i++) {
+			if (str.charAt(i) != subStr.charAt(0)) continue;
 
-			int j, k = i;
-			for (j = 0; j < n2 && k < n1; j++) {
-				if (!(str.charAt(k++) == subStr.charAt(j))) break;
+			for (j = 0; j < m; j++) {
+				if (!(str.charAt(i + j) == subStr.charAt(j))) break;
 			}
-			if (j == n2) return i;
+
+			if (j == m) return i;
 		}
 		return -1;
+	}
+
+	public void strStr2(final String str, final String subStr) {
+		patternSearchingAlgorithms.naivePatternSearching(str, subStr);
+		patternSearchingAlgorithms.KMPAlgorithm(str, subStr);
+		patternSearchingAlgorithms.rabinKarpAlgorithm(str, subStr);
 	}
 
 	// Is Subsequence

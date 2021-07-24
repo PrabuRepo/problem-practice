@@ -571,7 +571,7 @@ public class MathProblems {
 	/********************** Arithmetic Operations ****************************/
 
 	// Add Binary - Binary String Problem
-	public String addBinary(String s1, String s2) {
+	public String addTwoBinaryNumbers(String s1, String s2) {
 		int carry = 0;
 		int i = s1.length() - 1, j = s2.length() - 1;
 		StringBuilder sb = new StringBuilder();
@@ -587,7 +587,7 @@ public class MathProblems {
 	}
 
 	// Add Strings - Decimal Addition
-	public String addStrings1(String num1, String num2) {
+	public String addTwoNumbers(String num1, String num2) {
 		StringBuilder sb = new StringBuilder();
 		int carry = 0, i = num1.length() - 1, j = num2.length() - 1;
 		for (; i >= 0 || j >= 0 || carry == 1; i--, j--) {
@@ -597,6 +597,42 @@ public class MathProblems {
 			carry = (x + y + carry) / 10;
 		}
 		return sb.reverse().toString();
+	}
+
+	public int[] addTwoNumbers(int[] nums1, int[] nums2) {
+		int carry = 0, m = nums1.length, n = nums2.length;
+		int larger = m > n ? m : n;
+		int[] result = new int[larger];
+		int k = larger - 1, i = m - 1, j = n - 1;
+
+		while (i >= 0 || j >= 0) {
+			int a = i < 0 ? 0 : nums1[i];
+			int b = j < 0 ? 0 : nums2[j];
+
+			int sum = a + b + carry;
+
+			result[k--] = sum % 10;
+			carry = sum / 10;
+			i--;
+			j--;
+		}
+
+		if (carry > 0) {
+			return resizeArray(result, carry);
+		}
+
+		return result;
+	}
+
+	private int[] resizeArray(int[] result, int carry) {
+		int[] val = new int[result.length + 1];
+		val[0] = carry;
+		int i = 1;
+		while (i < val.length) {
+			val[i] = result[i - 1];
+			i++;
+		}
+		return val;
 	}
 
 	// Add Two Numbers I- Linked List
@@ -713,7 +749,7 @@ public class MathProblems {
 	 * Sum of two bits can be obtained by performing XOR (^) of the two bits(S= a^b).
 	 * Carry bit can be obtained by performing AND (&) of two bits(C= a&b).
 	 */
-	public static int sum1(int a, int b) {
+	public int addTwoNumbers(int a, int b) {
 		int sum = 0, carry = 0;
 		while (b != 0) {
 			sum = a ^ b;
@@ -726,11 +762,11 @@ public class MathProblems {
 	}
 
 	// Recursive approach
-	public static int sum2(int a, int b) {
+	public int addTwoNumbers2(int a, int b) {
 		if (b == 0) return a;
 		int sum = a ^ b;
 		int carry = a & b;
-		return sum2(sum, carry << 1);
+		return addTwoNumbers2(sum, carry << 1);
 	}
 
 	/*Sub without using arithmetic operators.
@@ -738,7 +774,7 @@ public class MathProblems {
 	 * Difference of two bits can be obtained by performing XOR (^) of the two bits(D= a^b).
 	 * Borrow bit can be obtained by performing AND (&) of two bits(B= a' & b).
 	 */
-	public static int sub1(int a, int b) {
+	public int sub1(int a, int b) {
 		int sub = 0, borrow = 0;
 		while (b != 0) {
 			sub = a ^ b;
@@ -750,7 +786,7 @@ public class MathProblems {
 		return sub;
 	}
 
-	public static int sub2(int a, int b) {
+	public int sub2(int a, int b) {
 		if (b == 0) return a;
 		int diff = a ^ b;
 		int borrow = (~a) & b;
@@ -849,11 +885,20 @@ public class MathProblems {
 		for (int i = m - 1; i >= 0; i--) {
 			for (int j = n - 1; j >= 0; j--) {
 				int mul = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
-				int carryIndex = i + j, sumIndex = i + j + 1;
+				/* Carry is less than sumIndex, bcoz iteration starts from end. 
+				 * Eg: m=3, n=3; then values len = 6; index 0 to 5; 
+				 * when i=2, j=2; then sumIndex = 5, carryIndex = 4  
+				 */
+				int carryIndex = i + j;
+				int sumIndex = i + j + 1;
+
+				//Add current mul and prev value available in that index
 				int sum = mul + values[sumIndex];
 
-				values[carryIndex] += sum / 10;
+				//Note: Values of carryIndex assigned with existing val, but sumIndex is assigned directly.
 				values[sumIndex] = sum % 10;
+				values[carryIndex] += sum / 10;
+
 			}
 		}
 
@@ -862,6 +907,28 @@ public class MathProblems {
 			if (!(sb.length() == 0 && val == 0)) sb.append(val);
 
 		return sb.length() == 0 ? "0" : sb.toString();
+	}
+
+	public int[] multiply(int[] nums1, int[] nums2) {
+		int m = nums1.length, n = nums2.length;
+		if (m == 0 || n == 0) return new int[0];
+
+		int[] result = new int[m + n];
+
+		for (int i = n - 1; i >= 0; i--) { //nums2 - 2nd Number
+			for (int j = m - 1; j >= 0; j--) { //Multiply 2nd Number with all the 1st number digits 
+				int carryIndex = i + j;
+				int sumIndex = i + j + 1;
+				int mul = nums1[j] * nums2[i];
+
+				int sum = mul + result[sumIndex];
+
+				result[sumIndex] = sum % 10;
+				result[carryIndex] += sum / 10;
+			}
+		}
+
+		return result[0] != 0 ? result : Arrays.copyOfRange(result, 1, result.length);
 	}
 
 	// Divide Two Integers - Bit Alg
@@ -874,7 +941,7 @@ public class MathProblems {
 	 * remainder, and the number of times subtraction is done becomes the quotient. 
 	 * - Time Complexity: O(a) This solution fails for large inputs.
 	 */
-	public static int div1(int dividend, int divisor) {
+	public int div1(int dividend, int divisor) {
 		int quotient = 0;
 
 		// Calculate the sign
@@ -1192,4 +1259,12 @@ public class MathProblems {
 		return gcd(b, a % b);
 	}
 
+	public static void main(String[] args) {
+		MathProblems ob = new MathProblems();
+		//System.out.println(ob.multiply("11", "11"));
+		int[] nums1 = { 1, 1, 1 };
+		int[] nums2 = { 1, 1, 1 };
+
+		System.out.println(Arrays.toString(ob.multiply(nums1, nums2)));
+	}
 }

@@ -32,6 +32,15 @@ public class StringProblems {
 		return true;
 	}
 
+	public boolean isPalindrome(String s, int l, int r) {
+		while (l < r) {
+			if (s.charAt(l) != s.charAt(r)) return false;
+			l++;
+			r--;
+		}
+		return true;
+	}
+
 	/*
 	 * Valid Palindrome:Given a string, determine if it is a palindrome, 
 	 * considering only alphanumeric characters and ignoring cases.
@@ -92,8 +101,7 @@ public class StringProblems {
 	}
 
 	/*
-	 * Valid Palindrome II:Given a non-empty string s, 
-	 * you may delete at most one character. Judge 
+	 * Valid Palindrome II:Given a non-empty string s, you may delete at most one character. Judge 
 	 * whether you can make it a palindrome.
 	 */
 	public boolean validPalindrome2(String s) {
@@ -109,15 +117,6 @@ public class StringProblems {
 		if (isPalindrome(s, l + 1, r) || isPalindrome(s, l, r - 1)) return true;
 
 		return false;
-	}
-
-	public boolean isPalindrome(String s, int l, int r) {
-		while (l < r) {
-			if (s.charAt(l) != s.charAt(r)) return false;
-			l++;
-			r--;
-		}
-		return true;
 	}
 
 	/********************* Sting Pretty Print ***************************/
@@ -284,7 +283,7 @@ public class StringProblems {
 
 	public static void main(String[] args) {
 		StringProblems ob = new StringProblems();
-		// System.out.println(ob.compareVersion("7.5.3.4", "7.5.3"));
+		System.out.println(ob.compareVersion("7.5.3.4", "7.5.3"));
 
 	}
 
