@@ -8,7 +8,7 @@ import com.basic.datastructures.adv.operations.DisjointSetOperations;
 
 /*
  * 	Disjoint-Set/Union-Find is a datastructure that keeps track of elements which are split into one or more disjointsets.
- *  Disjoint-set data structure (also called a union�find data structure or merge�find set) is a data structure that tracks a set of
+ *  Disjoint-set data structure (also called a union-find data structure or merge-find set) is a data structure that tracks a set of
  *  elements partitioned into a number of disjoint (non-overlapping) subsets. It provides near-constant-time operations to add new sets,
  *  to merge existing sets, and to determine whether elements are in the same set
  * Operations :

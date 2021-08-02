@@ -641,6 +641,7 @@ public class WordProblems {
 			WordNode curr = queue.poll();
 			if (curr.word.equals(endWord)) return curr.count;
 
+			//Replace each char from a to z in the word
 			char[] arr = curr.word.toCharArray();
 			for (int i = 0; i < arr.length; i++) {
 				char temp = arr[i];
@@ -673,6 +674,8 @@ public class WordProblems {
 			while (size-- > 0) {
 				String top = queue.poll();
 				if (top.equals(endWord)) return ladderLen;
+
+				//Replace each char from a to z in the word
 				char[] arr = top.toCharArray();
 				for (int i = 0; i < arr.length; i++) {
 					for (char c = 'a'; c <= 'z'; c++) {
@@ -687,6 +690,7 @@ public class WordProblems {
 						arr[i] = temp;
 					}
 				}
+
 			}
 			ladderLen++;
 		}

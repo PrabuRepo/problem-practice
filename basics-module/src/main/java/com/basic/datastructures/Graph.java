@@ -106,11 +106,14 @@ public class Graph {
 		}
 
 		@Override
-		public List<Integer> dfsRecursive(int source) {
-			if (adjMatrix.length == 0 || adjMatrix[0].length == 0) return null;
+		public List<Integer> dfs() {
 			boolean[] visited = new boolean[N];
 			List<Integer> result = new ArrayList<>();
-			dfsUtil(adjMatrix, visited, source, result);
+			for (int i = 0; i < N; i++) { //Iteration is to handle the disconnected graph
+				if (!visited[i]) {
+					dfsUtil(adjMatrix, visited, i, result);
+				}
+			}
 			return result;
 		}
 
@@ -126,31 +129,19 @@ public class Graph {
 		}
 
 		@Override
-		public List<Integer> dfsIterative(int source) {
+		public List<Integer> dfsIterative() {
 			return null;
 		}
 
 		@Override
-		public int dfsDisconnectedGraph() {
-			if (adjMatrix.length == 0) return 0;
-			List<Integer> result = new ArrayList<>();
-			int groups = 0; //No of disconnected graphs
+		public List<Integer> bfs() {
 			boolean[] visited = new boolean[N];
-			for (int i = 0; i < N; i++) {
+			List<Integer> result = new ArrayList<>();
+			for (int i = 0; i < N; i++) { //Iteration is to handle the disconnected graph
 				if (!visited[i]) {
-					groups++;
-					dfsUtil(adjMatrix, visited, i, result);
+					bfsUtil(adjMatrix, visited, i, result);
 				}
 			}
-			return groups;
-		}
-
-		@Override
-		public List<Integer> bfsIterative(int source) {
-			if (adjMatrix.length == 0 || adjMatrix[0].length == 0) return null;
-			boolean[] visited = new boolean[N];
-			List<Integer> result = new ArrayList<>();
-			bfsUtil(adjMatrix, visited, source, result);
 			result.forEach(k -> System.out.print(k + " - "));
 			return result;
 		}
@@ -170,6 +161,25 @@ public class Graph {
 		}
 
 		@Override
+		public int findDisconnectedGraph() {
+			int count = dfsDisconnectedGraph();
+			count = bfsDisconnectedGraph();
+			return 0;
+		}
+
+		public int dfsDisconnectedGraph() {
+			List<Integer> result = new ArrayList<>();
+			int groups = 0; //No of disconnected graphs
+			boolean[] visited = new boolean[N];
+			for (int i = 0; i < N; i++) {
+				if (!visited[i]) {
+					groups++;
+					dfsUtil(adjMatrix, visited, i, result);
+				}
+			}
+			return groups;
+		}
+
 		public int bfsDisconnectedGraph() {
 			if (adjMatrix.length == 0) return 0;
 			List<Integer> result = new ArrayList<>();
@@ -185,13 +195,7 @@ public class Graph {
 		}
 
 		@Override
-		public List<Integer> topologicalSortDfs() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<Integer> topologicalSortBfs() {
+		public List<Integer> topologicalSort() {
 			// TODO Auto-generated method stub
 			return null;
 		}
@@ -286,15 +290,19 @@ public class Graph {
 		}
 
 		@Override
-		public int sccKosarajuAlg() {
+		public void kosarajuAlg() {
 			// TODO Auto-generated method stub
-			return 0;
 		}
 
 		@Override
-		public int sccTarjanAlg() {
+		public void tarjanAlg() {
 			// TODO Auto-generated method stub
-			return 0;
+		}
+
+		@Override
+		public boolean isBipartite() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 
 	}
@@ -368,34 +376,49 @@ public class Graph {
 		}
 
 		@Override
-		public List<Integer> dfsRecursive(int source) {
+		public List<Integer> dfs() {
 			boolean[] visited = new boolean[N];
 			List<Integer> result = new ArrayList<>();
-			dfs1(source, visited, result);
+
+			for (int i = 0; i < N; i++) { //Iteration is to handle the disconnected graph
+				if (!visited[i]) {
+					dfs(i, visited, result);
+				}
+			}
 			result.forEach(k -> System.out.print(k + " - "));
 			return result;
 		}
 
-		// Recursive Approach
-		public void dfs1(int v, boolean[] visited, List<Integer> result) {
+		private void dfs(int v, boolean[] visited, List<Integer> result) {
 			visited[v] = true;
 			result.add(v);
 			ListIterator<Integer> listIterator = adjList[v].listIterator();
 			while (listIterator.hasNext()) {
 				int data = listIterator.next();
 				if (!visited[data]) {
-					dfs1(data, visited, result);
+					dfs(data, visited, result);
 				}
 			}
 		}
 
 		@Override
-		public List<Integer> dfsIterative(int source) {
+		public List<Integer> dfsIterative() {
 			boolean[] visited = new boolean[N];
 			List<Integer> result = new ArrayList<>();
+
+			for (int i = 0; i < N; i++) { //Iteration is to handle the disconnected graph
+				if (!visited[i]) {
+					dfsIterative(i, visited, result);
+				}
+			}
+			result.forEach(k -> System.out.print(k + " - "));
+			return result;
+		}
+
+		private List<Integer> dfsIterative(int v, boolean[] visited, List<Integer> result) {
 			Stack<Integer> stack = new Stack<>();
-			visited[source] = true;
-			stack.push(source);
+			visited[v] = true;
+			stack.push(v);
 			while (!stack.isEmpty()) {
 				int data = stack.pop();
 				result.add(data);
@@ -414,23 +437,24 @@ public class Graph {
 		}
 
 		@Override
-		public int dfsDisconnectedGraph() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		// DFS Algorithm to traverse the graph and display the nodes
-		public void dfs(int s) {
-
-		}
-
-		@Override
-		public List<Integer> bfsIterative(int source) {
+		public List<Integer> bfs() {
 			boolean[] visited = new boolean[N];
-			Queue<Integer> queue = new LinkedList<>();
 			List<Integer> result = new ArrayList<>();
-			queue.add(source);
-			visited[source] = true;
+
+			for (int i = 0; i < N; i++) {//Iteration is to handle the disconnected graph
+				if (!visited[i]) {
+					bfs(i, visited, result);
+				}
+			}
+
+			result.forEach(k -> System.out.print(k + " - "));
+			return result;
+		}
+
+		private void bfs(int vertex, boolean[] visited, List<Integer> result) {
+			Queue<Integer> queue = new LinkedList<>();
+			queue.add(vertex);
+			visited[vertex] = true;
 			while (!queue.isEmpty()) {
 				int data = queue.poll();
 				result.add(data);
@@ -443,23 +467,64 @@ public class Graph {
 					}
 				}
 			}
-			result.forEach(k -> System.out.print(k + " - "));
+		}
+
+		public List<List<Integer>> bfsLevelByLevel() {
+			boolean[] visited = new boolean[N];
+			List<List<Integer>> result = new ArrayList<>();
+			for (int i = 0; i < N; i++) {
+				if (!visited[i]) {
+					bfsLevelByLevel(i, visited, result);
+				}
+			}
 			return result;
 		}
 
+		public void bfsLevelByLevel(int source, boolean[] visited, List<List<Integer>> result) {
+			Queue<Integer> queue = new LinkedList<>();
+			queue.add(source);
+			visited[source] = true;
+
+			while (!queue.isEmpty()) {
+				int size = queue.size();
+				List<Integer> curr = new ArrayList<>();
+				while (size-- > 0) {
+					int data = queue.poll();
+					curr.add(data);
+					ListIterator<Integer> list = adjList[data].listIterator();
+					while (list.hasNext()) {
+						int next = list.next();
+						if (!visited[next]) {
+							visited[next] = true;
+							queue.add(next);
+						}
+					}
+				}
+				result.add(new ArrayList<>(curr));
+			}
+
+		}
+
 		@Override
-		public int bfsDisconnectedGraph() {
+		public int findDisconnectedGraph() {
+			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
+		public List<Integer> topologicalSort() {
+			List<Integer> result = topologicalSortDfs();
+			result = topologicalSortBfs();
+			return result;
+		}
+
 		public List<Integer> topologicalSortDfs() {
-			boolean[] visited = new boolean[N], visiting = new boolean[N];
+			boolean[] visited = new boolean[N], onStack = new boolean[N];
 			LinkedList<Integer> result = new LinkedList<>();
 
 			for (int i = 0; i < N; i++)
 				if (!visited[i]) {
-					if (topoSortUtil(i, visited, visiting, result)) {
+					if (topoSortUtil(i, visited, onStack, result)) {
 						//If there any cycle return null
 						return null;
 					}
@@ -469,29 +534,28 @@ public class Graph {
 		}
 
 		//This solution is DFS Algorithm + Detect Cycle Algo
-		private boolean topoSortUtil(int v, boolean[] visited, boolean[] visiting, LinkedList<Integer> result) {
+		private boolean topoSortUtil(int v, boolean[] visited, boolean[] onStack, LinkedList<Integer> result) {
 			// If this condition satisfies, then graph contains cycle
-			if (visiting[v]) return true;
+			if (onStack[v]) return true;
 
 			if (visited[v]) return false;
 
 			// Mark vertex as visited and set recursion stack
 			visited[v] = true;
-			visiting[v] = true;
+			onStack[v] = true;
 
 			ListIterator<Integer> listIterator = adjList[v].listIterator();
 			while (listIterator.hasNext()) {
 				int next = listIterator.next();
-				if (topoSortUtil(next, visited, visiting, result)) return true;
+				if (topoSortUtil(next, visited, onStack, result)) return true;
 			}
 
 			result.addFirst(v);
 			// Reset the recursion stack/Reset after visited the node 
-			visiting[v] = false;
+			onStack[v] = false;
 			return false;
 		}
 
-		@Override
 		public List<Integer> topologicalSortBfs() {
 			Queue<Integer> queue = new LinkedList<>();
 			List<Integer> linearOrder = new ArrayList<>();
@@ -537,46 +601,46 @@ public class Graph {
 			return linearOrder;
 		}
 
+		/*
+		 * Depth First Traversal can be used to detect a cycle in a Graph. 
+		 *  - DFS for a connected graph produces a tree. There is a cycle in a graph only if there is a back edge present in the  graph. 
+		 *    A back edge is an edge that is from a node to  itself (self-loop) or one of its ancestors in the tree produced by DFS. 
+		 *  - For a disconnected graph, Get the DFS forest as output. To detect cycle, check for a cycle in individual trees by checking 
+		 *    back edges.
+		 *    
+		 *  - To detect a back edge, keep track of vertices currently in the recursion stack of function for DFS traversal. If a vertex is
+		 *    reached that is already in the recursion stack, then there is a cycle in the tree. The edge that connects the current vertex 
+		 *    to the vertex in the recursion stack is a back edge. Use onStack[] array to keep track of vertices in the recursion stack.
+		 */
 		@Override
 		public boolean detectCycleInDG() {
-			boolean[] visited = new boolean[N], visiting = new boolean[N];
+			//onStack maintains 'Visiting' state nodes.
+			boolean[] visited = new boolean[N], onStack = new boolean[N];
 			for (int i = 0; i < N; i++) {
 				if (!visited[i]) {
-					if (hasCycle(i, visited, visiting)) return true;
+					if (hasCycle(i, visited, onStack)) return true;
 				}
 			}
 			return false;
 		}
 
-		private boolean hasCycle(int vertex, boolean[] visited, boolean[] visiting) {
+		private boolean hasCycle(int vertex, boolean[] visited, boolean[] onStack) {
 			// If this condition satisfies, then graph contains cycle
-			if (visiting[vertex]) return true;
-
-			//if (visited[vertex]) return false;
+			if (onStack[vertex]) return true;
 
 			// Mark vertex as visited and set recursion stack
 			visited[vertex] = true;
-			visiting[vertex] = true;
+			onStack[vertex] = true;
 
 			if (adjList[vertex] != null) {
 				ListIterator<Integer> iter = adjList[vertex].listIterator();
 				while (iter.hasNext()) {
 					int adjVertex = iter.next();
-					if (!visited[adjVertex] && hasCycle(adjVertex, visited, visiting)) return true;
+					if (!visited[adjVertex] && hasCycle(adjVertex, visited, onStack)) return true;
 				}
 			}
 			// Reset the recursion stack array
-			visiting[vertex] = false;
-			return false;
-		}
-
-		// Using DisjointSet: Union-Find Algorithm can be used to check whether an undirected graph contains cycle or no
-		public boolean hasCycleInUndirectedGraph(EdgeNode[] edges, int n, int e) {
-			DisjointSet ds = new DisjointSet(n);
-			ds.initialize(n);
-			for (int i = 0; i < e; i++) {
-				if (ds.union(edges[i].src, edges[i].dest)) return true;
-			}
+			onStack[vertex] = false;
 			return false;
 		}
 
@@ -600,6 +664,16 @@ public class Graph {
 				if (!visited[adjVertex]) {
 					if (hasCycleInUndirectedGraph(adjVertex, visited, vertex)) return true;
 				} else if (adjVertex != parent) return true;
+			}
+			return false;
+		}
+
+		// Using DisjointSet: Union-Find Algorithm can be used to check whether an undirected graph contains cycle or no
+		public boolean hasCycleInUndirectedGraph(EdgeNode[] edges, int n, int e) {
+			DisjointSet ds = new DisjointSet(n);
+			ds.initialize(n);
+			for (int i = 0; i < e; i++) {
+				if (ds.union(edges[i].src, edges[i].dest)) return true;
 			}
 			return false;
 		}
@@ -688,15 +762,20 @@ public class Graph {
 		}
 
 		@Override
-		public int sccKosarajuAlg() {
+		public void kosarajuAlg() {
 			// TODO Auto-generated method stub
-			return 0;
 		}
 
 		@Override
-		public int sccTarjanAlg() {
+		public void tarjanAlg() {
 			// TODO Auto-generated method stub
-			return 0;
+
+		}
+
+		@Override
+		public boolean isBipartite() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 
 	}
@@ -752,45 +831,53 @@ public class Graph {
 		@Override
 		public int findNumberOfNodes(int[][] edges) {
 			Set<Integer> set = CommonUtil.findNumberOfNodes(edges);
-			vertices = new ArrayList<Integer>(set);
+			this.vertices = new ArrayList<Integer>(set);
 			return set.size();
 		}
 
 		@Override
 		public void printGraph() {
-			for (int i = 0; i < N; i++) {
-				System.out.println("\nEdges from Vertex: " + i + "->");
-				if (adjMap.get(i) != null) adjMap.get(i).forEach(k -> System.out.print(k + " "));
+			for (int v : vertices) {
+				System.out.println("\nEdges from Vertex: " + v + "->");
+				if (adjMap.get(v) != null) adjMap.get(v).forEach(k -> System.out.print(k + " "));
 			}
 		}
 
 		@Override
-		public List<Integer> dfsRecursive(int source) {
+		public List<Integer> dfs() {
 			Set<Integer> visited = new HashSet<>();
 			List<Integer> result = new ArrayList<>();
-			dfs1(source, visited, result);
+			for (int v : vertices) {
+				if (!visited.contains(v)) {
+					dfs(v, visited, result);
+				}
+			}
 			return result;
 		}
 
 		// Recursive Approach
-		private void dfs1(int v, Set<Integer> visited, List<Integer> result) {
+		private void dfs(int v, Set<Integer> visited, List<Integer> result) {
 			visited.add(v);
 			result.add(v);
 			if (adjMap.get(v) == null) return;
 			for (int adjNode : adjMap.get(v)) {
-				if (!visited.contains(adjNode)) dfs1(adjNode, visited, result);
+				if (!visited.contains(adjNode)) dfs(adjNode, visited, result);
 			}
 		}
 
 		@Override
-		public List<Integer> dfsIterative(int source) {
+		public List<Integer> dfsIterative() {
 			Set<Integer> visited = new HashSet<>();
 			List<Integer> result = new ArrayList<>();
-			dfs2(source, visited, result);
+			for (int v : vertices) {
+				if (!visited.contains(v)) {
+					dfsIterative(v, visited, result);
+				}
+			}
 			return result;
 		}
 
-		private void dfs2(int s, Set<Integer> visited, List<Integer> result) {
+		private void dfsIterative(int s, Set<Integer> visited, List<Integer> result) {
 			Stack<Integer> stack = new Stack<>();
 			visited.add(s);
 			stack.push(s);
@@ -807,16 +894,19 @@ public class Graph {
 		}
 
 		@Override
-		public int dfsDisconnectedGraph() {
-			// TODO Auto-generated method stub
-			return 0;
+		public List<Integer> bfs() {
+			Set<Integer> visited = new HashSet<>();
+			List<Integer> result = new ArrayList<>();
+			for (int v : vertices) {
+				if (!visited.contains(v)) {
+					bfs(v, visited, result);
+				}
+			}
+			return result;
 		}
 
-		@Override
-		public List<Integer> bfsIterative(int source) {
-			Set<Integer> visited = new HashSet<>();
+		public void bfs(int source, Set<Integer> visited, List<Integer> result) {
 			Queue<Integer> queue = new LinkedList<>();
-			List<Integer> result = new ArrayList<>();
 			queue.add(source);
 			visited.add(source);
 			while (!queue.isEmpty()) {
@@ -829,48 +919,86 @@ public class Graph {
 					}
 				}
 			}
+		}
+
+		public List<List<Integer>> bfsLevelByLevel() {
+			Set<Integer> visited = new HashSet<>();
+			List<List<Integer>> result = new ArrayList<>();
+			for (int v : vertices) {
+				if (!visited.contains(v)) {
+					bfsLevelByLevel(v, visited, result);
+				}
+			}
 			return result;
 		}
 
+		public void bfsLevelByLevel(int source, Set<Integer> visited, List<List<Integer>> result) {
+			Queue<Integer> queue = new LinkedList<>();
+			queue.add(source);
+			visited.add(source);
+
+			while (!queue.isEmpty()) {
+				int size = queue.size();
+				List<Integer> curr = new ArrayList<>();
+				while (size-- > 0) {
+					int v = queue.poll();
+					curr.add(v);
+					if (adjMap.get(v) == null) continue;
+					for (int adjNode : adjMap.get(v)) {
+						if (visited.add(adjNode)) {
+							queue.add(adjNode);
+						}
+					}
+				}
+				result.add(new ArrayList<>(curr));
+			}
+		}
+
 		@Override
-		public int bfsDisconnectedGraph() {
+		public int findDisconnectedGraph() {
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
+		public List<Integer> topologicalSort() {
+			List<Integer> result = topologicalSortDfs();
+			result = topologicalSortBfs();
+			return result;
+		}
+
 		public List<Integer> topologicalSortDfs() {
-			Set<Integer> visited = new HashSet<>(), visiting = new HashSet<>();
+			//onStack maintains 'Visiting' state nodes.
+			Set<Integer> visited = new HashSet<>(), onStack = new HashSet<>();
 			LinkedList<Integer> result = new LinkedList<>();
 			for (int i = 0; i < N; i++) {
 				if (!visited.contains(i)) {
-					if (topoSortUtil(i, visited, visiting, result)) return null;
+					if (topoSortUtil(i, visited, onStack, result)) return null;
 				}
 			}
 			return result;
 		}
 
 		//This solution is DFS Algorithm + Detect Cycle Algo
-		private boolean topoSortUtil(int v, Set<Integer> visited, Set<Integer> visiting, LinkedList<Integer> result) {
+		private boolean topoSortUtil(int v, Set<Integer> visited, Set<Integer> onStack, LinkedList<Integer> result) {
 			// If this condition satisfies, then adjMap contains cycle
-			if (visiting.contains(v)) return true;
+			if (onStack.contains(v)) return true;
 
 			// Mark vertex as visited and set recursion stack
 			visited.add(v);
-			visiting.add(v);
+			onStack.add(v);
 
 			if (adjMap.get(v) != null) {
 				for (int adjVertex : adjMap.get(v)) {
-					if (!visited.contains(adjVertex) && topoSortUtil(adjVertex, visited, visiting, result)) return true;
+					if (!visited.contains(adjVertex) && topoSortUtil(adjVertex, visited, onStack, result)) return true;
 				}
 			}
 			result.addFirst(v);
 			// Reset the recursion stack/Remove the node after visited
-			visiting.remove(v);
+			onStack.remove(v);
 			return false;
 		}
 
-		@Override
 		public List<Integer> topologicalSortBfs() {
 			// If any specific ordering is required for Problem, use PriorityQueue
 			Queue<Integer> queue = new LinkedList<>();
@@ -910,31 +1038,32 @@ public class Graph {
 
 		@Override
 		public boolean detectCycleInDG() {
-			Set<Integer> visited = new HashSet<>(), visiting = new HashSet<>();
+			//onStack maintains 'Visiting' state nodes.
+			Set<Integer> visited = new HashSet<>(), onStack = new HashSet<>();
 			for (int i = 0; i < N; i++) {
 				if (!visited.contains(i)) {
-					if (hasCycle(i, visited, visiting)) return false;
+					if (hasCycle(i, visited, onStack)) return false;
 				}
 			}
 
 			return true;
 		}
 
-		private boolean hasCycle(int v, Set<Integer> visited, Set<Integer> visiting) {
+		private boolean hasCycle(int v, Set<Integer> visited, Set<Integer> onStack) {
 			// If this condition satisfies, then adjMap contains cycle
-			if (visiting.contains(v)) return true;
+			if (onStack.contains(v)) return true;
 
 			// Mark vertex as visited and set recursion stack
 			visited.add(v);
-			visiting.add(v);
+			onStack.add(v);
 
 			if (adjMap.get(v) != null) {
 				for (int adjVertex : adjMap.get(v)) {
-					if (!visited.contains(adjVertex) && hasCycle(adjVertex, visited, visiting)) return true;
+					if (!visited.contains(adjVertex) && hasCycle(adjVertex, visited, onStack)) return true;
 				}
 			}
 			// Reset the recursion stack/Remove the node after visited
-			visiting.remove(v);
+			onStack.remove(v);
 			return false;
 		}
 
@@ -974,10 +1103,314 @@ public class Graph {
 
 		}
 
+		/*
+		 *  Solution:
+		 *    A bipartite graph is possible if the graph coloring is possible using two colors such that vertices in a set are colored 
+		 *    with the same color.
+		 *    Note that it is possible to color a cycle graph with even cycle(even no of edges) using two colors.
+		 *    It is not possible to color a cycle graph with odd cycle using two colors. 
+		 *  There are two approaches to check whether graph can be colored in 2 colors:
+		 *  	1. BFS
+		 *  	2. DFS
+		 *  Time: O(V+E) => O(V+E); Space: O(V+E)
+		 */
+		public boolean isBipartite() {
+			Map<Integer, Integer> vertexColors = new HashMap<>();
+			//BFS Approach
+			for (int v : vertices) { // Iteration is to handle the disconnected graph
+				if (!vertexColors.containsKey(v)) {
+					if (!bfsBipartite(v, vertexColors)) return false;
+				}
+			}
+
+			//DFS Approach
+			for (int v : vertices) {
+				if (!vertexColors.containsKey(v)) {
+					//Two Colors: 0 and 1; Assign 0 to first node
+					if (!dfsBipartite(v, vertexColors, 0)) return false;
+				}
+			}
+			return true;
+		}
+
+		public boolean bfsBipartite(int v, Map<Integer, Integer> vertexColors) {
+			Queue<Integer> queue = new LinkedList<>();
+
+			queue.add(v);
+			//Two Colors: 0 and 1; Assign 0 to first node
+			vertexColors.put(v, 0);
+
+			while (!queue.isEmpty()) {
+				int curr = queue.poll();
+				int col = vertexColors.get(curr);
+
+				if (adjMap.get(curr) == null) continue;
+
+				for (int adjNode : adjMap.get(curr)) {
+					if (!vertexColors.containsKey(adjNode)) {
+						vertexColors.put(adjNode, col == 1 ? 0 : 1); //Assign opposite color from curr/parent node
+						queue.add(adjNode);
+					} else if (vertexColors.get(adjNode).equals(col)) {
+						//Both current and adjacent nodes are same color. So its not Bipartite Graph
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		public boolean dfsBipartite(int v, Map<Integer, Integer> vertexColors, int color) {
+			vertexColors.put(v, color);
+
+			if (adjMap.get(v) != null) {
+				for (int adjNode : adjMap.get(v)) {
+					if (!vertexColors.containsKey(adjNode)) {
+						//adjNode should be opposite of current node color, so opp color is passed below
+						if (!dfsBipartite(adjNode, vertexColors, color == 1 ? 0 : 1)) return false;
+					} else if (vertexColors.get(adjNode).equals(color)) {
+						//Both current and adjacent nodes are same color. So its not Bipartite Graph
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		/*
+		 * Imp terminologies to understand the Tarjan's Alg:
+		 * 	- Visited or Discovery Time: This is the time when a node is visited 1st time while DFS traversal.
+		 *  - lowTime: The vertex with minimum discovery or visited time(earliest visited vertex).“Low” value of a node tells the 
+		 *    topmost reachable ancestor (with minimum possible Disc value) via the subtree of that node.
+		 *  - Tree Edge: It is an edge which is present in the DFS tree obtained after applying DFS on the graph.
+		 *  - Back Edge: Back edges point from a node to one of its ancestors in the DFS tree.
+		 *  - Forward Edge: Forward edges point from a node to one of its descendants.
+		 *  - Cross Edge: Cross edges point from a node to a previously visited node that is neither an ancestor nor a descendant.
+		 * Two cases in Tarjan's Algorithm:
+		 *  	1.Case1 (Tree Edge): If child v(adj Node) is not visited already, then after DFS of v is complete, then minimum of low[u]
+		 *  	  and low[v] will be updated to low[u].
+		 *  		  low[u] = min(low[u], low[v]);
+		 *      2.Case2 (Back Edge): When child v is already visited, then minimum of low[u] and Disc[v] will be updated to low[u].
+		 *      	  low[u] = min(low[u], disc[v]); 
+		 *   -  Time Complexity of Tarjan's Algorithm: O(V+E), Space: O(V)
+		 */
+
+		int time, sccCount;
+
+		@Override
+		public void tarjanAlg() {
+			findBridges2();
+
+			findArticulationPoints2();
+
+			//Strongly Connected Components
+			findSCC1();
+		}
+
+		/* Find Bridges in the Graph:
+		 * 	Approach1:  
+		 * 		A simple approach is to one by one remove all edges and see if removal of an edge causes disconnected graph. 
+		 * 		Following are steps of simple approach for connected graph.
+		 * 		    - For every edge (u, v), do following
+		 * 				a) Remove (u, v) from graph
+		 * 				b) See if the graph remains connected (We can either use BFS or DFS)
+		 * 				c) Add (u, v) back to the graph.
+		 * 		Time complexity:O(E*(V+E)) for a graph represented using adjacency list.
+		 * 
+		 *  Approach2: 
+		 *  	Using Tarjan's Algorithm
+		 */
+		public List<int[]> findBridges2() {
+			time = 0;
+			List<int[]> bridges = new ArrayList<>();
+
+			//Note: visitedTime map also used to track the visited vertex in the graph, so we dont need to have separate hashset to track this.
+			Map<Integer, Integer> visitedTime = new HashMap<>();
+			Map<Integer, Integer> lowTime = new HashMap<>();
+
+			for (int vertex : adjMap.keySet()) {
+				if (!visitedTime.containsKey(vertex)) {
+					dfsBridge(vertex, -1, visitedTime, lowTime, bridges);
+				}
+			}
+			return bridges;
+		}
+
+		private void dfsBridge(Integer vertex, int parent, Map<Integer, Integer> visitedTime,
+				Map<Integer, Integer> lowTime, List<int[]> bridges) {
+			//Directly add the current time in both maps
+			visitedTime.put(vertex, time);
+			lowTime.put(vertex, time);
+			time++;
+
+			if (adjMap.get(vertex) != null) {
+				for (int adj : adjMap.get(vertex)) {
+					/* This condition is required to skip immediate parent node in undirected graph.
+					 * In undirected graph, there is a chance to directly returns to immediate parent node.
+					 * This should be avoided in this algorithm, otherwise we cant find the bridge in the graph. 
+					 */
+					if (adj == parent) continue;
+
+					if (!visitedTime.containsKey(adj)) {
+						dfsBridge(adj, vertex, visitedTime, lowTime, bridges);
+
+						//Case1: TreeEdge
+						lowTime.put(vertex, Math.min(lowTime.get(vertex), lowTime.get(adj)));
+
+						/* Condition to find the bridge in the graph:
+						 *  If this condition satisfies, then there should not be back edge between curr vertex and adj vertex, 
+						 *  so if this edge is removed, then graph will be disconnected and increases the no of disconnected graphs.
+						 */
+						if (visitedTime.get(vertex) < lowTime.get(adj)) {
+							bridges.add(new int[] { vertex, adj });
+						}
+					} else {
+						// Case2: Backedge
+						lowTime.put(vertex, Math.min(lowTime.get(vertex), visitedTime.get(adj)));
+					}
+				}
+			}
+
+		}
+
+		/* Find Articulation Points in the Graph:
+		 * 	Approach1:  
+		 * 		A simple approach is to one by one remove all vertices and see if removal of a vertex causes disconnected graph. 
+		 * 		Following are steps of simple approach for connected graph.
+		 * 		    - For every vertex v, do following 
+		 * 				a) Remove v from graph
+		 * 				b) See if the graph remains connected (We can either use BFS or DFS)
+		 * 				c) Add v back to the graph.
+		 * 		Time complexity:O(E*(V+E)) for a graph represented using adjacency list.
+		 * 
+		 *  Approach2: 
+		 *  	Using Tarjan's Algorithm
+		 */
+		public List<Integer> findArticulationPoints2() {
+			time = 0;
+			List<Integer> articulationPoints = new ArrayList<>();
+			Map<Integer, Integer> visitedTime = new HashMap<>();
+			Map<Integer, Integer> lowTime = new HashMap<>();
+			Map<Integer, Integer> parent = new HashMap<>();
+
+			for (int vertex : adjMap.keySet()) {
+				if (!visitedTime.containsKey(vertex)) {
+					dfsAp(vertex, parent, visitedTime, lowTime, articulationPoints);
+				}
+			}
+			return articulationPoints;
+		}
+
+		private void dfsAp(Integer vertex, Map<Integer, Integer> parent, Map<Integer, Integer> visitedTime,
+				Map<Integer, Integer> lowTime, List<Integer> articulationPoints) {
+			visitedTime.put(vertex, time);
+			lowTime.put(vertex, time);
+			time++;
+			int childCount = 0;
+			for (Integer adj : adjMap.get(vertex)) {
+				//This condition is required to skip immediate parent node in undirected graph.
+				if (adj.equals(parent.get(vertex))) continue;
+
+				//if adj has not been visited then visit it.
+				if (!visitedTime.containsKey(adj)) {
+					parent.put(adj, vertex);
+					childCount++;
+					dfsAp(adj, parent, visitedTime, lowTime, articulationPoints);
+
+					//Case1: TreeEdge
+					lowTime.put(vertex, Math.min(lowTime.get(vertex), lowTime.get(adj)));
+
+					// Conditions to find the Articulation Points in the graph:
+					// 1. Current vertex is root of DFS tree and has two or more independent children.
+					if (parent.get(vertex) == null && childCount >= 2) {
+						articulationPoints.add(vertex);
+					}
+					/* 2.If Current vertex is not root and satisfies below condition, then adj Vertex should not have
+					 *   back edge to one of the ancestors (in DFS tree) of current Vertex.
+					 *   Note: Condition2 is same as bridge problem above.
+					 */
+					if (parent.get(vertex) != null && visitedTime.get(vertex) <= lowTime.get(adj)) {
+						articulationPoints.add(vertex);
+					}
+
+				} else {
+					//Case2: BackEdge
+					lowTime.put(vertex, Math.min(lowTime.get(vertex), visitedTime.get(adj)));
+				}
+			}
+		}
+
+		/* Find Strongly Connected Components(SCC) in a graph:
+		 * A directed graph is strongly connected if there is a path between all pairs of vertices. A graph is said to be strongly connected if every
+		 * vertex is reachable from every other vertex. The strongly connected components of an arbitrary directed graph form a partition into subgraphs 
+		 * that are themselves strongly connected.
+		 * These two algorithms are used to find the SCC of a directed graph:
+		 *   - Approach1: Using Kosaraju's Algorithm
+		 * 	 - Apporach2: Using Tarjan's Algorithm
+		 */
+		public int findSCC2() {
+			Stack<Integer> stack = new Stack<>();
+			Set<Integer> onStack = new HashSet<>();
+			//Discovered or Visited Time:
+			Map<Integer, Integer> visitedTime = new HashMap<>();
+			//Low Time:
+			Map<Integer, Integer> lowTime = new HashMap<>();
+			time = 0;
+			sccCount = 0;
+
+			for (int vertex : adjMap.keySet()) {
+				if (!visitedTime.containsKey(vertex)) {
+					dfsScc(vertex, visitedTime, lowTime, onStack, stack);
+				}
+			}
+			lowTime.forEach((k, v) -> System.out.println(k + " - " + v));
+			return sccCount;
+		}
+
+		private void dfsScc(int currVertex, Map<Integer, Integer> visitedTime, Map<Integer, Integer> lowTime,
+				Set<Integer> onStack, Stack<Integer> stack) {
+			stack.push(currVertex);
+			onStack.add(currVertex);
+			visitedTime.put(currVertex, time);
+			lowTime.put(currVertex, time);
+			time++;
+
+			if (adjMap.get(currVertex) != null) {
+				for (int adjVertex : adjMap.get(currVertex)) {
+					if (!visitedTime.containsKey(adjVertex)) {
+						dfsScc(adjVertex, visitedTime, lowTime, onStack, stack);
+						//Case1: TreeEdge
+						lowTime.put(currVertex, Math.min(lowTime.get(currVertex), lowTime.get(adjVertex)));
+					} else if (onStack.contains(adjVertex)) {
+						//Note: Here we have additional condition to check the vertex in stack, before updating the lowtime
+						//Case2: BackEdge
+						lowTime.put(currVertex, Math.min(lowTime.get(currVertex), visitedTime.get(adjVertex)));
+					}
+				}
+			}
+
+			/* Condition to find SCC:
+			 * On recursive callback, if we're at the root node (start of SCC). Empty the seen stack until back to root.
+			 */
+			if (visitedTime.get(currVertex).equals(lowTime.get(currVertex))) {
+				while (!stack.isEmpty()) {
+					int top = stack.pop();
+					onStack.remove(top);
+					if (top == currVertex) break;
+				}
+				sccCount++;
+			}
+		}
+
 		//TODO: Rewrite this
 
 		@Override
-		public int sccKosarajuAlg() {
+		public void kosarajuAlg() {
+			// TODO Auto-generated method stub
+		}
+
+		public int findSCC1() {
 			/*//it holds vertices by finish time in reverse order.
 			Stack<Integer> stack = new Stack<>();
 			//holds visited vertices for DFS.
@@ -1029,7 +1462,8 @@ public class Graph {
 			DFSUtil(v, visited, stack);
 			}
 			stack.push(vertex);
-			*/}
+			*/
+		}
 
 		private void DFSUtilForReverseGraph(Integer vertex, Set<Integer> visited, Set<Integer> set) {
 			/*
@@ -1041,220 +1475,31 @@ public class Graph {
 			}
 			DFSUtilForReverseGraph(v, visited, set);
 			}
-			*/}
-
-		int time, sccCount;
-
-		@Override
-		public int sccTarjanAlg() {
-			Stack<Integer> stack = new Stack<>();
-			Set<Integer> onStack = new HashSet<>();
-			Map<Integer, Integer> visitedTime = new HashMap<>();
-			Map<Integer, Integer> lowTime = new HashMap<>();
-
-			for (int vertex : adjMap.keySet()) {
-				if (!visitedTime.containsKey(vertex)) {
-					dfsTarjan(vertex, visitedTime, lowTime, onStack, stack);
-				}
-			}
-			lowTime.forEach((k, v) -> System.out.println(k + " - " + v));
-			return sccCount;
+			*/
 		}
 
-		private void dfsTarjan(int currVertex, Map<Integer, Integer> visitedTime, Map<Integer, Integer> lowTime,
-				Set<Integer> onStack, Stack<Integer> stack) {
-			stack.push(currVertex);
-			onStack.add(currVertex);
-			visitedTime.put(currVertex, time);
-			lowTime.put(currVertex, time);
-			time++;
-
-			if (adjMap.get(currVertex) != null) {
-				for (int adjVertex : adjMap.get(currVertex)) {
-					if (!visitedTime.containsKey(adjVertex)) {
-						dfsTarjan(adjVertex, visitedTime, lowTime, onStack, stack);
-					}
-					if (onStack.contains(adjVertex)) {
-						lowTime.put(currVertex, Math.min(lowTime.get(currVertex), lowTime.get(adjVertex)));
-					}
-				}
-			}
-
-			// On recursive callback, if we're at the root node (start of SCC). Empty the seen stack until back to root.
-			if (visitedTime.get(currVertex).equals(lowTime.get(currVertex))) {
-				while (!stack.isEmpty()) {
-					int node = stack.pop();
-					onStack.remove(node);
-					if (node == currVertex) break;
-				}
-				sccCount++;
-			}
-		}
-
-		//Find the articulation point Tarjan's Algorithm
-		public Set<Integer> findarticulationPoints() {
-			time = 0;
-			Set<Integer> visited = new HashSet<>();
-			Set<Integer> articulationPoints = new HashSet<>();
-
-			Map<Integer, Integer> visitedTime = new HashMap<>();
-			Map<Integer, Integer> lowTime = new HashMap<>();
-			Map<Integer, Integer> parent = new HashMap<>();
-
-			for (int vertex : adjMap.keySet()) {
-				DFS(visited, articulationPoints, vertex, visitedTime, lowTime, parent);
-			}
-			return articulationPoints;
-		}
-
-		private void DFS(Set<Integer> visited, Set<Integer> articulationPoints, Integer vertex,
-				Map<Integer, Integer> visitedTime, Map<Integer, Integer> lowTime, Map<Integer, Integer> parent) {
-			visited.add(vertex);
-			visitedTime.put(vertex, time);
-			lowTime.put(vertex, time);
-			time++;
-			int childCount = 0;
-			boolean isArticulationPoint = false;
-			for (Integer adj : adjMap.get(vertex)) {
-				//if adj is same as parent then just ignore this vertex.
-				if (adj.equals(parent.get(vertex))) {
-					continue;
-				}
-				//if adj has not been visited then visit it.
-				if (!visited.contains(adj)) {
-					parent.put(adj, vertex);
-					childCount++;
-					DFS(visited, articulationPoints, adj, visitedTime, lowTime, parent);
-
-					if (visitedTime.get(vertex) <= lowTime.get(adj)) {
-						isArticulationPoint = true;
-					} else {
-						//below operation basically does lowTime[vertex] = min(lowTime[vertex], lowTime[adj]);
-						lowTime.compute(vertex, (currentVertex, time) -> Math.min(time, lowTime.get(adj)));
-					}
-
-				} else { //if adj is already visited see if you can get better low time.
-					//below operation basically does lowTime[vertex] = min(lowTime[vertex], visitedTime[adj]);
-					lowTime.compute(vertex, (currentVertex, time) -> Math.min(time, visitedTime.get(adj)));
-				}
-			}
-
-			//checks if either condition 1 or condition 2 meets). If yes then it is articulation point.
-			if ((parent.get(vertex) == null && childCount >= 2) || parent.get(vertex) != null && isArticulationPoint) {
-				articulationPoints.add(vertex);
-			}
-
-		}
 	}
 
 	/**
 	 * Edge List representation: Containers for vertices and edges. Vertices contain information only
 	 * about the vertex.
 	 */
-	class GraphEdgeList implements GraphOperations {
+	class GraphEdgeList {
 		// For Edge representation
 		public int N;
 		public int noOfEdges;
 		public EdgeNode[] edges;
 		public List<Integer> vertices;
 
-		@Override
-		public void buildDirectedGraph(int[][] edges) {
-			// TODO Auto-generated method stub
+		public void buildIncidence(int V, int E, int[][] input) {
+			this.N = V;
+			this.noOfEdges = E;
+			this.edges = new EdgeNode[E];
+			for (int i = 0; i < E; i++)
+				edges[i] = new EdgeNode(input[i][0], input[i][1], input[i][2]); // src, dest & weight
 
 		}
 
-		@Override
-		public void buildUndirectedGraph(int[][] edges) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void buildWeightedDG(int[][] edges) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void buildWeightedUG(int[][] edges) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public int findNumberOfNodes(int[][] edges) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public void printGraph() {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public List<Integer> dfsRecursive(int source) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<Integer> dfsIterative(int source) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public int dfsDisconnectedGraph() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public List<Integer> bfsIterative(int source) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public int bfsDisconnectedGraph() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public List<Integer> topologicalSortDfs() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<Integer> topologicalSortBfs() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public boolean detectCycleInDG() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean detectCycleInUG() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void mstPrimsAlg() {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
 		public void mstKruskalsAlg() {
 			ArrayList<EdgeNode> result = new ArrayList<>();
 			Set<Integer> nodes = CommonUtil.findNumberOfNodes(edges);
@@ -1276,33 +1521,7 @@ public class Graph {
 				System.out.println(edge.src + " - " + edge.dest + "->" + edge.weight);
 		}
 
-		@Override
-		public void spDijikstraAlg(int source) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void spBellmanFordAlg(int source) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void spFloydWarshallAlg() {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void buildIncidence(int V, int E, int[][] input) {
-			this.N = V;
-			this.noOfEdges = E;
-			this.edges = new EdgeNode[E];
-			for (int i = 0; i < E; i++)
-				edges[i] = new EdgeNode(input[i][0], input[i][1], input[i][2]); // src, dest & weight
-
-		}
-
+		//TODO: Revisit and remove the duplicate kruskal algorithm
 		public void KruskalsMST(EdgeNode[] edges, int n) {
 			ArrayList<EdgeNode> result = new ArrayList<>();
 			DisjointSet ds = new DisjointSet(n);
@@ -1321,7 +1540,7 @@ public class Graph {
 				System.out.println(edge.src + " - " + edge.dest + "->" + edge.weight);
 		}
 
-		public void bellmanFordSP(EdgeNode[] edges, int n, int e, int source) {
+		public void spBellmanFordAlg(EdgeNode[] edges, int n, int e, int source) {
 			int[] edgeWeight = new int[n]; // Edge Weight from source vertex
 			// int[] parent = new int[n];
 
@@ -1372,18 +1591,6 @@ public class Graph {
 		public void display() {
 			for (EdgeNode edge : edges)
 				System.out.println("Src: " + edge.src + " Dest: " + edge.dest + " Weight: " + edge.weight);
-		}
-
-		@Override
-		public int sccKosarajuAlg() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int sccTarjanAlg() {
-			// TODO Auto-generated method stub
-			return 0;
 		}
 
 	}
@@ -1498,18 +1705,15 @@ public class Graph {
 					break;
 				case 2:
 					System.out.println("Enter starting index:");
-					graph.bfsIterative(in.nextInt());
-					graph.dfsDisconnectedGraph();
+					graph.bfs();
+					graph.findDisconnectedGraph();
 					break;
 				case 3:
 					System.out.println("Enter starting index:");
-					graph.dfsRecursive(in.nextInt());
-					// graph.dfsIterative(in.nextInt());
-					// graph.dfsDisconnectedGraph();
+					graph.dfs();
 					break;
 				case 4:
-					graph.topologicalSortDfs();
-					// graph.topologicalSortBfs();
+					graph.topologicalSort();
 					break;
 				case 5:
 					graph.detectCycleInDG();
@@ -1527,7 +1731,7 @@ public class Graph {
 					break;
 				case 8:
 					//graph.sccKosarajuAlg();
-					graph.sccTarjanAlg();
+					graph.tarjanAlg();
 					break;
 				default:
 					System.out.println("Please enter the valid option!!!");

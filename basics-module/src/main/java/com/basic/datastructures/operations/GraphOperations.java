@@ -7,66 +7,70 @@ import java.util.List;
  * 1.Basic Graph Theory
  * 2.Graph Representations: 
  *      - Adjacency Matrix Representation
- * 		- Adjacency List Representation - Using LL array, Using List of List, Using Map
+ * 		- Adjacency List Representation - Using LL array, Using List of List, Using Map, Using Object
  * 		- Edge List Representation
  * 	    - Incidence Matrix Representation
  *  3.Graph Traversals: DFS/BFS
  *  4.Topological Sort: DFS/BFS(Kahn's Algorithm)
  *  5.Detecting Cycles: DFS/BFS/UF
- *  6.Shortest Path: 
- *      - Bipartite Graph: ?
+ *  6.Graph Dynamic Connectivity:
+ *      - Union-Find or DisJoint set Data Structure
+ *  7.Shortest Path: 
  *      - BFS Algorithm to find the Shortest path
  *  	- Single Source Shortest Paths using Dijikstra's Algorithm
  *      - Single Source Shortest Paths(including negative edge weights) using Bellman-Ford Algorithm
  *      - All-pairs Shortest paths on Dense Graphs(Floyd-Warshall Algorithm)
  *      - All-pairs Shortest paths on Sparse Graphs(Johnson's Algorithm)
- *  7.Minimum Spanning Tree:
+ *  8.Minimum Spanning Tree:
  *  	- Prim's Alg
  *      - Kruskal's Alg
- *  8.Bidirectional Search
- *      - Best First
- *      - A* 
  *  9.Connected Components:
  *      - Find Connected Components for Directed and Undirected Graphs
  *  	- Terminologies: Bridges, Articulation Points, Strongly Connected Components
  *      - Algorithms: Tarjan, Kosaraju
- *  10.Graph Dynamic Connectivity:
- *      - Union-Find or DisJoint set Data Structure
- *  11.Grid Problems: DFS/BFS
+ *  10.Bidirectional Search
+ *      - Best First
+ *      - A* 
+ *  11.Graph Color - Bipartite Graph
+ *  12.Maximum Flow Problem - Ford Fulkerson
+ *  13.Euler Path/Circuit - Fleury’s Algorithm
+ *  14.Hamiltonian Path/Circuit - ??
+ *  15.Grid Problems: DFS/BFS
  */
 public interface GraphOperations {
 
 	// DG - Directed Graph
 	// UG - Undirected Graph
-	public void buildDirectedGraph(int[][] edges);
+	void buildDirectedGraph(int[][] edges);
 
-	public void buildUndirectedGraph(int[][] edges);
+	void buildUndirectedGraph(int[][] edges);
 
-	public void buildWeightedDG(int[][] edges);
+	void buildWeightedDG(int[][] edges);
 
-	public void buildWeightedUG(int[][] edges);
+	void buildWeightedUG(int[][] edges);
 
-	public int findNumberOfNodes(int[][] edges);
+	int findNumberOfNodes(int[][] edges);
 
-	public void printGraph();
+	void printGraph();
 
-	/*
+	/* Note:
 	 * Graph Traversals algorithms have 3 states: Unvisited, Visiting, Visited
 	 *   Unvisited - Node/Vertex is not visited
 	 *   Visiting - Node/Vertex is in recursion flow, not marked as visited 
 	 *   Visited - Node/Vertex is visited 
 	 */
-	public List<Integer> dfsRecursive(int source);
+
+	//DFS Recursive Approach
+	List<Integer> dfs();
 
 	// DFS Iterative Approach using Stack
-	public List<Integer> dfsIterative(int source);
-
-	public int dfsDisconnectedGraph();
+	List<Integer> dfsIterative();
 
 	// BFS Iterative Approach using Queue
-	public List<Integer> bfsIterative(int source);
+	List<Integer> bfs();
 
-	public int bfsDisconnectedGraph();
+	//Find the no of disconnected sub graphs in the graph - Using both DFS & BFS
+	int findDisconnectedGraph();
 
 	/* Topological Sort:
 	 * Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for "every
@@ -76,28 +80,30 @@ public interface GraphOperations {
 	 *   Approach1: DFS Algorithm
 	 *   Approach2: BFS Algorithm (Kahn's Algorithm)
 	 */
-	public List<Integer> topologicalSortDfs();
+	List<Integer> topologicalSort();
 
-	/* BFS Algorithm (Kahn's Algorithm) for Topological Sorting:
-	 * A DAG G has at least one vertex with in-degree 0 and one vertex with out-degree 0.
+	//TODO: Revisit DG & UG graph cycle solutions and merge it as a single approach. Keep only one method here
+	/*
+	 * TODO: Solve this problem using 3 approaches:
+	 * 	1. DFS Algorithm with additional recursion stack array
+	 *  2. Using Graph Colors
+	 *  3. Using DisjointSet
 	 */
-	public List<Integer> topologicalSortBfs();
+	boolean detectCycleInDG();
 
-	public boolean detectCycleInDG();
-
-	public boolean detectCycleInUG();
+	boolean detectCycleInUG();
 
 	// MST - Minimum Spanning Tree
 	/* A minimum spanning tree (MST) or minimum weight spanning tree for a weighted, connected and undirected graph is a spanning tree with
 	 * weight less than or equal to the weight of every other spanning tree. The weight of a spanning tree is the sum of weights given to 
 	 * each edge of the spanning tree. A minimum spanning tree has (V - 1) edges where V is the number of vertices in the given graph.
 	 */
-	public void mstPrimsAlg();
+	void mstPrimsAlg();
 
-	public void mstKruskalsAlg();
+	void mstKruskalsAlg();
 
 	// SP - Shortest Path Alg
-	public void spDijikstraAlg(int source);
+	void spDijikstraAlg(int source);
 
 	/*
 	 * Dijkstra follows Greed Alg; Bellmanford alg follows DP algorithms and it finds shortest paths from src to all vertices in the given graph.
@@ -107,31 +113,14 @@ public interface GraphOperations {
 	 * How does this work? Like other Dynamic Programming Problems, the algorithm calculate shortest paths in bottom-up manner. It first
 	 * calculates the shortest distances which have at-most one edge in the path. Then, it calculates shortest paths with at-most 2 edges, 
 	 * and so on. After the i-th iteration of outer loop, the shortest paths with at most i edges are calculated. There can be maximum 
-	 * |V| ï¿½ 1 edges in any simple path, that is why the outer loop runs |v|- 1 times.
+	 * |V| - 1 edges in any simple path, that is why the outer loop runs |v|- 1 times.
 	 */
-	public void spBellmanFordAlg(int source);
+	void spBellmanFordAlg(int source);
 
 	/* The Floyd Warshall Algorithm (Dynamic Programming) is for solving the All Pairs Shortest Path problem. The problem is 
 	 * to find shortest distances between every pair of vertices in a given edge weighted directed Graph.
 	 */
-	public void spFloydWarshallAlg();
-
-	/* Strongly Connected Components(SCC) in a graph:
-	 * A directed graph is strongly connected if there is a path between all pairs of vertices. A graph is said to be strongly connected if every
-	 * vertex is reachable from every other vertex. The strongly connected components of an arbitrary directed graph form a partition into subgraphs 
-	 * that are themselves strongly connected.
-	 * These two algorithms are used to find the SCC of a directed graph:
-	 *   - Kosaraju Algorithm
-	 *   - Tarjan Algorithm 
-	 */
-
-	/*
-	 * Kosaraju's algorithm uses two passes of depth first search. The first, in the original graph, is used to choose the order in which the outer 
-	 * loop of the second depth first search tests vertices for having been visited already and recursively explores them if not. The second depth 
-	 * first search is on the transpose graph of the original graph, and each recursive exploration finds a single new strongly connected component.
-	 * Time: 3*O(V+E) => O(V+E); Space: O(V+E)
-	 */
-	public int sccKosarajuAlg();
+	void spFloydWarshallAlg();
 
 	/* 
 	 * Tarjan's strongly connected components algorithm performs a single pass of depth first search. It maintains a stack of vertices that have been
@@ -140,6 +129,20 @@ public interface GraphOperations {
 	 * a new component.
 	 * Time: O(V+E) => O(V+E); Space: O(V+E)
 	 */
-	public int sccTarjanAlg();
+	void tarjanAlg();
 
+	/*
+	 * Kosaraju's algorithm uses two passes of depth first search. The first, in the original graph, is used to choose the order in which the outer 
+	 * loop of the second depth first search tests vertices for having been visited already and recursively explores them if not. The second depth 
+	 * first search is on the transpose graph of the original graph, and each recursive exploration finds a single new strongly connected component.
+	 * Time: 3*O(V+E) => O(V+E); Space: O(V+E)
+	 */
+	void kosarajuAlg();
+
+	/*
+	 * A Bipartite Graph is a graph whose vertices can be divided into two independent sets, U and V such that every edge (u, v) either connects
+	 * a vertex from U to V or a vertex from V to U.
+	 * It can be solved using DFS & BFS
+	 */
+	boolean isBipartite();
 }
